@@ -1,4 +1,0 @@
-repository "2D Roguelike Deckbuilder/Senior-Video-Game-Project@2475920862136@cloud"
-  path "/"
-    br "/main"
-    co "/main"
