@@ -4,7 +4,9 @@ using System.Collections.Generic;
 
 public class HandView : MonoBehaviour
 {
-    public CardView cardPrefab;
+    public CardView attackPrefab;
+    public CardView defendPrefab;
+
     public Transform handArea;
 
     public float fanRadius = 300f;
@@ -16,7 +18,17 @@ public class HandView : MonoBehaviour
         //ClearHand();
 
         for(int i = 0; i < cards.Count;i++ ){ // Adds all of the cards on screen
-            CardView view = Instantiate(cardPrefab, handArea);
+            CardView view;
+
+            if(cards[i].cardName == "Attack")
+            {
+                view = Instantiate(attackPrefab, handArea);
+            } else //if(cards[i].cardName == "Defend")
+            { 
+                view = Instantiate(defendPrefab, handArea);
+            }
+
+            
             view.Setup(cards[i]);
             cardViews.Add(view);
         }

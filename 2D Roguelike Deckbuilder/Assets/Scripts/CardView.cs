@@ -25,6 +25,10 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if(card is DefendCard defend){ // If the card is a defend card, print this text
             descriptionText.text = $"Gain {defend.defendAmount} Block";
         }
+        else if(card is AttackCard attack)
+        {
+            descriptionText.text = $"Deal {attack.attackAmount} Damage";
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData){ // Event that when pointer enters a card
