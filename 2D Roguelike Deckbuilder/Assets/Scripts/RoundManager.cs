@@ -14,7 +14,7 @@ public class RoundManager : MonoBehaviour
 
     //numeric variables
     public int maxEnergy = 3;
-    public int energy;
+    public static int energy;
 
     void Awake() {
         instance = this;    //initialize an instance of RoundManager before game starts
@@ -28,10 +28,4 @@ public class RoundManager : MonoBehaviour
         //should be player's turn at start of the round
         currentState = gameState.playerTurn; 
     }
-
-    // Update is called once per frame
-    /*void Update()
-    {
-        
-    }*/
 }

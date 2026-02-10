@@ -21,6 +21,7 @@ public class CardHover : MonoBehaviour
 
     void Show(Card card){ // Reveals the hidden magnified card
         previewView.cardData = card; 
+        previewView.cardData.sprite = card.sprite;
         previewView.Refresh(); // Copies details from hovered card
 
         cg.alpha = 1; // Reveals hidden magnified card

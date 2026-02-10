@@ -8,6 +8,10 @@ public abstract class Card // Will store a card's name, cost, description, and t
 
     public string description;
 
-   // public abstract void Play(Player player, Enemy enemy);
+    public string sprite;
+
+    public string type;
+
+    public abstract void Play();
     
 }

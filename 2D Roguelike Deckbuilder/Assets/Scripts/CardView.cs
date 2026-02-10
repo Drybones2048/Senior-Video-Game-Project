@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine.EventSystems;
 using System;
 
-public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
      [Header("UI")]
      public TextMeshProUGUI nameText;
@@ -37,6 +37,22 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerExit(PointerEventData eventData){ // Event for when pointer leaves card
         HoverExit?.Invoke();
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if(RoundManager.energy - cardData.cost < 0)
+        {
+            Debug.Log("Cannot play card, not enough energy!");
+        }
+        else
+        {
+            RoundManager.energy -= cardData.cost;
+            cardData.Play();
+            //Add to discard's list
+            //Destroy(gameObject);
+            //redisplay hand view since there are less than 5 cards in hand
+        }
     }
 
     public void Refresh() { // Refreshes any card's data with any updated values
