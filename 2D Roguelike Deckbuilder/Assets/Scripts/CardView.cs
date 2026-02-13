@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
 using System;
+using System.Collections.Generic;
 
 public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
@@ -14,6 +15,8 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
      public static event Action<Card> HoverEnter; 
      public static event Action HoverExit;
+
+     public static event Action<List<Card>> cardClicked;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void Setup(Card card){
@@ -47,11 +50,13 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
         else
         {
-            RoundManager.energy -= cardData.cost;
-            cardData.Play();
-            //Add to discard's list
-            //Destroy(gameObject);
-            //redisplay hand view since there are less than 5 cards in hand
+            RoundManager.energy -= cardData.cost; // decrement the player's energy by the cost of the card
+
+            cardData.Play(); // Plays the card's effect
+
+            Deck.discardAdd(cardData); //Add to discard's list
+            
+            cardClicked?.Invoke(Deck.currentHand); // Fixes the hand view
         }
     }
 

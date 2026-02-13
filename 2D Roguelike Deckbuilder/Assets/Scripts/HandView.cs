@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Splines;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class HandView : MonoBehaviour
 {
@@ -14,8 +15,13 @@ public class HandView : MonoBehaviour
 
     private List<CardView> cardViews = new();
 
+    void OnEnable() // Whenever a card is played, the card hand will update
+    {
+        CardView.cardClicked += DisplayHand;
+    }
+
     public void DisplayHand(List<Card> cards){
-        //ClearHand();
+        ClearHand();
 
         for(int i = 0; i < cards.Count;i++ ){ // Adds all of the cards on screen
             CardView view;
@@ -65,6 +71,17 @@ public class HandView : MonoBehaviour
 
             cardViews[i].transform.localRotation = Quaternion.Euler(0, 0, -angle);
         }
+    }
+
+    // Every time the player plays a card, this function will be called to delete the assets
+    void ClearHand()
+    {
+        foreach (CardView view in cardViews)
+        {
+            Destroy(view.gameObject);
+        }
+
+        cardViews.Clear();
     }
 
 }

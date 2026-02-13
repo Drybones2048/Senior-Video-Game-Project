@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
     public PlayerHealth healthBar;
     public int currentHealth;
 
+    public int shieldAmount;
+
     //private variables
     bool myTurn;
 
@@ -14,24 +16,24 @@ public class Player : MonoBehaviour
         // Sets the healthbar full with its max value
         currentHealth = maxHealth;
         healthBar.setMaxHealth(maxHealth);
+        shieldAmount = 0;
 
         //Indicate that it is the player's turn and ready for input
         myTurn = true;
     }   
 
     void Update(){
-        //only accept input if it's the player's turn
-        if (myTurn) {
-            if (Input.GetKeyDown(KeyCode.Mouse1))
-            {
-                TakeDamage(20);
-            }
-        }
+        
     }
 
-    void TakeDamage(int damage){ // function that will be used strictly to keep track of damage
+    public void TakeDamage(int damage){ // function that will be used strictly to keep track of damage
         currentHealth -= damage;
 
         healthBar.setHealth(currentHealth);
+    }
+
+    public void GainShield(int shield)
+    {
+        shieldAmount += shield;
     }
 } 

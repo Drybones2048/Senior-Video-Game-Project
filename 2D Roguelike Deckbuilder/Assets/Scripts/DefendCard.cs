@@ -1,10 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
+using System;
 
 public class DefendCard : Card
 {
     public int defendAmount = 5; // the amount that all defend cards will defend for
+
+    public static event Action<DefendCard> shieldGained;
 
     public DefendCard(){ // Default constructor for base defend card
         cardName = "Defend";
@@ -25,9 +29,11 @@ public class DefendCard : Card
         this.sprite = sprite;
     }
 
-    public override void Play() // Will write code here for player shield
+    public override void Play() // When the player plays a defend card, player gains shield
     {
-        throw new System.NotImplementedException();
+        CombatManager.Instance.player.GainShield(defendAmount);
+        
+        shieldGained?.Invoke(this);
     }
 
 }
