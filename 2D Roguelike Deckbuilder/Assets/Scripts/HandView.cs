@@ -1,7 +1,9 @@
 using UnityEngine;
 using UnityEngine.Splines;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
 public class HandView : MonoBehaviour
 {
@@ -9,53 +11,190 @@ public class HandView : MonoBehaviour
     public CardView defendPrefab;
 
     public Transform handArea;
+    public Transform drawPilePosition;
 
     public float fanRadius = 300f;
     public float fanAngle = 30f;
 
-    private List<CardView> cardViews = new();
+    // Animation settings
+    public float drawDuration = 0.4f;
+    public float delayBetweenCards = 0.1f;
+    public Ease drawEaseType = Ease.OutQuad;
+    
+    public AudioClip cardDrawSound; // Optional: drag your sound effect here
 
-    void OnEnable() // Whenever a card is played, the card hand will update
+    private List<CardView> cardViews = new();
+    private bool isDrawing = false;
+    private bool hasDrawnInitialHand = false; // NEW: Track if initial draw has happened
+
+    void OnEnable()
     {
-        CardView.cardClicked += DisplayHand;
+        CardView.cardClicked += OnCardPlayed; // Restore event subscription but with new method
     }
 
-    public void DisplayHand(List<Card> cards){
-        ClearHand(); // Delete all the cards in hand for re-display
+    void OnDisable()
+    {
+        CardView.cardClicked -= OnCardPlayed;
+    }
 
-        for(int i = 0; i < cards.Count; i++){ // Adds all of the cards on screen
-            CardView view;
+    // NEW: Separate handler for when cards are played
+    void OnCardPlayed(List<Card> cards)
+    {
+        // When a card is played, always refresh instantly (no animation)
+        RefreshHandInstantly(cards);
+    }
 
-            if(cards[i].cardName == "Attack")
+    // Public method called directly from Deck.drawHand()
+    public void DisplayHand(List<Card> cards)
+    {
+        // Only animate if this is the very first draw
+        if (!hasDrawnInitialHand)
+        {
+            if (isDrawing) return;
+            hasDrawnInitialHand = true;
+            StartCoroutine(DrawCardsSequentially(cards));
+        }
+        else
+        {
+            // If called again (shouldn't happen in normal flow, but just in case)
+            RefreshHandInstantly(cards);
+        }
+    }
+
+    // Animated draw sequence - used only for initial hand
+    IEnumerator DrawCardsSequentially(List<Card> cards)
+    {
+        isDrawing = true;
+        ClearHand();
+
+        List<CardPositionData> finalPositions = CalculateCardPositions(cards.Count);
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+            // Wait before drawing (except for the first card)
+            if (i > 0)
             {
-                view = Instantiate(attackPrefab, handArea);
-            } else //if(cards[i].cardName == "Defend")
-            { 
-                view = Instantiate(defendPrefab, handArea);
+                yield return new WaitForSeconds(delayBetweenCards);
             }
 
-            
-            view.Setup(cards[i]);
+            CardView view = CreateCard(cards[i]);
+
+            // Set starting position/scale IMMEDIATELY (before adding to list or doing anything else)
+            if (drawPilePosition != null)
+            {
+                view.transform.position = drawPilePosition.position;
+                view.transform.rotation = drawPilePosition.rotation;
+            }
+            else
+            {
+                view.transform.localPosition = new Vector3(0, -500, 0);
+            }
+            view.transform.localScale = Vector3.zero; // Start at zero scale (invisible)
+
             cardViews.Add(view);
+
+            // Play sound effect (optional)
+            if (cardDrawSound != null)
+            {
+                AudioSource.PlayClipAtPoint(cardDrawSound, Camera.main.transform.position, 0.5f);
+            }
+
+            AnimateCardToPosition(view, finalPositions[i]);
         }
 
-        FanCards();
+        isDrawing = false;
     }
 
-    void FanCards(){ // function that does the math on how to display the cards based on HandArea's location
-        int count = cardViews.Count;
+    // Instant refresh - used when card is played and hand needs to re-fan
+    void RefreshHandInstantly(List<Card> cards)
+    {
+        // Kill any lingering DOTween animations on cards before destroying them
+        foreach (CardView view in cardViews)
+        {
+            if (view != null)
+            {
+                view.transform.DOKill();
+            }
+        }
+        
+        ClearHand();
+
+        List<CardPositionData> finalPositions = CalculateCardPositions(cards.Count);
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+            CardView view = CreateCard(cards[i]);
+            cardViews.Add(view);
+
+            // Set position instantly (no animation)
+            view.transform.localPosition = finalPositions[i].position;
+            view.transform.localRotation = finalPositions[i].rotation;
+            view.transform.localScale = Vector3.one;
+            
+            // Ensure no tweens are accidentally playing on the new card
+            view.transform.DOKill();
+        }
+    }
+
+    void AnimateCardToPosition(CardView card, CardPositionData posData)
+    {
+        // Start the card invisible
+        CanvasGroup canvasGroup = card.GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+        {
+            canvasGroup = card.gameObject.AddComponent<CanvasGroup>();
+        }
+        canvasGroup.alpha = 0;
+
+        Sequence cardSequence = DOTween.Sequence();
+
+        cardSequence.Join(card.transform.DOLocalMove(posData.position, drawDuration).SetEase(drawEaseType));
+        cardSequence.Join(card.transform.DOLocalRotate(posData.rotation.eulerAngles, drawDuration).SetEase(drawEaseType));
+        cardSequence.Join(card.transform.DOScale(Vector3.one, drawDuration).SetEase(drawEaseType));
+        
+        // Fade in the card
+        cardSequence.Join(canvasGroup.DOFade(1f, drawDuration * 0.3f)); // Fade in quickly at start
+
+        // Optional pop effect
+        cardSequence.Append(card.transform.DOScale(Vector3.one * 1.05f, 0.1f));
+        cardSequence.Append(card.transform.DOScale(Vector3.one, 0.1f));
+    }
+
+    CardView CreateCard(Card card)
+    {
+        CardView view;
+
+        if (card.cardName == "Attack")
+        {
+            view = Instantiate(attackPrefab, handArea);
+        }
+        else
+        {
+            view = Instantiate(defendPrefab, handArea);
+        }
+
+        view.Setup(card);
+        return view;
+    }
+
+    List<CardPositionData> CalculateCardPositions(int count)
+    {
+        List<CardPositionData> positions = new List<CardPositionData>();
         float radius = 400f;
         float maxAngle = 20f;
 
-        if (count == 1){ // If there is only one card in hand, display it vertically
-
-            cardViews[0].transform.localPosition = Vector3.zero;
-            cardViews[0].transform.localRotation = Quaternion.identity;
-            return;
-
-        } else if(count == 2) { // if there is only two cards in hand, make sure they are close together
-
-            float smallAngle = 6f; // tighter spread
+        if (count == 1)
+        {
+            positions.Add(new CardPositionData
+            {
+                position = Vector3.zero,
+                rotation = Quaternion.identity
+            });
+            return positions;
+        }
+        else if (count == 2)
+        {
+            float smallAngle = 6f;
 
             for (int i = 0; i < 2; i++)
             {
@@ -68,11 +207,14 @@ public class HandView : MonoBehaviour
                     0
                 );
 
-                cardViews[i].transform.localPosition = pos;
-                cardViews[i].transform.localRotation = Quaternion.Euler(0, 0, -angle);
+                positions.Add(new CardPositionData
+                {
+                    position = pos,
+                    rotation = Quaternion.Euler(0, 0, -angle)
+                });
             }
 
-            return;
+            return positions;
         }
 
         float angleStep = (maxAngle * 2) / (count - 1);
@@ -88,13 +230,17 @@ public class HandView : MonoBehaviour
                 Mathf.Cos(rad) * radius - radius,
                 0
             );
-            cardViews[i].transform.localPosition = pos;
 
-            cardViews[i].transform.localRotation = Quaternion.Euler(0, 0, -angle);
+            positions.Add(new CardPositionData
+            {
+                position = pos,
+                rotation = Quaternion.Euler(0, 0, -angle)
+            });
         }
+
+        return positions;
     }
 
-    // Every time the player plays a card, this function will be called to delete the assets
     void ClearHand()
     {
         foreach (CardView view in cardViews)
@@ -105,4 +251,9 @@ public class HandView : MonoBehaviour
         cardViews.Clear();
     }
 
+    struct CardPositionData
+    {
+        public Vector3 position;
+        public Quaternion rotation;
+    }
 }

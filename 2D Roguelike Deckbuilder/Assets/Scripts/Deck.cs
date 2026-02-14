@@ -22,22 +22,19 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         };
     
     // The pool of cards that the player can draw each turn
-    static List<Card> drawPile = new List<Card>();
+    public static List<Card> drawPile = new List<Card>();
 
     // The current hand that the player has 
     public static List<Card> currentHand = new List<Card>();
 
     // The cards that the player has discarded
-    static List<Card> discard = new List<Card>();
+    public static List<Card> discard = new List<Card>();
 
     // The entire deck the player has at the start of the game
     void Start()
     {
         // At the start of combat, add all cards in the deck to the draw pile
-        for(int i = 0; i < deck.Count - 1; i++)
-        {
-            drawPile.Add(deck[i]);
-        }
+        drawPile.AddRange(deck);
 
         drawHand();
     }
@@ -46,7 +43,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
     {
         for(int i = 0; i < 5; i++) // Player draws 5 random cards to hand at the start of the round
         {
-            Card cardPick = randomDraw(deck); // Draws a random card
+            Card cardPick = randomDraw(drawPile); // Draws a random card
 
             drawPile.Remove(cardPick); // Removes the card from draw pile
 
