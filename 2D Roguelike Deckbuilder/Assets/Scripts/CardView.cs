@@ -44,13 +44,13 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if(RoundManager.energy - cardData.cost < 0)
+        if(RoundManager.instance.currentEnergy - cardData.cost < 0)
         {
             Debug.Log("Cannot play card, not enough energy!");
         }
         else
         {
-            RoundManager.energy -= cardData.cost; // decrement the player's energy by the cost of the card
+            RoundManager.instance.decrementEnergy(cardData.cost);    //replaced old line that directly modified energy field
 
             cardData.Play(); // Plays the card's effect
 
