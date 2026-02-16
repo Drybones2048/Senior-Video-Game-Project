@@ -1497,6 +1497,7 @@ GameObject:
   - component: {fileID: 446406489}
   - component: {fileID: 446406491}
   - component: {fileID: 446406492}
+  - component: {fileID: 446406493}
   m_Layer: 0
   m_Name: Round Manager
   m_TagString: Untagged
@@ -1516,6 +1517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1758d746c70e3784689490eaf0c6f5f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoundManager
+  routine: {fileID: 446406493}
   defaultMaxEnergy: 3
 --- !u!4 &446406490
 Transform:
@@ -1563,6 +1565,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CombatManager
   currentEnemy: {fileID: 368184936}
   player: {fileID: 2008279966}
+--- !u!114 &446406493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446406488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d99c99b191eac84e9d3910011760d00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TurnEndRoutine
 --- !u!1 &458414615
 GameObject:
   m_ObjectHideFlags: 0

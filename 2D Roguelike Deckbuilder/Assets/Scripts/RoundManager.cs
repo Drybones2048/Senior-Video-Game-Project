@@ -17,7 +17,8 @@ public class RoundManager : MonoBehaviour
     public int currentSeed { get; private set; }
     public static UnityEvent endPlayerTurn = new UnityEvent();
     public static UnityEvent<int> energyChanged = new UnityEvent<int>();
-    public gameState currentState { get; private set; }
+    public gameState currentState;
+    public TurnEndRoutine routine;
 
     [SerializeField] private int defaultMaxEnergy = 3; //reference point, would only ever be different from max energy if an effect altered your starting energy amount
     public int maxEnergy { get; private set; }
@@ -27,11 +28,13 @@ public class RoundManager : MonoBehaviour
         instance = this;    //initialize an instance of RoundManager before game starts
         startNewRun();
 
-        Enemy.endEnemyTurn.AddListener(startPlayerTurn);
+        Enemy.endEnemyTurn.AddListener(EndEnemyTurn);
+        TurnEndRoutine.StartPlayerTurn.AddListener(startPlayerTurn);
     }
 
     void OnDestroy() {
-        Enemy.endEnemyTurn.RemoveListener(startPlayerTurn);
+        Enemy.endEnemyTurn.RemoveListener(EndEnemyTurn);
+        TurnEndRoutine.StartPlayerTurn.RemoveListener(startPlayerTurn);
     }
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -46,6 +49,8 @@ public class RoundManager : MonoBehaviour
         currentEnergy = maxEnergy;
         currentState = gameState.playerTurn;
 
+        //TODO: Make sure through play-testing that it's not possible to get some super unlucky seed draws
+        //i.e. make sure you can't get seeds that are so unfavorable that it makes the run unfairly difficult
         currentSeed = seed ?? Environment.TickCount;
         RNG = new System.Random(currentSeed);
 
@@ -54,15 +59,26 @@ public class RoundManager : MonoBehaviour
 
     private void startPlayerTurn()
     {
-        currentEnergy = maxEnergy;
         currentState = gameState.playerTurn;
+        currentEnergy = maxEnergy;
         energyChanged.Invoke(currentEnergy);
     }
 
     public void endTurnButton() {
-        currentState = gameState.enemyTurn;
-        Debug.Log("Player turn ended, starting enemy turn");
-        endPlayerTurn.Invoke();
+        if (currentState == gameState.playerTurn)
+        {
+            currentState = gameState.interim;
+            Debug.Log("Player turn ended, starting enemy turn");
+            routine.EndPlayerTurn();    //start coroutine
+        }
+        else {
+            Debug.Log("Not the player's turn!");
+        }
+    }
+
+    private void EndEnemyTurn() {
+        currentState = gameState.interim;
+        routine.EndEnemyTurn(); //start coroutine
     }
 
     public void decrementEnergy(int amount) {
