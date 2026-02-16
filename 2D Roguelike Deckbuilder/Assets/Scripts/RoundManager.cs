@@ -27,6 +27,10 @@ public class RoundManager : MonoBehaviour
     void Awake() {
         instance = this;    //initialize an instance of RoundManager before game starts
         startNewRun();
+        //initialize energy and state variables in awake because other scripts depend on them
+        maxEnergy = defaultMaxEnergy;
+        currentEnergy = maxEnergy;
+        currentState = gameState.interim;
 
         Enemy.endEnemyTurn.AddListener(EndEnemyTurn);
         TurnEndRoutine.StartPlayerTurn.AddListener(startPlayerTurn);
@@ -40,21 +44,20 @@ public class RoundManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        startPlayerTurn();
+        StartNewRound(); //we can put this here for now, but when we create multiple rounds, we'll need this to be called multiple times
+        energyChanged.Invoke(currentEnergy);
     }
 
     void startNewRun(int? seed = null) {
-        //initialize energy and state variables in awake because other scripts depend on them
-        maxEnergy = defaultMaxEnergy;
-        currentEnergy = maxEnergy;
-        currentState = gameState.playerTurn;
-
         //TODO: Make sure through play-testing that it's not possible to get some super unlucky seed draws
         //i.e. make sure you can't get seeds that are so unfavorable that it makes the run unfairly difficult
         currentSeed = seed ?? Environment.TickCount;
         RNG = new System.Random(currentSeed);
-
         Debug.Log("Run Seed: " + currentSeed);
+    }
+
+    void StartNewRound() {
+        routine.StartRound();
     }
 
     private void startPlayerTurn()
