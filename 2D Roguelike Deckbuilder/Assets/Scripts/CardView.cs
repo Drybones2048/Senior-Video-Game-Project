@@ -55,8 +55,22 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             cardData.Play(); // Plays the card's effect
 
             Deck.discardAdd(cardData); //Add to discard's list
-            
-            cardClicked?.Invoke(Deck.currentHand); // Fixes the hand view
+
+            HandView handView = FindFirstObjectByType<HandView>();
+
+            if(handView != null)
+            {
+                handView.AnimateCardToDiscard(this, () =>
+                {
+                    // After discard animation completes, refresh the hand
+                    cardClicked?.Invoke(Deck.currentHand);
+                });
+            }
+            else
+            {
+                // Fallback: if no HandView found, just refresh immediately
+                cardClicked?.Invoke(Deck.currentHand);
+            }
         }
     }
 

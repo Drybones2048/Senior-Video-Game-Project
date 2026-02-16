@@ -12,6 +12,8 @@ public class HandView : MonoBehaviour
 
     public Transform handArea;
     public Transform drawPilePosition;
+    public Transform discardPilePosition;
+    public Vector3 discardPositionOffset = Vector3.zero;
 
     public float fanRadius = 300f;
     public float fanAngle = 30f;
@@ -25,7 +27,7 @@ public class HandView : MonoBehaviour
 
     private List<CardView> cardViews = new();
     private bool isDrawing = false;
-    private bool hasDrawnInitialHand = false; // NEW: Track if initial draw has happened
+    private bool hasDrawnInitialHand = false; // Tracks for intial draw
 
     void OnEnable()
     {
@@ -37,10 +39,9 @@ public class HandView : MonoBehaviour
         CardView.cardClicked -= OnCardPlayed;
     }
 
-    // NEW: Separate handler for when cards are played
+    // Separate handler for when cards are played
     void OnCardPlayed(List<Card> cards)
     {
-        // When a card is played, always refresh instantly (no animation)
         RefreshHandInstantly(cards);
     }
 
@@ -158,6 +159,58 @@ public class HandView : MonoBehaviour
         // Optional pop effect
         cardSequence.Append(card.transform.DOScale(Vector3.one * 1.05f, 0.1f));
         cardSequence.Append(card.transform.DOScale(Vector3.one, 0.1f));
+    }
+
+    public void AnimateCardToDiscard(CardView card, System.Action onComplete = null)
+    {
+        // Remove from our tracking list immediately (so hand doesn't try to manage it)
+        if (cardViews.Contains(card))
+        {
+            cardViews.Remove(card);
+        }
+
+        // Kill any existing tweens on this card
+        card.transform.DOKill();
+
+        // Determine discard pile position
+        Vector3 targetPosition;
+        if (discardPilePosition != null)
+        {
+            // If both are in the same Canvas, use local position
+            if (card.transform.parent == discardPilePosition.parent)
+            {
+                targetPosition = discardPilePosition.localPosition + discardPositionOffset;
+            }
+            else
+            {
+                // Use world position
+                targetPosition = discardPilePosition.position + discardPositionOffset;
+            }
+        }
+        else
+        {
+            // Default to bottom-right if no discard pile set
+            targetPosition = card.transform.localPosition + new Vector3(500, -300, 0);
+        }
+
+        // Create animation sequence with longer duration for visibility
+        Sequence discardSequence = DOTween.Sequence();
+
+        // Move to discard pile - using Linear easing for straight path
+        discardSequence.Join(card.transform.DOLocalMove(targetPosition, 0.3f).SetEase(Ease.Linear));
+        
+        // Shrink to zero
+        discardSequence.Join(card.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InQuad));
+
+        // Rotate while discarding for extra flair
+        discardSequence.Join(card.transform.DOLocalRotate(new Vector3(0, 0, 360), 0.3f, RotateMode.FastBeyond360).SetEase(Ease.Linear));
+
+        // When animation completes, destroy the card and call callback
+        discardSequence.OnComplete(() =>
+        {
+            Destroy(card.gameObject);
+            onComplete?.Invoke();
+        });
     }
 
     CardView CreateCard(Card card)

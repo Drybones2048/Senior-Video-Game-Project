@@ -19,6 +19,7 @@ public class ShieldManager : MonoBehaviour
     void OnEnable()
     {
         DefendCard.shieldGained += Show;
+        Player.shieldBroken += Hide;
     }
 
     void Show(DefendCard card){ // Shows shield bar
@@ -27,5 +28,12 @@ public class ShieldManager : MonoBehaviour
         defendText.text = currentShield.ToString();
 
         cg.alpha = 1; // Reveals shield bar
+    }
+
+    void Hide() // Hides defend bar when block is removed
+    {
+        currentShield = 0;
+
+        cg.alpha = 0;
     }
 }
