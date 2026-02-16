@@ -6,7 +6,7 @@ public class Energy : MonoBehaviour
     public TMP_Text text;
 
     void Awake() {
-        RoundManager.energyChanged.AddListener(displayEnergy);
+        RoundManager.energyChanged.AddListener(displayEnergy);  //do I need to invoke the instance here?
     }
 
     void Start() {

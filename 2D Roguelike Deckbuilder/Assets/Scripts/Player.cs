@@ -17,9 +17,6 @@ public class Player : MonoBehaviour
         currentHealth = maxHealth;
         healthBar.setMaxHealth(maxHealth);
         shieldAmount = 0;
-
-        //Indicate that it is the player's turn and ready for input
-        myTurn = true;
     }   
 
     void Update(){

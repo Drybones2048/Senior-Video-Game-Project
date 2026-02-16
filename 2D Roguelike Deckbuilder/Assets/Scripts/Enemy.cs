@@ -1,23 +1,34 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Enemy : MonoBehaviour
 {
-    public  int maxHealth = 100; // Max health value that we want to give the player character
+    public static UnityEvent endEnemyTurn = new UnityEvent();
+    public Player player;
+    public EnemyHealth healthBar;
+    [SerializeField] private EnemyAttack attack;
+    [SerializeField] private int maxHealth = 100;
+    [SerializeField] private int currentHealth; //don't attempt to modify from within inspector, that's only for debugging
+    public int CurrentHealth => currentHealth;  //CurrentHealth is publicly readable, currentHealth is private. Also don't try and set it in the inspector
 
-    public  EnemyHealth healthBar;
-    public  int currentHealth;
+    void Awake() {
+        RoundManager.endPlayerTurn.AddListener(StartEnemyTurn);
+    }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void OnDestroy() {
+        RoundManager.endPlayerTurn.RemoveListener(StartEnemyTurn);
+    }
+
     void Start()
     {
         currentHealth = maxHealth;
         healthBar.setMaxHealth(maxHealth);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void StartEnemyTurn() {
+        attack.attackPlayer(player);
+        Debug.Log("Enemy turn ended, starting playing turn");
+        endEnemyTurn.Invoke();
     }
 
     public void TakeDamage(int damage){
