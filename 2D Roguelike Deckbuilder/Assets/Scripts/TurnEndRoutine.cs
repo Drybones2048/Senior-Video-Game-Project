@@ -5,7 +5,6 @@ using UnityEngine.Events;
 public class TurnEndRoutine : MonoBehaviour
 {
     private Coroutine flow;
-    public static UnityEvent StartPlayerTurn = new UnityEvent();
     public static UnityEvent PrintRoundStartMessage = new UnityEvent();
     public static UnityEvent PrintPlayerTurnMessage = new UnityEvent();
     public static UnityEvent PrintEnemyTurnMessage = new UnityEvent();
@@ -61,14 +60,14 @@ public class TurnEndRoutine : MonoBehaviour
     private IEnumerator ResolvePlayerTurn() {
         yield return new WaitForSeconds(enemyTurnStartDelay);
         RoundManager.instance.currentState = gameState.enemyTurn;
-        RoundManager.endPlayerTurn.Invoke();    //I could move this event from being instantiated in RoundManager, to being instantiated in this file. I probably should
+        RoundManager.startEnemyTurn.Invoke();    //I could move this event from being instantiated in RoundManager, to being instantiated in this file. I probably should
     }
 
     private IEnumerator ResolveEnemyTurn()
     {
         yield return new WaitForSeconds(playerTurnStartDelay);
         RoundManager.instance.currentState = gameState.playerTurn;
-        StartPlayerTurn.Invoke();
+        RoundManager.startPlayerTurn.Invoke();
         flow = null;    //end of the turn
     }
 }

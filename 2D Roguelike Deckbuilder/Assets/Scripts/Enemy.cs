@@ -3,7 +3,6 @@ using UnityEngine.Events;
 
 public class Enemy : MonoBehaviour
 {
-    public static UnityEvent endEnemyTurn = new UnityEvent();
     public Player player;
     public EnemyHealth healthBar;
     [SerializeField] private EnemyAttack attack;
@@ -12,11 +11,11 @@ public class Enemy : MonoBehaviour
     public int CurrentHealth => currentHealth;  //CurrentHealth is publicly readable, currentHealth is private. Also don't try and set it in the inspector
 
     void Awake() {
-        RoundManager.endPlayerTurn.AddListener(StartEnemyTurn);
+        RoundManager.startEnemyTurn.AddListener(StartEnemyTurn);
     }
 
     void OnDestroy() {
-        RoundManager.endPlayerTurn.RemoveListener(StartEnemyTurn);
+        RoundManager.startEnemyTurn.RemoveListener(StartEnemyTurn);
     }
 
     void Start()
@@ -27,8 +26,8 @@ public class Enemy : MonoBehaviour
 
     void StartEnemyTurn() {
         attack.attackPlayer(player);
-        Debug.Log("Enemy turn ended, starting playing turn");
-        endEnemyTurn.Invoke();
+        Debug.Log("Enemy turn ended, resolving");
+        RoundManager.endEnemyTurn.Invoke();
     }
 
     public void TakeDamage(int damage){

@@ -16,6 +16,9 @@ public class RoundManager : MonoBehaviour
     public System.Random RNG { get; private set; }  //One RNG for the whole program
     public int currentSeed { get; private set; }
     public static UnityEvent endPlayerTurn = new UnityEvent();
+    public static UnityEvent endEnemyTurn = new UnityEvent();
+    public static UnityEvent startPlayerTurn = new UnityEvent();
+    public static UnityEvent startEnemyTurn = new UnityEvent();
     public static UnityEvent<int> energyChanged = new UnityEvent<int>();
     public gameState currentState;
     public TurnEndRoutine routine;
@@ -32,13 +35,13 @@ public class RoundManager : MonoBehaviour
         currentEnergy = maxEnergy;
         currentState = gameState.interim;
 
-        Enemy.endEnemyTurn.AddListener(EndEnemyTurn);
-        TurnEndRoutine.StartPlayerTurn.AddListener(startPlayerTurn);
+        endEnemyTurn.AddListener(EndEnemyTurn);
+        startPlayerTurn.AddListener(StartPlayerTurn);
     }
 
     void OnDestroy() {
-        Enemy.endEnemyTurn.RemoveListener(EndEnemyTurn);
-        TurnEndRoutine.StartPlayerTurn.RemoveListener(startPlayerTurn);
+        endEnemyTurn.RemoveListener(EndEnemyTurn);
+        startPlayerTurn.RemoveListener(StartPlayerTurn);
     }
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -60,7 +63,7 @@ public class RoundManager : MonoBehaviour
         routine.StartRound();
     }
 
-    private void startPlayerTurn()
+    private void StartPlayerTurn()
     {
         currentState = gameState.playerTurn;
         currentEnergy = maxEnergy;
@@ -71,7 +74,8 @@ public class RoundManager : MonoBehaviour
         if (currentState == gameState.playerTurn)
         {
             currentState = gameState.interim;
-            Debug.Log("Player turn ended, starting enemy turn");
+            Debug.Log("Player turn ended, resolving");
+            endPlayerTurn.Invoke();
             routine.EndPlayerTurn();    //start coroutine
         }
         else {

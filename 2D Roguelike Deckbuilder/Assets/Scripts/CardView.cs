@@ -48,7 +48,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             Debug.Log("Cannot play card, not enough energy!");
         }
-        else
+        else //change to if-else currentState = playerTurn
         {
             RoundManager.instance.decrementEnergy(cardData.cost);    //replaced old line that directly modified energy field
 
