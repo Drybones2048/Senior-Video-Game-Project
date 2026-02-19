@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using UnityEngine.Events;
 
 public class HandView : MonoBehaviour
 {
@@ -23,7 +24,8 @@ public class HandView : MonoBehaviour
     public float delayBetweenCards = 0.1f;
     public Ease drawEaseType = Ease.OutQuad;
     
-    public AudioClip cardDrawSound; // Optional: drag your sound effect here
+    public AudioClip cardDrawSound; // Field for draw sound effect
+    //public AudioClip cardDiscardSound; // Field for discard sound effect
 
     private List<CardView> cardViews = new();
     private bool isDrawing = false;
@@ -45,6 +47,11 @@ public class HandView : MonoBehaviour
         RefreshHandInstantly(cards);
     }
 
+    public void ResetDrawFlag() // Method to have draw animations every time the player draws cards
+    {
+        hasDrawnInitialHand = false;
+    }
+
     // Public method called directly from Deck.drawHand()
     public void DisplayHand(List<Card> cards)
     {
@@ -55,9 +62,8 @@ public class HandView : MonoBehaviour
             hasDrawnInitialHand = true;
             StartCoroutine(DrawCardsSequentially(cards));
         }
-        else
+        else // Refresh hand instantly if this is not the first draw this turn
         {
-            // If called again (shouldn't happen in normal flow, but just in case)
             RefreshHandInstantly(cards);
         }
     }
@@ -94,8 +100,7 @@ public class HandView : MonoBehaviour
 
             cardViews.Add(view);
 
-            // Play sound effect (optional)
-            if (cardDrawSound != null)
+            if (cardDrawSound != null) // Play card draw sound effect
             {
                 AudioSource.PlayClipAtPoint(cardDrawSound, Camera.main.transform.position, 0.5f);
             }
@@ -107,18 +112,42 @@ public class HandView : MonoBehaviour
     }
 
     // Instant refresh - used when card is played and hand needs to re-fan
-    void RefreshHandInstantly(List<Card> cards)
+   void RefreshHandInstantly(List<Card> cards)
     {
-        // Kill any lingering DOTween animations on cards before destroying them
-        foreach (CardView view in cardViews)
+        // Kill any lingering DOTween animations on ALL children of handArea
+        // Store children in array first to avoid modification during iteration
+        Transform[] children = new Transform[handArea.childCount];
+        for (int i = 0; i < handArea.childCount; i++)
         {
-            if (view != null)
+            children[i] = handArea.GetChild(i);
+        }
+        
+        foreach (Transform child in children)
+        {
+            if (child != null)
             {
-                view.transform.DOKill();
+                child.DOKill(true); // Kill with complete = true
             }
         }
         
         ClearHand();
+        
+        // ALSO destroy any remaining children that might not be tracked
+        // (like cards currently animating to discard)
+        // Refresh the children array since some may have been destroyed
+        children = new Transform[handArea.childCount];
+        for (int i = 0; i < handArea.childCount; i++)
+        {
+            children[i] = handArea.GetChild(i);
+        }
+        
+        foreach (Transform child in children)
+        {
+            if (child != null && child.gameObject != null)
+            {
+                Destroy(child.gameObject);
+            }
+        }
 
         List<CardPositionData> finalPositions = CalculateCardPositions(cards.Count);
 
@@ -127,13 +156,12 @@ public class HandView : MonoBehaviour
             CardView view = CreateCard(cards[i]);
             cardViews.Add(view);
 
-            // Set position instantly (no animation)
+            // Set position instantly
             view.transform.localPosition = finalPositions[i].position;
             view.transform.localRotation = finalPositions[i].rotation;
             view.transform.localScale = Vector3.one;
             
-            // Ensure no tweens are accidentally playing on the new card
-            view.transform.DOKill();
+            view.transform.DOKill(); // Ensure no tweens are accidentally playing on the new card
         }
     }
 
@@ -163,47 +191,43 @@ public class HandView : MonoBehaviour
 
     public void AnimateCardToDiscard(CardView card, System.Action onComplete = null)
     {
-        // Remove from our tracking list immediately (so hand doesn't try to manage it)
-        if (cardViews.Contains(card))
+        if (cardViews.Contains(card)) // Remove from our tracking list immediately (so hand doesn't try to manage it)
         {
             cardViews.Remove(card);
         }
 
-        // Kill any existing tweens on this card
-        card.transform.DOKill();
+        card.transform.DOKill(); // Kill any existing tweens on this card
 
         // Determine discard pile position
         Vector3 targetPosition;
         if (discardPilePosition != null)
         {
-            // If both are in the same Canvas, use local position
-            if (card.transform.parent == discardPilePosition.parent)
+            if (card.transform.parent == discardPilePosition.parent) // If both are in the same Canvas, use local position
             {
                 targetPosition = discardPilePosition.localPosition + discardPositionOffset;
             }
-            else
+            else // Use world position
             {
-                // Use world position
                 targetPosition = discardPilePosition.position + discardPositionOffset;
             }
         }
-        else
+        else // Default to bottom-right if no discard pile set
         {
-            // Default to bottom-right if no discard pile set
             targetPosition = card.transform.localPosition + new Vector3(500, -300, 0);
         }
 
-        // Create animation sequence with longer duration for visibility
-        Sequence discardSequence = DOTween.Sequence();
+        /*if (cardDiscardSound != null) // Card discard noise put here (if wanted to be implemented)
+        {
+            AudioSource.PlayClipAtPoint(cardDiscardSound, Camera.main.transform.position, 0.5f);
+        }*/
 
-        // Move to discard pile - using Linear easing for straight path
-        discardSequence.Join(card.transform.DOLocalMove(targetPosition, 0.3f).SetEase(Ease.Linear));
+        Sequence discardSequence = DOTween.Sequence(); // Create animation sequence with longer duration for visibility
+
+        discardSequence.Join(card.transform.DOLocalMove(targetPosition, 0.3f).SetEase(Ease.Linear)); // Move to discard pile - using Linear easing for straight path
         
-        // Shrink to zero
-        discardSequence.Join(card.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InQuad));
+        discardSequence.Join(card.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InQuad)); // Shrink to zero behind discard pile
 
-        // Rotate while discarding for extra flair
-        discardSequence.Join(card.transform.DOLocalRotate(new Vector3(0, 0, 360), 0.3f, RotateMode.FastBeyond360).SetEase(Ease.Linear));
+        discardSequence.Join(card.transform.DOLocalRotate(new Vector3(0, 0, 360), 0.3f, RotateMode.FastBeyond360).SetEase(Ease.Linear)); // Rotate while discarding for extra flair
 
         // When animation completes, destroy the card and call callback
         discardSequence.OnComplete(() =>
@@ -211,6 +235,42 @@ public class HandView : MonoBehaviour
             Destroy(card.gameObject);
             onComplete?.Invoke();
         });
+    }
+     public void AnimateAllCardsToDiscard(System.Action onComplete = null)
+    {
+        List<CardView> cardsToDiscard = new List<CardView>(cardViews); // Create a copy of the list to iterate over (prevents modification during iteration)
+
+        cardViews.Clear(); // Clears all CardViews !!(do not replace with ClearHand();)!!
+        
+        if (cardsToDiscard.Count == 0) // No cards to discard, call callback immediately
+        {
+            onComplete?.Invoke();
+            return;
+        }
+
+        int remainingCards = cardsToDiscard.Count;
+
+        // Animate each card with a slight delay between them
+        for (int i = 0; i < cardsToDiscard.Count; i++)
+        {
+            CardView card = cardsToDiscard[i];
+            float delay = i * 0.1f; // Stagger the animations
+
+            // Start animation after delay
+            DOVirtual.DelayedCall(delay, () =>
+            {
+                AnimateCardToDiscard(card, () =>
+                {
+                    remainingCards--;
+                    
+                    // When all cards are done, call the completion callback
+                    if (remainingCards <= 0)
+                    {
+                        onComplete?.Invoke();
+                    }
+                });
+            });
+        }
     }
 
     CardView CreateCard(Card card)
@@ -298,7 +358,10 @@ public class HandView : MonoBehaviour
     {
         foreach (CardView view in cardViews)
         {
-            Destroy(view.gameObject);
+            if (view != null && view.gameObject != null) // Check if the card still exists before trying to destroy it to avoid errors
+            {
+                Destroy(view.gameObject);
+            }
         }
 
         cardViews.Clear();

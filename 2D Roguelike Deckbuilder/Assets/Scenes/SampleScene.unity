@@ -270,6 +270,7 @@ MonoBehaviour:
   delayBetweenCards: 0.1
   drawEaseType: 6
   cardDrawSound: {fileID: 8300000, guid: f082c5d6d6e623b4d858aebb60082624, type: 3}
+  cardDiscardSound: {fileID: 0}
 --- !u!1 &100690970
 GameObject:
   m_ObjectHideFlags: 0
@@ -1829,6 +1830,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Deck
   handView: {fileID: 990285235}
+  deckShuffleSound: {fileID: 8300000, guid: c42b4591708e05c46a8e6437e4c940de, type: 3}
 --- !u!114 &446406492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1855,10 +1857,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d99c99b191eac84e9d3910011760d00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TurnEndRoutine
-  roundStartDelay: 3
-  enemyTurnStartDelay: 2
-  playerTurnStartDelay: 2
-  playerTurnMessageDisplayLength: 2
+  roundStartDelay: 1
+  enemyTurnStartDelay: 1
+  playerTurnStartDelay: 1
+  playerTurnMessageDisplayLength: 1
 --- !u!1 &458414615
 GameObject:
   m_ObjectHideFlags: 0
@@ -2675,6 +2677,7 @@ MonoBehaviour:
   delayBetweenCards: 0.075
   drawEaseType: 5
   cardDrawSound: {fileID: 8300000, guid: f082c5d6d6e623b4d858aebb60082624, type: 3}
+  cardDiscardSound: {fileID: 0}
 --- !u!1 &1180568803
 GameObject:
   m_ObjectHideFlags: 0
