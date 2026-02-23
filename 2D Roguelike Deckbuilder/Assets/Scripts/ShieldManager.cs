@@ -20,6 +20,7 @@ public class ShieldManager : MonoBehaviour
     {
         DefendCard.shieldGained += Show;
         Player.shieldBroken += Hide;
+        Player.shieldDamaged += DamagedShield;
     }
 
     void Show(DefendCard card){ // Shows shield bar
@@ -35,5 +36,12 @@ public class ShieldManager : MonoBehaviour
         currentShield = 0;
 
         cg.alpha = 0;
+    }
+
+    void DamagedShield(int damage) // Gets called when shield is damaged but not fully destroyed
+    {
+        currentShield -= damage;
+        
+        defendText.text = currentShield.ToString();
     }
 }

@@ -9,9 +9,13 @@ public class Player : MonoBehaviour
     public PlayerHealth healthBar;
     public int currentHealth;
 
+    public bool weakened; // status effect to indicate the player will do 20% (balance pending) less damage on each attack card's listed value
+
     public int shieldAmount;
     
     public static event Action shieldBroken;
+
+    public static event Action<int> shieldDamaged;
 
     //private variables
     bool myTurn;
@@ -26,18 +30,34 @@ public class Player : MonoBehaviour
     void Update(){
         
     }
+    public void GainShield(int shield)
+    {
+        shieldAmount += shield;
+    }
 
     public void TakeDamage(int damage){ // function that will be used strictly to keep track of damage
 
-        if(shieldAmount > 0 && damage > shieldAmount) // Player has shield but not enough to block all the damage
+        if(shieldAmount > 0 && damage >= shieldAmount) // Player has shield but not enough to block all the damage
         {
-            currentHealth = currentHealth - (damage - shieldAmount);
+            currentHealth -= (damage - shieldAmount);
+
+            shieldAmount = 0;
 
             shieldBroken?.Invoke();
 
         } else if (shieldAmount > 0 && shieldAmount > damage) // Shield is able to block all of the damage
         {
             shieldAmount -= damage;
+
+            if(shieldAmount == 0) // If shield is able to block all damage but it uses all shield, destroy shield
+            {
+                shieldBroken?.Invoke();
+            }
+            else // else just decrement shield val
+            {
+                shieldDamaged?.Invoke(damage);
+            }
+            
         }
         else // Player takes regular damage because they played no block
         {
@@ -45,10 +65,5 @@ public class Player : MonoBehaviour
         }
 
         healthBar.setHealth(currentHealth);
-    }
-
-    public void GainShield(int shield)
-    {
-        shieldAmount += shield;
     }
 } 

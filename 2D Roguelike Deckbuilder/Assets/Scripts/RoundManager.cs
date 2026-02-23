@@ -23,6 +23,8 @@ public class RoundManager : MonoBehaviour
     public gameState currentState;
     public TurnEndRoutine routine;
 
+    public static int roundNumber;
+
     [SerializeField] private int defaultMaxEnergy = 3; //reference point, would only ever be different from max energy if an effect altered your starting energy amount
     public int maxEnergy { get; private set; }
     public int currentEnergy { get; private set; }
@@ -54,12 +56,15 @@ public class RoundManager : MonoBehaviour
     void startNewRun(int? seed = null) {
         //TODO: Make sure through play-testing that it's not possible to get some super unlucky seed draws
         //i.e. make sure you can't get seeds that are so unfavorable that it makes the run unfairly difficult
+        roundNumber = 0;
         currentSeed = seed ?? Environment.TickCount;
         RNG = new System.Random(currentSeed);
         Debug.Log("Run Seed: " + currentSeed);
     }
 
-    void StartNewRound() {
+    void StartNewRound() { 
+        roundNumber++; 
+
         routine.StartRound();
     }
 
@@ -86,6 +91,8 @@ public class RoundManager : MonoBehaviour
     private void EndEnemyTurn() {
         currentState = gameState.interim;
         routine.EndEnemyTurn(); //start coroutine
+        
+        StartNewRound(); // A new round begins after the enemy round
     }
 
     public void decrementEnergy(int amount) {

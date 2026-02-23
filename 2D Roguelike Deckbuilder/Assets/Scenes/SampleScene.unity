@@ -270,7 +270,6 @@ MonoBehaviour:
   delayBetweenCards: 0.1
   drawEaseType: 6
   cardDrawSound: {fileID: 8300000, guid: f082c5d6d6e623b4d858aebb60082624, type: 3}
-  cardDiscardSound: {fileID: 0}
 --- !u!1 &100690970
 GameObject:
   m_ObjectHideFlags: 0
@@ -1042,15 +1041,15 @@ RectTransform:
   m_GameObject: {fileID: 240754519}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 531036405}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2.57, y: 126}
-  m_SizeDelta: {x: 706.51, y: 152}
+  m_AnchoredPosition: {x: -0.0010834, y: 199}
+  m_SizeDelta: {x: 665.32, y: 158.68}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &240754521
 MonoBehaviour:
@@ -1099,8 +1098,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 100
-  m_fontSizeBase: 100
+  m_fontSize: 109.9
+  m_fontSizeBase: 109.9
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1265,7 +1264,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2.57, y: 126}
+  m_AnchoredPosition: {x: 2.57, y: 66.9}
   m_SizeDelta: {x: 706.51, y: 152}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &284374576
@@ -1861,6 +1860,7 @@ MonoBehaviour:
   enemyTurnStartDelay: 1
   playerTurnStartDelay: 1
   playerTurnMessageDisplayLength: 1
+  enemyTurnMessageDisplayLength: 1
 --- !u!1 &458414615
 GameObject:
   m_ObjectHideFlags: 0
@@ -2677,7 +2677,6 @@ MonoBehaviour:
   delayBetweenCards: 0.075
   drawEaseType: 5
   cardDrawSound: {fileID: 8300000, guid: f082c5d6d6e623b4d858aebb60082624, type: 3}
-  cardDiscardSound: {fileID: 0}
 --- !u!1 &1180568803
 GameObject:
   m_ObjectHideFlags: 0
@@ -3161,6 +3160,7 @@ MonoBehaviour:
   roundStartText: {fileID: 284374576}
   playerTurnText: {fileID: 240754521}
   enemyTurnText: {fileID: 2019319306}
+  round: {fileID: 446406489}
 --- !u!1 &1415832189
 GameObject:
   m_ObjectHideFlags: 0
@@ -4195,6 +4195,7 @@ MonoBehaviour:
   maxHealth: 100
   healthBar: {fileID: 585470566}
   currentHealth: 0
+  weakened: 0
   shieldAmount: 0
 --- !u!1 &2019319304
 GameObject:
