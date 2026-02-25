@@ -34,18 +34,29 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
     // The cards that the player has discarded
     public static List<Card> discard = new List<Card>();
 
+    void Awake() {
+        //drawHand() is no longer called in start, instead it is called by the battleStart event which is invoked in TurnEndRoutine
+        RoundManager.battleStart.AddListener(drawHand);
+        /*Listen for when player starts their turn, then draw back up to 5 cards, should happen before game registers user input
+         i.e. before the startPlayerTurn event is invoked*/
+        RoundManager.dealHand.AddListener(startNewTurn);
+        RoundManager.endPlayerTurn.AddListener(discardAll); // Listen for when the player clicks the end turn button, then discard all cards
+    }
+
     // The entire deck the player has at the start of the game
     void Start()
     {
         // At the start of combat, add all cards in the deck to the draw pile
         drawPile.AddRange(deck);
-
-        drawHand();
-
-        RoundManager.endPlayerTurn.AddListener(discardAll); // Listen for when the player clicks the end turn button, then discard all cards
-        RoundManager.startPlayerTurn.AddListener(startNewTurn); // Listen for when player starts their turn, then draw back up to 5 cards
     }
 
+    void OnDestroy() {
+        RoundManager.battleStart.RemoveListener(drawHand);
+        RoundManager.dealHand.RemoveListener(startNewTurn);
+        RoundManager.endPlayerTurn.RemoveListener(discardAll);
+    }
+
+    //drawHand() is no longer called in start, instead it is called by the battleStart event which is invoked in TurnEndRoutine
     public void drawHand()
     {
         int cardsToDraw = 5;
@@ -81,7 +92,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         }
 
         handView.DisplayHand(currentHand);
-    }
+    } 
 
     // NEW: Method to start a new turn - resets animation flag and draws new hand
     public void startNewTurn()
@@ -130,6 +141,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
 
         if(didReshuffle) // Implement a pause between reshuffle and draw sound effects
         {
+            Debug.Log("Reshuffle pause");
             yield return new WaitForSeconds(1f);
         }
         

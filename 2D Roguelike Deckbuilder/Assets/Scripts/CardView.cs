@@ -44,33 +44,40 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if(RoundManager.instance.currentEnergy - cardData.cost < 0)
+        //only allows you to select cards if it's the player's turn
+        if (RoundManager.instance.currentState == gameState.playerTurn)
         {
-            Debug.Log("Cannot play card, not enough energy!");
-        }
-        else //change to if-else currentState = playerTurn
-        {
-            RoundManager.instance.decrementEnergy(cardData.cost);    //replaced old line that directly modified energy field
-
-            cardData.Play(); // Plays the card's effect
-
-            Deck.discardAdd(cardData); //Add to discard's list
-
-            HandView handView = FindFirstObjectByType<HandView>();
-
-            if(handView != null)
+            if (RoundManager.instance.currentEnergy - cardData.cost < 0)
             {
-                handView.AnimateCardToDiscard(this, () =>
+                Debug.Log("Cannot play card, not enough energy!");
+            }
+            else //change to if-else currentState = playerTurn
+            {
+                RoundManager.instance.decrementEnergy(cardData.cost);    //replaced old line that directly modified energy field
+
+                cardData.Play(); // Plays the card's effect
+
+                Deck.discardAdd(cardData); //Add to discard's list
+
+                HandView handView = FindFirstObjectByType<HandView>();
+
+                if (handView != null)
                 {
-                    // After discard animation completes, refresh the hand
+                    handView.AnimateCardToDiscard(this, () =>
+                    {
+                        // After discard animation completes, refresh the hand
+                        cardClicked?.Invoke(Deck.currentHand);
+                    });
+                }
+                else
+                {
+                    // Fallback: if no HandView found, just refresh immediately
                     cardClicked?.Invoke(Deck.currentHand);
-                });
+                }
             }
-            else
-            {
-                // Fallback: if no HandView found, just refresh immediately
-                cardClicked?.Invoke(Deck.currentHand);
-            }
+        }
+        else {
+            Debug.Log("Can't play cards. It's not the player's turn.");
         }
     }
 

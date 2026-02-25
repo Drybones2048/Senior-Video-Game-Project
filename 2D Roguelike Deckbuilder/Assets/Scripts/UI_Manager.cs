@@ -1,17 +1,19 @@
 using UnityEngine;
 using TMPro;
 
-public class DisplayTurnState : MonoBehaviour
+public class UI_Manager : MonoBehaviour
 {
+    public static UI_Manager instance;    //singleton
+
     [SerializeField] private TMP_Text battleStartText;
     [SerializeField] private TMP_Text roundStartText;
     [SerializeField] private TMP_Text playerTurnText;
     [SerializeField] private TMP_Text enemyTurnText;
 
-    [SerializeField] private RoundManager round;
-
     void Awake()
     {
+        instance = this;
+
         TurnEndRoutine.PrintRoundStartMessage.AddListener(PrintRoundStartMessage);
         TurnEndRoutine.PrintEnemyTurnMessage.AddListener(PrintEnemyTurnMessage);
         TurnEndRoutine.RemovePlayerTurnMessage.AddListener(RemovePlayerTurnMessage);
@@ -20,7 +22,8 @@ public class DisplayTurnState : MonoBehaviour
         TurnEndRoutine.RemoveBattleStartMessage.AddListener(RemoveBattleStartMessage);
     }
 
-    void OnDestroy() {
+    void OnDestroy()
+    {
         TurnEndRoutine.PrintRoundStartMessage.RemoveListener(PrintRoundStartMessage);
         TurnEndRoutine.PrintEnemyTurnMessage.RemoveListener(PrintEnemyTurnMessage);
         TurnEndRoutine.PrintEnemyTurnMessage.RemoveListener(RemovePlayerTurnMessage);
@@ -29,32 +32,36 @@ public class DisplayTurnState : MonoBehaviour
         TurnEndRoutine.RemoveBattleStartMessage.RemoveListener(RemoveBattleStartMessage);
     }
 
-    void PrintBattleStartMessage() {
+    public void PrintBattleStartMessage()
+    {
         battleStartText.gameObject.SetActive(true);
     }
 
-    void RemoveBattleStartMessage()
+    public void RemoveBattleStartMessage()
     {
         battleStartText.gameObject.SetActive(false);
     }
 
-    void PrintRoundStartMessage() {
+    public void PrintRoundStartMessage()
+    {
         roundStartText.text = $"Round " + RoundManager.instance.roundNumber;
         roundStartText.gameObject.SetActive(true);
         playerTurnText.gameObject.SetActive(true);
     }
 
-    void RemovePlayerTurnMessage() {
+    public void RemovePlayerTurnMessage()
+    {
         playerTurnText.gameObject.SetActive(false);
         roundStartText.gameObject.SetActive(false);
     }
 
-    void PrintEnemyTurnMessage() {
+    public void PrintEnemyTurnMessage()
+    {
         enemyTurnText.gameObject.SetActive(true);
     }
 
-    void RemoveEnemyTurnMessage() {
+    public void RemoveEnemyTurnMessage()
+    {
         enemyTurnText.gameObject.SetActive(false);
     }
-
 }
