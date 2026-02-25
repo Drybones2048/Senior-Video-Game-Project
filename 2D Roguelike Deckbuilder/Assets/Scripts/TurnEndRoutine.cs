@@ -46,20 +46,6 @@ public class TurnEndRoutine : MonoBehaviour
         RoundManager.startPlayerTurn.Invoke();  //now the game registers user input
     }
 
-    /*private IEnumerator ResolveRoundStart() {
-        PrintRoundStartMessage.Invoke();
-        yield return new WaitForSeconds(roundStartDelay);
-        RoundManager.startPlayerTurn.Invoke();
-        //RoundManager.instance.currentState = gameState.playerTurn;
-        at this point we've given the user freedom to select cards again, so it could cause a bug if they start a new coroutine by clicking the endTurn button
-          before "yield return new WaitForSeconds playerTurnMessageDisplayLength" has finished. It could cause "RemovePlayerTurnMessage.Invoke();" to never run
-        yield return new WaitForSeconds(playerTurnMessageDisplayLength);
-        RemovePlayerTurnMessage.Invoke();
-
-
-        flow = null;
-    }*/
-
     private IEnumerator ResolvePlayerTurn() { // Print enemy turn messages and switch to enemy turn
         UI_Manager.instance.PrintEnemyTurnMessage();
         yield return new WaitForSeconds(enemyTurnMessageDisplayLength);
@@ -80,13 +66,4 @@ public class TurnEndRoutine : MonoBehaviour
 
         flow = null; // Added to have the round text print every time with player turn start text
     }
-
-    /*public void StartRound() {
-        //if it's not null, something is probably wrong
-        if (flow != null)
-        {
-            return;
-        }
-        flow = StartCoroutine(ResolveRoundStart());
-    }*/
 }
