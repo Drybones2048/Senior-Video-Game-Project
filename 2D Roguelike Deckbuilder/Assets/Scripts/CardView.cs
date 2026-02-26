@@ -25,12 +25,38 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         nameText.text = card.cardName; // Sets text
         costText.text = card.cost.ToString(); // Sets text
 
-        if(card is DefendCard defend){ // If the card is a defend card, print this text
+        UpdateCardDescription();
+
+        PlayerStatusEffects.OnStatusEffectsChanged += UpdateCardDescription;
+    }
+
+    void OnDestroy()
+    {
+        // Unsubscribe when card is destroyed to prevent memory leaks
+        PlayerStatusEffects.OnStatusEffectsChanged -= UpdateCardDescription;
+    }
+
+    void UpdateCardDescription()
+    {
+        if(cardData is DefendCard defend)
+        { 
             descriptionText.text = $"Gain {defend.defendAmount} Block";
         }
-        else if(card is AttackCard attack)
+        else if(cardData is AttackCard attack)
         {
-            descriptionText.text = $"Deal {attack.attackAmount} Damage";
+            int actualDamage = attack.GetActualDamage();
+            
+            // Check if damage is modified
+            if (attack.IsDamageModified())
+            {
+                // Show modified damage (we'll add red color in a later step)
+                descriptionText.text = $"Deal {actualDamage} Damage";
+            }
+            else
+            {
+                // Show normal damage
+                descriptionText.text = $"Deal {attack.attackAmount} Damage";
+            }
         }
     }
 

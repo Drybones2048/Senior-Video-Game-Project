@@ -83,6 +83,7 @@ public class RoundManager : MonoBehaviour
             currentState = gameState.interim;
             Debug.Log("Player turn ended, resolving");
             endPlayerTurn.Invoke();
+            PlayerStatusEffects.Instance.DecrementStatusEffects(); // Decrement all status effects that the player has on them at the end of a round
             routine.EndPlayerTurn();    //start coroutine
         }
         else {

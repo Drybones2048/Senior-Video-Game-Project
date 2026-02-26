@@ -4,19 +4,22 @@ using UnityEngine.Events;
 
 public class EnemyAttack : MonoBehaviour
 {
-    //public static event Action playerWeakened;
-
     //Uses RNG to determine attack damage
     public void attackPlayer(Player player) {
-        int damage = RoundManager.instance.RNG.Next(10, 51);
-        player.TakeDamage(damage);
-        Debug.Log("Enemy dealt " + damage + " damage to player!");
+        int enemyChoice = RoundManager.instance.RNG.Next(1, 3);
+
+        switch (enemyChoice) // Enemy will either do damage to the player or apply status randomly
+        {
+            case 1:
+                int damage = RoundManager.instance.RNG.Next(10, 51);
+                player.TakeDamage(damage);
+                Debug.Log("Enemy dealt " + damage + " damage to player!");
+                
+                break;
+            case 2:
+                PlayerStatusEffects.Instance.ApplyWeaken(1);
+                
+                break;
+        }
     }
-
-    /*public void weakenPlayer(Player player) // Will be used to decrease player's damage by 20% and shows recuded damage on text of all attack cards
-    {
-        playerWeakened.Invoke();
-
-        player.weakened = true;
-    }*/
 }
