@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public enum CardType { Attack, Defend, Special, Persistent }
-public enum UniqueBehavior { None, PressAndFall, PiercingStrike } //going to add more here once I decide what needs unique behavior
+public enum UniqueBehavior { None, PressAndFall, PiercingStrike, EmpoweringShield, Juggernaut } //going to add more here once I decide what needs unique behavior
 public enum CardClass { All, BlockStance, StatusEffectStance, AttackStance }
 public enum IsStartingCard { Yes, No }    //Is this card in the class's deck at the start of each run?
 
