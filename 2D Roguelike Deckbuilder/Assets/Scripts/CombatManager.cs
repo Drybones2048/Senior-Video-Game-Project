@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CombatManager : MonoBehaviour
 {
     public static CombatManager Instance {get; private set;}
+    public static UnityEvent<CardInstance> shieldGained = new UnityEvent<CardInstance>();
 
     public Enemy currentEnemy;
 
@@ -27,6 +29,7 @@ public class CombatManager : MonoBehaviour
 
         else if (card.type == CardType.Defend) {
             player.GainShield(card.block);
+            shieldGained.Invoke(card);
         }
         
         else {}

@@ -18,13 +18,17 @@ public class ShieldManager : MonoBehaviour
 
     void OnEnable()
     {
-        DefendCard.shieldGained += Show;
+        CombatManager.shieldGained.AddListener(Show);
         Player.shieldBroken += Hide;
         Player.shieldDamaged += DamagedShield;
     }
 
-    void Show(DefendCard card){ // Shows shield bar
-        currentShield += card.defendAmount;
+    void OnDisable() {
+        CombatManager.shieldGained.RemoveListener(Show);
+    }
+
+    void Show(CardInstance card){ // Shows shield bar
+        currentShield += card.block;
         
         defendText.text = currentShield.ToString();
 
