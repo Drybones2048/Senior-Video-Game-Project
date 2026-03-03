@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour
     public Player player;
     public EnemyHealth healthBar;
     [SerializeField] private EnemyAttack attack;
-    [SerializeField] private int maxHealth = 100;
+    [SerializeField] private int maxHealth; // The max health for the enemy will be set in the inspector
     [SerializeField] private int currentHealth; //don't attempt to modify from within inspector, that's only for debugging
     public int CurrentHealth => currentHealth;  //CurrentHealth is publicly readable, currentHealth is private. Also don't try and set it in the inspector
 

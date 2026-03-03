@@ -66,4 +66,10 @@ public class Player : MonoBehaviour
 
         healthBar.setHealth(currentHealth);
     }
+
+    public void TakeDirectDamage(int damage)
+    {
+        currentHealth -= damage;
+        healthBar.setHealth(currentHealth);
+    }
 } 
