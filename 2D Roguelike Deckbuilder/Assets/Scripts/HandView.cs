@@ -42,7 +42,7 @@ public class HandView : MonoBehaviour
     }
 
     // Separate handler for when cards are played
-    void OnCardPlayed(List<Card> cards)
+    void OnCardPlayed(List<CardInstance> cards)
     {
         RefreshHandInstantly(cards);
     }
@@ -53,7 +53,7 @@ public class HandView : MonoBehaviour
     }
 
     // Public method called directly from Deck.drawHand()
-    public void DisplayHand(List<Card> cards)
+    public void DisplayHand(List<CardInstance> cards)
     {
         // Only animate if this is the very first draw
         if (!hasDrawnInitialHand)
@@ -69,7 +69,7 @@ public class HandView : MonoBehaviour
     }
 
     // Animated draw sequence - used only for initial hand
-    IEnumerator DrawCardsSequentially(List<Card> cards)
+    IEnumerator DrawCardsSequentially(List<CardInstance> cards)
     {
         isDrawing = true;
         ClearHand();
@@ -112,7 +112,7 @@ public class HandView : MonoBehaviour
     }
 
     // Instant refresh - used when card is played and hand needs to re-fan
-   void RefreshHandInstantly(List<Card> cards)
+   void RefreshHandInstantly(List<CardInstance> cards)
     {
         // Kill any lingering DOTween animations on ALL children of handArea
         // Store children in array first to avoid modification during iteration
@@ -273,11 +273,11 @@ public class HandView : MonoBehaviour
         }
     }
 
-    CardView CreateCard(Card card)
+    CardView CreateCard(CardInstance card)
     {
         CardView view;
 
-        if (card.cardName == "Attack")
+        if (card.id == "attack")
         {
             view = Instantiate(attackPrefab, handArea);
         }

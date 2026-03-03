@@ -12,11 +12,13 @@ public class CardData : ScriptableObject
     [Header("Card Attributes")]
     public string id;
     public string displayName;
+    public string description;
     public CardType type;
     public int cost;
+    public string sprite;
 
     public int damage;
-    public int shield;
+    public int block;
 
     public List<StatusEffect> statusEffects;
     public UniqueBehavior uniqueBehavior;   //hardcoding behavior for certain cards, logic resolved in another script

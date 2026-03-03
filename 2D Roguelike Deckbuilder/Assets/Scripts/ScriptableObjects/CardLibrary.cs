@@ -32,6 +32,14 @@ public class CardLibrary : ScriptableObject
         }
     }
 
+    public CardInstance CreateInstance(string id, bool upgraded = false)
+    {
+        CardData card = GetCardById(id);
+        if (card == null) return null;
+
+        return new CardInstance(card, upgraded);
+    }
+
     public List<string> GetRandomCard(System.Predicate<CardData> filter, int numCardsRequested)
     {
         var newCardPool = new List<CardData>();

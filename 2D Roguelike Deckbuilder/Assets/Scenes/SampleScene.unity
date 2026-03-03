@@ -1964,6 +1964,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Deck
   handView: {fileID: 990285235}
+  cardLibrary: {fileID: 11400000, guid: 327752160e14de646a0f338b1b5f7c20, type: 2}
   deckShuffleSound: {fileID: 8300000, guid: c42b4591708e05c46a8e6437e4c940de, type: 3}
 --- !u!114 &446406492
 MonoBehaviour:

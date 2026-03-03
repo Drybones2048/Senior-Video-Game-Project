@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.EventSystems;
 using System;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
@@ -11,18 +12,19 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
      public TextMeshProUGUI costText;
      public TextMeshProUGUI descriptionText;
 
-     public Card cardData;
+     public CardInstance cardData;
 
-     public static event Action<Card> HoverEnter; 
+     public static event Action<CardInstance> HoverEnter; 
      public static event Action HoverExit;
 
-     public static event Action<List<Card>> cardClicked;
+     public static event Action<List<CardInstance>> cardClicked;
+     public static UnityEvent<CardInstance> playerCardPlayed = new UnityEvent<CardInstance>();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public void Setup(Card card){
+    public void Setup(CardInstance card){
         cardData = card;
 
-        nameText.text = card.cardName; // Sets text
+        nameText.text = card.name; // Sets text
         costText.text = card.cost.ToString(); // Sets text
 
         UpdateCardDescription();
@@ -38,16 +40,19 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     void UpdateCardDescription()
     {
-        if(cardData is DefendCard defend)
+        if(cardData.id == "defend")
         { 
-            descriptionText.text = $"Gain {defend.defendAmount} Block";
+            descriptionText.text = $"Gain {cardData.block} Block";
         }
-        else if(cardData is AttackCard attack)
+        else if(cardData.id == "attack")
         {
-            int actualDamage = attack.GetActualDamage();
+            //calling GetActualDamage from CombatManager instead of AttackCard
+            int actualDamage = CombatManager.Instance.GetActualDamage(cardData.damage);
+            descriptionText.text = $"Deal {actualDamage} Damage";
+
             
             // Check if damage is modified
-            if (attack.IsDamageModified())
+            if (CombatManager.Instance.IsDamageModified())
             {
                 // Show modified damage (we'll add red color in a later step)
                 descriptionText.text = $"Deal {actualDamage} Damage";
@@ -55,7 +60,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             else
             {
                 // Show normal damage
-                descriptionText.text = $"Deal {attack.attackAmount} Damage";
+                descriptionText.text = $"Deal {cardData.damage} Damage";
             }
         }
     }
@@ -77,11 +82,13 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 Debug.Log("Cannot play card, not enough energy!");
             }
-            else //change to if-else currentState = playerTurn
+            else
             {
                 RoundManager.instance.decrementEnergy(cardData.cost);    //replaced old line that directly modified energy field
 
-                cardData.Play(); // Plays the card's effect
+                //*****UPDATE****** no longer call Play() from the Card class. Instead the cardPlayed event(new) is invoked which the CombatManager will listen for
+                //cardData.Play(); //Old method of playing the card, deprecated
+                playerCardPlayed.Invoke(cardData);
 
                 Deck.discardAdd(cardData); //Add to discard's list
 
@@ -108,7 +115,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
 
     public void Refresh() { // Refreshes any card's data with any updated values
-        nameText.text = cardData.cardName;
+        nameText.text = cardData.name;
         costText.text = cardData.cost.ToString();
         descriptionText.text = cardData.description;
 

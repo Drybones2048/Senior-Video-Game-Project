@@ -9,7 +9,7 @@ public class CardHover : MonoBehaviour
 
     [SerializeField] CardView previewView; // The CardView of the hovered card
     
-    private Card currentlyShowingCard = null; // Track which card is currently being previewed
+    private CardInstance currentlyShowingCard = null; // Track which card is currently being previewed
     
     void Awake() { // Card starts off as hidden
         cg = GetComponent<CanvasGroup>();
@@ -31,11 +31,12 @@ public class CardHover : MonoBehaviour
         PlayerStatusEffects.OnStatusEffectsChanged -= UpdatePreviewIfVisible;
     }
 
-    void Show(Card card){ // Reveals the hidden magnified card
+    void Show(CardInstance card){ // Reveals the hidden magnified card
         currentlyShowingCard = card; // Remember which card we're showing
         
         previewView.cardData = card; 
-        previewView.cardData.sprite = card.sprite;
+        //*****UPDATE: Commented this line out because it seemed redundant and was causing errors
+        //previewView.cardData.sprite = card.sprite;
         
         UpdatePreviewDescription(); // Update description with status effects
         
@@ -61,20 +62,23 @@ public class CardHover : MonoBehaviour
         if (currentlyShowingCard == null) return;
 
         // Update the preview card's text
-        previewView.nameText.text = currentlyShowingCard.cardName;
+        previewView.nameText.text = currentlyShowingCard.name;
         previewView.costText.text = currentlyShowingCard.cost.ToString();
         
         // Handle different card types
-        if (currentlyShowingCard is DefendCard defend)
+        if (currentlyShowingCard.id == "defend")
         {
-            previewView.descriptionText.text = $"Gain {defend.defendAmount} Block";
+            previewView.descriptionText.text = $"Gain {currentlyShowingCard.block} Block";
         }
-        else if (currentlyShowingCard is AttackCard attack)
+        else if (currentlyShowingCard.id == "attack")
         {
-            int actualDamage = attack.GetActualDamage();
+            //calling GetActualDamage from CombatManager instead of AttackCard
+            int actualDamage = CombatManager.Instance.GetActualDamage(currentlyShowingCard.damage);
+            previewView.descriptionText.text = $"Deal {actualDamage} Damage";
+
             
             // Check if damage is modified
-            if (attack.IsDamageModified())
+            if (CombatManager.Instance.IsDamageModified())
             {
                 // Show modified damage
                 previewView.descriptionText.text = $"Deal {actualDamage} Damage";
@@ -82,8 +86,8 @@ public class CardHover : MonoBehaviour
             else
             {
                 // Show normal damage
-                previewView.descriptionText.text = $"Deal {attack.attackAmount} Damage";
-            }
+                previewView.descriptionText.text = $"Deal {currentlyShowingCard.damage} Damage";
+            } 
         }
     }
 }

@@ -9,7 +9,7 @@ public class ArtManager : MonoBehaviour
     }
 
     // Sets the art of the magnified card to the art of the card that is being hovered over with mouse
-    void SetArt(Card card)
+    void SetArt(CardInstance card)
     {
         gameObject.GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>(card.sprite);
     }

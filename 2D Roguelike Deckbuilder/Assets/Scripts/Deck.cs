@@ -8,11 +8,12 @@ using System.Collections;
 public class Deck : MonoBehaviour // Will store a list of all the cards in the deck
 {
     public HandView handView;
+    public CardLibrary cardLibrary;
 
     public AudioClip deckShuffleSound;
 
     // The deck of cards that the player has, starting amounts defined here.
-    List<Card> deck = new List<Card> 
+    /*List<Card> deck = new List<Card> 
         {
             new DefendCard(),
             new DefendCard(),
@@ -24,15 +25,33 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
             new AttackCard(),
             new AttackCard()
         };
-    
+    */
+
+    //******UPDATE: This is now where you define the composition of the deck, you reference the cards by their ID in the quantity you want
+    //I just left the old deck commented above so you could see it in comparison 
+    List<string> deckIDs = new List<string> {
+        "defend",
+        "defend",
+        "defend",
+        "defend",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack"
+    };
+
+    //*****UPDATE: This is the deck containing all card data that you'll pass by reference to other functions
+    List<CardInstance> deck = new List<CardInstance>();
+
     // The pool of cards that the player can draw each turn
-    public static List<Card> drawPile = new List<Card>();
+    public static List<CardInstance> drawPile = new List<CardInstance>();
 
     // The current hand that the player has 
-    public static List<Card> currentHand = new List<Card>();
+    public static List<CardInstance> currentHand = new List<CardInstance>();
 
     // The cards that the player has discarded
-    public static List<Card> discard = new List<Card>();
+    public static List<CardInstance> discard = new List<CardInstance>();
 
     void Awake() {
         //drawHand() is no longer called in start, instead it is called by the battleStart event which is invoked in TurnEndRoutine
@@ -46,6 +65,9 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
     // The entire deck the player has at the start of the game
     void Start()
     {
+        //****UPDATE**** deck is now built here
+        deck = BuildRuntimeDeck(deckIDs);
+
         // At the start of combat, add all cards in the deck to the draw pile
         drawPile.AddRange(deck);
     }
@@ -54,6 +76,21 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         RoundManager.battleStart.RemoveListener(drawHand);
         RoundManager.dealHand.RemoveListener(startNewTurn);
         RoundManager.endPlayerTurn.RemoveListener(discardAll);
+    }
+
+    //****UPDATE**** new helper for building the deck
+    public List<CardInstance> BuildRuntimeDeck(List<string> deckIDs)
+    {
+        var runtimeDeck = new List<CardInstance>(deckIDs.Count);
+
+        foreach (string id in deckIDs)
+        {
+            var instance = cardLibrary.CreateInstance(id);
+            if (instance != null)
+                runtimeDeck.Add(instance);
+        }
+
+        return runtimeDeck;
     }
 
     //drawHand() is no longer called in start, instead it is called by the battleStart event which is invoked in TurnEndRoutine
@@ -82,7 +119,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
             }
             
             // Draw a card
-            Card cardPick = randomDraw(drawPile);
+            CardInstance cardPick = randomDraw(drawPile);
             
             if(cardPick != null)
             {
@@ -130,7 +167,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
             }
             
             // Draw a card
-            Card cardPick = randomDraw(drawPile);
+            CardInstance cardPick = randomDraw(drawPile);
             
             if(cardPick != null)
             {
@@ -149,20 +186,20 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         handView.DisplayHand(currentHand); // Show cards with animation (plays draw sounds)
     }
 
-    T randomDraw<T>(List<T> list) // method to draw cards randomly
+    CardInstance randomDraw(List<CardInstance> list)
     {
-        if(list == null || list.Count == 0)
-        {
-            return default(T);
+        if (list == null || list.Count == 0)
+        { 
+            return null; 
         }
 
-        int randomIndex = Random.Range(0, list.Count);
+        int randomIndex = RoundManager.instance.RNG.Next(0, list.Count);
 
         return list[randomIndex];
     }
 
     // Adds a card to the discard pile
-    public static void discardAdd(Card card)
+    public static void discardAdd(CardInstance card)
     {
         currentHand.Remove(card);
 
@@ -171,9 +208,9 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
 
     public void discardAll() // Method to discard all cards in hand when the player clicks the end round button
     {
-        List<Card> cardsToDiscard = new List<Card>(currentHand);
+        List<CardInstance> cardsToDiscard = new List<CardInstance>(currentHand);
         
-        foreach(Card card in cardsToDiscard)
+        foreach(CardInstance card in cardsToDiscard)
         {
             discardAdd(card);
         }

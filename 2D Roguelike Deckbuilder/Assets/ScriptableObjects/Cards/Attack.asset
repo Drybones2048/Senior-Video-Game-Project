@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   id: attack
   displayName: Attack
+  description: 
   type: 0
   cost: 1
+  sprite: Base Attack
   damage: 5
-  shield: 0
+  block: 0
   statusEffects: []
   uniqueBehavior: 0
   cardClass: 0

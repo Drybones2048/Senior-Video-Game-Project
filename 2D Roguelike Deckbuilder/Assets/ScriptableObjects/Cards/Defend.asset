@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   id: defend
   displayName: Defend
+  description: 
   type: 1
   cost: 1
+  sprite: Basic Defense
   damage: 0
-  shield: 5
+  block: 5
   statusEffects: []
   uniqueBehavior: 0
   cardClass: 0
