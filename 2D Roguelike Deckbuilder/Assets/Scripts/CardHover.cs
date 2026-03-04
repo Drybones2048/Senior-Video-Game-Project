@@ -64,7 +64,7 @@ public class CardHover : MonoBehaviour
         // Update the preview card's text
         previewView.nameText.text = currentlyShowingCard.name;
         previewView.costText.text = currentlyShowingCard.cost.ToString();
-        
+
         // Handle different card types
         if (currentlyShowingCard.id == "defend")
         {
@@ -76,7 +76,7 @@ public class CardHover : MonoBehaviour
             int actualDamage = CombatManager.Instance.GetActualDamage(currentlyShowingCard.damage);
             previewView.descriptionText.text = $"Deal {actualDamage} Damage";
 
-            
+
             // Check if damage is modified
             if (CombatManager.Instance.IsDamageModified())
             {
@@ -87,7 +87,12 @@ public class CardHover : MonoBehaviour
             {
                 // Show normal damage
                 previewView.descriptionText.text = $"Deal {currentlyShowingCard.damage} Damage";
-            } 
+            }
+        }
+        else {
+            /* ***UPDATE*** this means one of the non-generic attack/defend cards were drawn. Leave description blank for now. We'll have to fix the card sprite to 
+            accomadate adding our own description */
+            previewView.descriptionText.text = "";
         }
     }
 }

@@ -30,6 +30,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
     //******UPDATE: This is now where you define the composition of the deck, you reference the cards by their ID in the quantity you want
     //I just left the old deck commented above so you could see it in comparison 
     List<string> deckIDs = new List<string> {
+        "solar_wrath",
         "defend",
         "defend",
         "defend",

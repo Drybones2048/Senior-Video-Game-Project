@@ -40,17 +40,17 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     void UpdateCardDescription()
     {
-        if(cardData.id == "defend")
-        { 
+        if (cardData.id == "defend")
+        {
             descriptionText.text = $"Gain {cardData.block} Block";
         }
-        else if(cardData.id == "attack")
+        else if (cardData.id == "attack")
         {
             //calling GetActualDamage from CombatManager instead of AttackCard
             int actualDamage = CombatManager.Instance.GetActualDamage(cardData.damage);
             descriptionText.text = $"Deal {actualDamage} Damage";
 
-            
+
             // Check if damage is modified
             if (CombatManager.Instance.IsDamageModified())
             {
@@ -62,6 +62,11 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 // Show normal damage
                 descriptionText.text = $"Deal {cardData.damage} Damage";
             }
+        }
+        else {
+            /* ***UPDATE*** this means one of the non-generic attack/defend cards were drawn. Leave description blank for now. We'll have to fix the card sprite to 
+            accomadate adding our own description */
+            descriptionText.text = "";
         }
     }
 
