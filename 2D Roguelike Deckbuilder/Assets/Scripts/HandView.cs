@@ -8,8 +8,9 @@ using UnityEngine.Events;
 
 public class HandView : MonoBehaviour
 {
-    public CardView attackPrefab;
-    public CardView defendPrefab;
+    //public CardView attackPrefab;
+    //public CardView defendPrefab;
+    public CardView cardPrefab;
 
     public Transform handArea;
     public Transform drawPilePosition;
@@ -275,16 +276,7 @@ public class HandView : MonoBehaviour
 
     CardView CreateCard(CardInstance card)
     {
-        CardView view;
-
-        if (card.id == "attack")
-        {
-            view = Instantiate(attackPrefab, handArea);
-        }
-        else
-        {
-            view = Instantiate(defendPrefab, handArea);
-        }
+        CardView view = Instantiate(cardPrefab, handArea);
 
         view.Setup(card);
         return view;

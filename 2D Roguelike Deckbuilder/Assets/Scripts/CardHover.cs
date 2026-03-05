@@ -92,7 +92,12 @@ public class CardHover : MonoBehaviour
         else {
             /* ***UPDATE*** this means one of the non-generic attack/defend cards were drawn. Leave description blank for now. We'll have to fix the card sprite to 
             accomadate adding our own description */
-            previewView.descriptionText.text = "";
+
+            // Font and Spacing values for Solar Wrath for card hover
+            previewView.nameText.fontSize = 25;
+            previewView.costText.transform.localPosition -= new Vector3(2f, 0f);
+            previewView.descriptionText.fontSize = 23; 
+            previewView.descriptionText.text = $"Deal {currentlyShowingCard.damage} damage";
         }
     }
 }

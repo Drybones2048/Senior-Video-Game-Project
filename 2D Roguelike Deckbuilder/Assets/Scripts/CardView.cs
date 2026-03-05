@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using System;
 using System.Collections.Generic;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
@@ -11,6 +12,8 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
      public TextMeshProUGUI nameText;
      public TextMeshProUGUI costText;
      public TextMeshProUGUI descriptionText;
+
+     public Image cardArtImage;
 
      public CardInstance cardData;
 
@@ -26,6 +29,11 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         nameText.text = card.name; // Sets text
         costText.text = card.cost.ToString(); // Sets text
+
+        if (cardArtImage != null && !string.IsNullOrEmpty(card.sprite)) // Loads the card's sprite
+        {
+            cardArtImage.sprite = Resources.Load<Sprite>(card.sprite);
+        }
 
         UpdateCardDescription();
 
@@ -66,7 +74,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         else {
             /* ***UPDATE*** this means one of the non-generic attack/defend cards were drawn. Leave description blank for now. We'll have to fix the card sprite to 
             accomadate adding our own description */
-            descriptionText.text = "";
+            descriptionText.text = $"Deal {cardData.damage} damage"; // Did this for solar wrath testing
         }
     }
 
