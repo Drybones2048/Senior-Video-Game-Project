@@ -79,11 +79,17 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
 
     public void OnPointerEnter(PointerEventData eventData){ // Event that when pointer enters a card
-        HoverEnter?.Invoke(cardData);
+        if(RoundManager.instance.currentState == gameState.playerTurn)
+        {
+            HoverEnter?.Invoke(cardData);
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData){ // Event for when pointer leaves card
-        HoverExit?.Invoke();
+        if(RoundManager.instance.currentState == gameState.playerTurn)
+        {
+            HoverExit?.Invoke();
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)

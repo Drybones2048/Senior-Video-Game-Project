@@ -12,10 +12,12 @@ public class Enemy : MonoBehaviour
 
     void Awake() {
         RoundManager.startEnemyTurn.AddListener(StartEnemyTurn);
+        RoundManager.enemyDead.AddListener(Die);
     }
 
     void OnDestroy() {
         RoundManager.startEnemyTurn.RemoveListener(StartEnemyTurn);
+        RoundManager.enemyDead.RemoveListener(Die);
     }
 
     void Start()
@@ -34,5 +36,10 @@ public class Enemy : MonoBehaviour
         currentHealth -= damage;
 
         healthBar.setHealth(currentHealth);
+    }
+
+    void Die()
+    {
+        // Will use this method to reset the enemy and spawn in a new enemy after card rewards
     }
 }

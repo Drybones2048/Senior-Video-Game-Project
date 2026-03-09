@@ -20,6 +20,7 @@ public class RoundManager : MonoBehaviour
     public static UnityEvent startPlayerTurn = new UnityEvent();
     public static UnityEvent startEnemyTurn = new UnityEvent();
     public static UnityEvent battleStart = new UnityEvent();
+    public static UnityEvent enemyDead = new UnityEvent();
     public static UnityEvent dealHand = new UnityEvent();
     public static UnityEvent<int> energyChanged = new UnityEvent<int>();
     public gameState currentState { get; private set; }
@@ -41,12 +42,14 @@ public class RoundManager : MonoBehaviour
         endEnemyTurn.AddListener(EndEnemyTurn);
         startEnemyTurn.AddListener(SetEnemyState);
         startPlayerTurn.AddListener(StartPlayerTurn);
+        enemyDead.AddListener(EndCombat);
     }
 
     void OnDestroy() {
         endEnemyTurn.RemoveListener(EndEnemyTurn);
         startEnemyTurn.RemoveListener(SetEnemyState);
         startPlayerTurn.RemoveListener(StartPlayerTurn);
+        enemyDead.RemoveListener(EndCombat);
     }
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -100,6 +103,12 @@ public class RoundManager : MonoBehaviour
         currentState = gameState.interim;
         roundNumber++;  //this is the only place other than startBattle(called once per battle) where roundNumber is incremented
         routine.EndEnemyTurn(); //start coroutine
+    }
+
+    private void EndCombat() // Created an event for when the combat ends because the enemy dies (or player does but that is not programmed currently)
+    {
+        currentState = gameState.interim;
+        roundNumber = 0;
     }
 
     public void decrementEnergy(int amount) {

@@ -61,6 +61,8 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
          i.e. before the startPlayerTurn event is invoked*/
         RoundManager.dealHand.AddListener(startNewTurn);
         RoundManager.endPlayerTurn.AddListener(discardAll); // Listen for when the player clicks the end turn button, then discard all cards
+        RoundManager.enemyDead.AddListener(discardAll);
+        RewardCardHandler.addedCard.AddListener(AddCardToDeck);
     }
 
     // The entire deck the player has at the start of the game
@@ -77,6 +79,8 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         RoundManager.battleStart.RemoveListener(drawHand);
         RoundManager.dealHand.RemoveListener(startNewTurn);
         RoundManager.endPlayerTurn.RemoveListener(discardAll);
+        RoundManager.enemyDead.RemoveListener(discardAll);
+        RewardCardHandler.addedCard.RemoveListener(AddCardToDeck);
     }
 
     //****UPDATE**** new helper for building the deck
@@ -131,6 +135,13 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
 
         handView.DisplayHand(currentHand);
     } 
+
+    public void resetDeck() // Will be used to reset deck after combat ends and a new card is added to the deck
+    {
+        drawPile.AddRange(discard); // Add all discarded cards back to draw pile
+
+        discard.Clear(); // Clear the discard pile
+    }
 
     // NEW: Method to start a new turn - resets animation flag and draws new hand
     public void startNewTurn()
@@ -217,6 +228,17 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         }
         
         handView.AnimateAllCardsToDiscard(); // Animate all cards to discard pile
+    }
+
+    public void AddCardToDeck(CardInstance card) // Method that is used when adding new cards with card rewards
+    {
+        deck.Add(card); // Add the new card to the player's deck
+
+        deckIDs.Add(card.id); // Add the ID of the new card to the ID list
+
+        Debug.Log($"Added {card.name} to deck!");
+
+        resetDeck(); // Shuffles after discarding all cards
     }
     
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class CardHover : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class CardHover : MonoBehaviour
     void OnEnable(){ // Since the magnified card is in the scene, this triggers the listeners to show the hidden magnified card
         CardView.HoverEnter += Show;
         CardView.HoverExit += Hide;
+        RoundManager.enemyDead.AddListener(Hide); // Hides the card hover when the combat ends
         
         // Subscribe to status effect changes so preview updates when player gets weakened
         PlayerStatusEffects.OnStatusEffectsChanged += UpdatePreviewIfVisible;
@@ -28,6 +30,7 @@ public class CardHover : MonoBehaviour
     {
         CardView.HoverEnter -= Show;
         CardView.HoverExit -= Hide;
+        RoundManager.enemyDead.RemoveListener(Hide);
         PlayerStatusEffects.OnStatusEffectsChanged -= UpdatePreviewIfVisible;
     }
 
@@ -95,7 +98,7 @@ public class CardHover : MonoBehaviour
 
             // Font and Spacing values for Solar Wrath for card hover
             previewView.nameText.fontSize = 25;
-            previewView.costText.transform.localPosition -= new Vector3(2f, 0f);
+            //previewView.costText.transform.localPosition -= new Vector3(2f, 0f); There is currently a bug where no matter what the card id is, the cost text gets moved on the hover
             previewView.descriptionText.fontSize = 23; 
             previewView.descriptionText.text = $"Deal {currentlyShowingCard.damage} damage";
         }

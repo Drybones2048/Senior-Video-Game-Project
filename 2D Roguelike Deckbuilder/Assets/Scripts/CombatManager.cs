@@ -25,6 +25,12 @@ public class CombatManager : MonoBehaviour
             //****UPDATE***** getting the actual damage here rather than in the AttackCard script
             int actualDamage = GetActualDamage(card.damage);
             currentEnemy.TakeDamage(actualDamage);
+
+            if(currentEnemy.CurrentHealth <= 0) // When the enemy's health reaches 0 or lower, will trigger event that after card rewards should resent the combat with a new enemy
+            {
+                RoundManager.enemyDead.Invoke();
+            }
+
         }
 
         else if (card.type == CardType.Defend) {
