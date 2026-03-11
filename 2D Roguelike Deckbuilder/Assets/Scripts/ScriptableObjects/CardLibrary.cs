@@ -40,7 +40,7 @@ public class CardLibrary : ScriptableObject
         return new CardInstance(card, upgraded);
     }
 
-    public List<string> GetRandomCard(System.Predicate<CardData> filter, int numCardsRequested)
+    public List<CardInstance> GetRandomCard(System.Predicate<CardData> filter, int numCardsRequested)
     {
         var newCardPool = new List<CardData>();
 
@@ -51,7 +51,7 @@ public class CardLibrary : ScriptableObject
         if (newCardPool.Count == 0)
         {
             Debug.Log("Card requested but no cards match the criteria.");
-            return new List<string>();
+            return new List<CardInstance>();
         }
 
         // Shuffle
@@ -63,12 +63,13 @@ public class CardLibrary : ScriptableObject
 
         int numCardsReturning = Mathf.Min(numCardsRequested, newCardPool.Count);    //this would only not equal numCardsRequested if more cards were requested than met the criteria
 
-        var selectedCardIDs = new List<string>();
+        var selectedCards = new List<CardInstance>();
 
         //now that the deck is shuffled, you can just select the number of cards you need starting from index 0. 
         for (int i = 0; i < numCardsReturning; i++)
-            selectedCardIDs.Add(newCardPool[i].id);
+            selectedCards.Add(new CardInstance(newCardPool[i], false));
 
-        return selectedCardIDs;
+
+        return selectedCards;
     }
 }

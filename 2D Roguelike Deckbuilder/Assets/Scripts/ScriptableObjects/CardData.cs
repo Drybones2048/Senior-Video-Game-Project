@@ -12,7 +12,7 @@ public class CardData : ScriptableObject
     [Header("Card Attributes")]
     public string id;
     public string displayName;
-    public string description;
+    [TextArea(3, 6)] public string description;
     public CardType type;
     public int cost;
     public string sprite;

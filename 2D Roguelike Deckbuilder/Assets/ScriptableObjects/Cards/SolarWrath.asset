@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   id: solar_wrath
   displayName: Solar Wrath
-  description: 
+  description: Deal 13 damage.
   type: 0
   cost: 2
   sprite: SolarWrath

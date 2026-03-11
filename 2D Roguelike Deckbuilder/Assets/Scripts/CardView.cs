@@ -72,9 +72,10 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             }
         }
         else {
-            /* ***UPDATE*** this means one of the non-generic attack/defend cards were drawn. Leave description blank for now. We'll have to fix the card sprite to 
-            accomadate adding our own description */
-            descriptionText.text = $"Deal {cardData.damage} damage"; // Did this for solar wrath testing
+            //****UPDATE***** this else statement now sets the text using the description field in CardInstance.
+            //Later we will get rid of the if-else statement entirely and it will be the same action for all cards.
+            //TODO: Need to figure out how to use in-line variables in description to show effect-adjusted damage values.
+            descriptionText.text = cardData.description;
         }
     }
 

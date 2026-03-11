@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   id: piercing_strike
   displayName: Piercing Strike
+  description: Deal 5 damage, ignore enemy block.
   type: 0
   cost: 1
+  sprite: 
   damage: 5
-  shield: 0
+  block: 0
   statusEffects: []
   uniqueBehavior: 2
   cardClass: 1

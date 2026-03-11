@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   id: press_and_fall
   displayName: Press and Fall
+  description: 'Deal 5 damage. Gain block equal to enemy damage received. '
   type: 2
   cost: 2
+  sprite: 
   damage: 5
-  shield: 0
+  block: 0
   statusEffects: []
   uniqueBehavior: 1
   cardClass: 1

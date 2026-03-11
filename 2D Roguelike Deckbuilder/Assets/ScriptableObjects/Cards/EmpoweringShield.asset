@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   id: empowering_shield
   displayName: Empowering Shield
+  description: Gain 2 strength next turn after a perfect block.
   type: 3
   cost: 2
+  sprite: 
   damage: 0
-  shield: 0
+  block: 0
   statusEffects: []
   uniqueBehavior: 3
   cardClass: 1

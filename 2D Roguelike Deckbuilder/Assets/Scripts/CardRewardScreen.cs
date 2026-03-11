@@ -58,17 +58,8 @@ public class CardRewardScreen : MonoBehaviour
 
     List<CardInstance> GenerateRewardCards() // Generates the number of card rewards as requested by the variable
     {
-        List<CardInstance> rewards = new List<CardInstance>(numberOfRewards);
-
-        for(int i = 0; i < numberOfRewards; i++)
-        {
-            var newCard = cardLibrary.CreateInstance("attack"); // For now all the card rewards will all reward with attacks, will need to add card pool of possible added cards later
-        
-            if (newCard != null)
-                rewards.Add(newCard);
-        }
-
-        return rewards;
+        //add whatever conditions you want to the first parameter
+        return cardLibrary.GetRandomCard(c => c.cardClass == CardClass.BlockStance, numberOfRewards); 
     }
 
     void DisplayRewardCards(List<CardInstance> cards) // Displays the possible reward cards on screen
