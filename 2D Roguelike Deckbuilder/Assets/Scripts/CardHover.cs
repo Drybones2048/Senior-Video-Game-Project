@@ -39,9 +39,7 @@ public class CardHover : MonoBehaviour
         
         previewView.cardData = card; 
  
-        previewView.Setup(currentlyShowingCard); // Needed to copy sprite of hovered card
-        
-        UpdatePreviewDescription(); // Update description with status effects
+        previewView.Setup(currentlyShowingCard); // Copies the sprite of the hovered card and changes text in the case of status effects
         
         cg.alpha = 1; // Reveals hidden magnified card
     }
