@@ -38,8 +38,8 @@ public class CardHover : MonoBehaviour
         currentlyShowingCard = card; // Remember which card we're showing
         
         previewView.cardData = card; 
-        //*****UPDATE: Commented this line out because it seemed redundant and was causing errors
-        //previewView.cardData.sprite = card.sprite;
+ 
+        previewView.Setup(currentlyShowingCard); // Needed to copy sprite of hovered card
         
         UpdatePreviewDescription(); // Update description with status effects
         
@@ -92,7 +92,7 @@ public class CardHover : MonoBehaviour
                 previewView.descriptionText.text = $"Deal {currentlyShowingCard.damage} Damage";
             }
         }
-        else {
+        /*else {
             //****UPDATE***** this else statement now sets the text using the description field in CardInstance.
             //Later we will get rid of the if-else statement entirely and it will be the same action for all cards.
             //TODO: Need to figure out how to use in-line variables in description to show effect-adjusted damage values. 
@@ -100,6 +100,6 @@ public class CardHover : MonoBehaviour
             //previewView.costText.transform.localPosition -= new Vector3(2f, 0f); There is currently a bug where no matter what the card id is, the cost text gets moved on the hover
             previewView.descriptionText.fontSize = 23; 
             previewView.descriptionText.text = currentlyShowingCard.description;
-        }
+        }*/
     }
 }
