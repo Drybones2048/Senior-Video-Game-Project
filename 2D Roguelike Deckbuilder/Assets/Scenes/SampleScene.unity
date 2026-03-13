@@ -2337,8 +2337,8 @@ MonoBehaviour:
   centipede: {fileID: 368184932}
   skeleton: {fileID: 1494195729}
   attack: {fileID: 486525714}
-  maxHealth: 5
-  currentHealth: 5
+  maxHealth: 55
+  currentHealth: 55
 --- !u!114 &486525714
 MonoBehaviour:
   m_ObjectHideFlags: 0
