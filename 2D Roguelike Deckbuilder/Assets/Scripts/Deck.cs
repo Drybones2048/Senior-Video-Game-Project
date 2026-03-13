@@ -55,8 +55,8 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
     public static List<CardInstance> discard = new List<CardInstance>();
 
     void Awake() {
-        //drawHand() is no longer called in start, instead it is called by the battleStart event which is invoked in TurnEndRoutine
-        RoundManager.battleStart.AddListener(drawHand);
+        //drawHand() is no longer called in start, instead it is called by the combatStart event which is invoked in TurnEndRoutine
+        RoundManager.combatStart.AddListener(drawHand);
         /*Listen for when player starts their turn, then draw back up to 5 cards, should happen before game registers user input
          i.e. before the startPlayerTurn event is invoked*/
         RoundManager.dealHand.AddListener(startNewTurn);
@@ -76,7 +76,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
     }
 
     void OnDestroy() {
-        RoundManager.battleStart.RemoveListener(drawHand);
+        RoundManager.combatStart.RemoveListener(drawHand);
         RoundManager.dealHand.RemoveListener(startNewTurn);
         RoundManager.endPlayerTurn.RemoveListener(discardAll);
         RoundManager.enemyDead.RemoveListener(discardAll);
@@ -98,7 +98,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         return runtimeDeck;
     }
 
-    //drawHand() is no longer called in start, instead it is called by the battleStart event which is invoked in TurnEndRoutine
+    //drawHand() is no longer called in start, instead it is called by the combatStart event which is invoked in TurnEndRoutine
     public void drawHand()
     {
         int cardsToDraw = 5;

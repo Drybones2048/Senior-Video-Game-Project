@@ -8,6 +8,8 @@ public class CardRewardScreen : MonoBehaviour
     public CanvasGroup rewardScreenCG;
     public CardView[] rewardCardSlots;
 
+    public RoundManager roundManager;
+
     public CardLibrary cardLibrary;
 
     public float fadeInDuration = 0.3f; // Animation for screen appearing
@@ -103,5 +105,7 @@ public class CardRewardScreen : MonoBehaviour
                     rewardScreenCG.blocksRaycasts = false;
                 });
         }
+
+        roundManager.StartNewCombat(); // After a card reward is chosen, a new enemy encounter will begin
     }
 }

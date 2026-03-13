@@ -3,7 +3,7 @@ using TMPro;
 
 public class DisplayTurnState : MonoBehaviour
 {
-    [SerializeField] private TMP_Text battleStartText;
+    [SerializeField] private TMP_Text combatStartText;
     [SerializeField] private TMP_Text roundStartText;
     [SerializeField] private TMP_Text playerTurnText;
     [SerializeField] private TMP_Text enemyTurnText;
@@ -16,8 +16,8 @@ public class DisplayTurnState : MonoBehaviour
         TurnEndRoutine.PrintEnemyTurnMessage.AddListener(PrintEnemyTurnMessage);
         TurnEndRoutine.RemovePlayerTurnMessage.AddListener(RemovePlayerTurnMessage);
         TurnEndRoutine.RemoveEnemyTurnMessage.AddListener(RemoveEnemyTurnMessage);
-        TurnEndRoutine.PrintBattleStartMessage.AddListener(PrintBattleStartMessage);
-        TurnEndRoutine.RemoveBattleStartMessage.AddListener(RemoveBattleStartMessage);
+        TurnEndRoutine.PrintCombatStartMessage.AddListener(PrintCombatStartMessage);
+        TurnEndRoutine.RemoveCombatStartMessage.AddListener(RemoveCombatStartMessage);
     }
 
     void OnDestroy() {
@@ -25,17 +25,17 @@ public class DisplayTurnState : MonoBehaviour
         TurnEndRoutine.PrintEnemyTurnMessage.RemoveListener(PrintEnemyTurnMessage);
         TurnEndRoutine.PrintEnemyTurnMessage.RemoveListener(RemovePlayerTurnMessage);
         TurnEndRoutine.PrintEnemyTurnMessage.RemoveListener(RemoveEnemyTurnMessage);
-        TurnEndRoutine.PrintBattleStartMessage.RemoveListener(PrintBattleStartMessage);
-        TurnEndRoutine.RemoveBattleStartMessage.RemoveListener(RemoveBattleStartMessage);
+        TurnEndRoutine.PrintCombatStartMessage.RemoveListener(PrintCombatStartMessage);
+        TurnEndRoutine.RemoveCombatStartMessage.RemoveListener(RemoveCombatStartMessage);
     }
 
-    void PrintBattleStartMessage() {
-        battleStartText.gameObject.SetActive(true);
+    void PrintCombatStartMessage() {
+        combatStartText.gameObject.SetActive(true);
     }
 
-    void RemoveBattleStartMessage()
+    void RemoveCombatStartMessage()
     {
-        battleStartText.gameObject.SetActive(false);
+        combatStartText.gameObject.SetActive(false);
     }
 
     void PrintRoundStartMessage() {

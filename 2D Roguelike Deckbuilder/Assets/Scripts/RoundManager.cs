@@ -13,15 +13,20 @@ public class RoundManager : MonoBehaviour
 {
     public static RoundManager instance;    //singleton
 
+    public Enemy currentEnemy;
+
     public System.Random RNG { get; private set; }  //One RNG for the whole program
     public int currentSeed { get; private set; }
     public static UnityEvent endPlayerTurn = new UnityEvent();
     public static UnityEvent endEnemyTurn = new UnityEvent();
     public static UnityEvent startPlayerTurn = new UnityEvent();
     public static UnityEvent startEnemyTurn = new UnityEvent();
-    public static UnityEvent battleStart = new UnityEvent();
+    public static UnityEvent combatStart = new UnityEvent();
     public static UnityEvent enemyDead = new UnityEvent();
     public static UnityEvent dealHand = new UnityEvent();
+
+    public int encounterNumber = 0;
+
     public static UnityEvent<int> energyChanged = new UnityEvent<int>();
     public gameState currentState { get; private set; }
     public TurnEndRoutine routine;
@@ -55,7 +60,7 @@ public class RoundManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        StartNewBattle(); //we can put this here for now, but when we create multiple rounds, we'll need this to be called multiple times
+        StartNewCombat(); //we can put this here for now, but when we create multiple rounds, we'll need this to be called multiple times
         energyChanged.Invoke(currentEnergy);
     }
 
@@ -68,9 +73,13 @@ public class RoundManager : MonoBehaviour
         Debug.Log("Run Seed: " + currentSeed);
     }
 
-    void StartNewBattle() { 
+    public void StartNewCombat() {
+        roundNumber = 0;
+        encounterNumber++; // Keeps track of which encounter we are on for purposes of enemy spawning
+        currentEnemy.SpawnNewEnemy(encounterNumber); // Spawns the new enemy on screen
+
         roundNumber++; 
-        routine.StartBattle();
+        routine.StartCombat();
     }
 
     private void StartPlayerTurn()
@@ -101,14 +110,13 @@ public class RoundManager : MonoBehaviour
 
     private void EndEnemyTurn() {
         currentState = gameState.interim;
-        roundNumber++;  //this is the only place other than startBattle(called once per battle) where roundNumber is incremented
+        roundNumber++;  //this is the only place other than startCombat(called once per combat) where roundNumber is incremented
         routine.EndEnemyTurn(); //start coroutine
     }
 
     private void EndCombat() // Created an event for when the combat ends because the enemy dies (or player does but that is not programmed currently)
     {
         currentState = gameState.interim;
-        roundNumber = 0;
     }
 
     public void decrementEnergy(int amount) {

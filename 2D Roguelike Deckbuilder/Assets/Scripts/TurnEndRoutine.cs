@@ -5,8 +5,8 @@ using UnityEngine.Events;
 public class TurnEndRoutine : MonoBehaviour
 {
     private Coroutine flow;
-    public static UnityEvent PrintBattleStartMessage = new UnityEvent();
-    public static UnityEvent RemoveBattleStartMessage = new UnityEvent();
+    public static UnityEvent PrintCombatStartMessage = new UnityEvent();
+    public static UnityEvent RemoveCombatStartMessage = new UnityEvent();
     public static UnityEvent PrintRoundStartMessage = new UnityEvent();
     public static UnityEvent PrintEnemyTurnMessage = new UnityEvent();
     public static UnityEvent RemovePlayerTurnMessage = new UnityEvent();
@@ -16,12 +16,12 @@ public class TurnEndRoutine : MonoBehaviour
     [SerializeField] private float playerTurnStartDelay = 2f;   //how long after the enemy acts before the player's turn starts
     [SerializeField] private float playerTurnMessageDisplayLength = 1.4f;   //how long the player turn message stays on the screen
     [SerializeField] private float enemyTurnMessageDisplayLength = 2f;  //how long the enemy turn message stays on the screen
-    [SerializeField] private float battleStartDelay = 2f;   //how long after the battle starts before the player's turn starts
+    [SerializeField] private float combatStartDelay = 2f;   //how long after the combat starts before the player's turn starts
     
 
 
-    public void StartBattle() {
-        flow = StartCoroutine(ResolveBattleStart());
+    public void StartCombat() {
+        flow = StartCoroutine(ResolveCombatStart());
     }   
 
     public void EndPlayerTurn() {
@@ -33,13 +33,13 @@ public class TurnEndRoutine : MonoBehaviour
         flow = StartCoroutine(ResolveEnemyTurn());
     }
 
-    private IEnumerator ResolveBattleStart() {
-        UI_Manager.instance.PrintBattleStartMessage();
-        yield return new WaitForSeconds(battleStartDelay);
-        UI_Manager.instance.RemoveBattleStartMessage();
+    private IEnumerator ResolveCombatStart() {
+        UI_Manager.instance.PrintCombatStartMessage();
+        yield return new WaitForSeconds(combatStartDelay);
+        UI_Manager.instance.RemoveCombatStartMessage();
 
         //start player's first turn
-        RoundManager.battleStart.Invoke();  //This will deal the player's first hand
+        RoundManager.combatStart.Invoke();  //This will deal the player's first hand
         UI_Manager.instance.PrintRoundStartMessage();
         yield return new WaitForSeconds(playerTurnMessageDisplayLength);
         UI_Manager.instance.RemovePlayerTurnMessage();

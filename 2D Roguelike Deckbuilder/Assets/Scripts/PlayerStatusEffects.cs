@@ -185,5 +185,7 @@ public class PlayerStatusEffects : MonoBehaviour {
 
         return null; // Did not find status effect requested
     }
+
+    //TODO: WILL NEED TO CREATE METHOD CALLED DeleteAllStatusEffects THAT WILL BE CALLED FOR THE ENEMYDIES ENCOUNTER THAT REMOVES ALL STATUS EFFECTS ON THE PLAYER BEFORE THE NEXT COMBAT
 }
     
