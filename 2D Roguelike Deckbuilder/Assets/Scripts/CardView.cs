@@ -110,6 +110,11 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 //cardData.Play(); //Old method of playing the card, deprecated
                 playerCardPlayed.Invoke(cardData);
 
+                if(RoundManager.instance.currentState != gameState.playerTurn) // Need to add this so card doesn't get discarded twice and duplicated if it is the card that kills the enemy
+                {
+                    return;
+                }
+
                 Deck.discardAdd(cardData); //Add to discard's list
 
                 HandView handView = FindFirstObjectByType<HandView>();

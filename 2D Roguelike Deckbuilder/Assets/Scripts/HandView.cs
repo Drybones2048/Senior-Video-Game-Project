@@ -8,8 +8,6 @@ using UnityEngine.Events;
 
 public class HandView : MonoBehaviour
 {
-    //public CardView attackPrefab;
-    //public CardView defendPrefab;
     public CardView cardPrefab;
 
     public Transform handArea;
@@ -34,11 +32,13 @@ public class HandView : MonoBehaviour
 
     void OnEnable()
     {
+        RoundManager.enemyDead.AddListener(ResetDrawFlag); // Used to still give the draw animation when a new combat begins
         CardView.cardClicked += OnCardPlayed; // Restore event subscription but with new method
     }
 
     void OnDisable()
     {
+        RoundManager.enemyDead.RemoveListener(ResetDrawFlag);
         CardView.cardClicked -= OnCardPlayed;
     }
 

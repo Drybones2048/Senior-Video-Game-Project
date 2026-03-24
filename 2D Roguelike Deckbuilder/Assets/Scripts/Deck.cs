@@ -236,6 +236,8 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
 
         deckIDs.Add(card.id); // Add the ID of the new card to the ID list
 
+        drawPile.Add(card); // Also adds the new card to the player's draw pile (needed for card reset between combats)
+
         Debug.Log($"Added {card.name} to deck!");
 
         resetDeck(); // Shuffles after discarding all cards

@@ -84,6 +84,7 @@ public class RoundManager : MonoBehaviour
 
     private void StartPlayerTurn()
     {
+        ShieldManager.removeShield.Invoke(); // Removes all shield from the player at the start of a new round
         currentState = gameState.playerTurn;
         currentEnergy = maxEnergy;
         energyChanged.Invoke(currentEnergy);

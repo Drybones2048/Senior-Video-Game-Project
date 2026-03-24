@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 using TMPro;
 using UnityEngine.UI;
 
@@ -8,6 +9,8 @@ public class ShieldManager : MonoBehaviour
     CanvasGroup cg;
 
     public TextMeshProUGUI defendText;
+
+    public static UnityEvent removeShield = new UnityEvent(); // Unity event that will be used to remove player shield at the start of a new round
 
     int currentShield;
 
@@ -19,11 +22,13 @@ public class ShieldManager : MonoBehaviour
     void OnEnable()
     {
         CombatManager.shieldGained.AddListener(Show);
+        removeShield.AddListener(removeAllShield);
         Player.shieldBroken += Hide;
         Player.shieldDamaged += DamagedShield;
     }
 
     void OnDisable() {
+        removeShield.RemoveListener(removeAllShield);
         CombatManager.shieldGained.RemoveListener(Show);
     }
 
@@ -47,5 +52,12 @@ public class ShieldManager : MonoBehaviour
         currentShield -= damage;
         
         defendText.text = currentShield.ToString();
+    }
+
+    void removeAllShield() // Method that will trigger to remove all player shield at the start of a new round
+    {
+        Hide();
+
+        defendText.text = "0";
     }
 }
