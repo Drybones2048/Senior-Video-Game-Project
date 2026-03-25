@@ -1864,6 +1864,7 @@ GameObject:
   - component: {fileID: 368184935}
   - component: {fileID: 368184934}
   - component: {fileID: 368184933}
+  - component: {fileID: 368184936}
   m_Layer: 0
   m_Name: Centepede
   m_TagString: Untagged
@@ -1967,6 +1968,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 486525712}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &368184936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 368184932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e6e53deb381d204196b5577f9f12136, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
+  attackPattern: {fileID: 11400000, guid: 8a377cd26d58c8049afb7c7e963bb17c, type: 2}
+  enemyIntentText: {fileID: 664725640}
 --- !u!1 &439419865
 GameObject:
   m_ObjectHideFlags: 0
@@ -2295,7 +2310,6 @@ GameObject:
   m_Component:
   - component: {fileID: 486525712}
   - component: {fileID: 486525713}
-  - component: {fileID: 486525714}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -2336,22 +2350,8 @@ MonoBehaviour:
   healthBar: {fileID: 1180568807}
   centipede: {fileID: 368184932}
   skeleton: {fileID: 1494195729}
-  attack: {fileID: 486525714}
   maxHealth: 55
   currentHealth: 55
---- !u!114 &486525714
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 486525711}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e6e53deb381d204196b5577f9f12136, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
-  enemyIntentText: {fileID: 664725640}
 --- !u!1 &506768867
 GameObject:
   m_ObjectHideFlags: 0
@@ -4559,6 +4559,7 @@ GameObject:
   - component: {fileID: 1494195733}
   - component: {fileID: 1494195732}
   - component: {fileID: 1494195731}
+  - component: {fileID: 1494195734}
   m_Layer: 0
   m_Name: Skeleton
   m_TagString: Untagged
@@ -4682,6 +4683,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1494195729}
   m_CullTransparentMesh: 1
+--- !u!114 &1494195734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494195729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e6e53deb381d204196b5577f9f12136, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
+  attackPattern: {fileID: 0}
+  enemyIntentText: {fileID: 0}
 --- !u!1001 &1521081749
 PrefabInstance:
   m_ObjectHideFlags: 0

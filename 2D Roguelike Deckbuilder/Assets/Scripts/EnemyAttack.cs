@@ -5,67 +5,52 @@ using TMPro;
 
 public class EnemyAttack : MonoBehaviour
 {
+    public EnemyAttackPattern attackPattern; // Will store the scriptable object of the enemy in question
     public TextMeshProUGUI enemyIntentText;
 
-    // Clunky way of displaying enemy intents for now, will think of a better solution later
-    // This specific intent pattern is meant only for the centipede monster
-    void Update() 
-    {
-        switch (RoundManager.instance.roundNumber)
+    void Update(){
+        if (attackPattern == null) return;
+ 
+        EnemyMove currentMove = attackPattern.GetMoveForRound(RoundManager.instance.roundNumber);
+        if (currentMove != null) // Get the intent text displayed correctly every round
         {
-            case 1:
-                enemyIntentText.text = $"8 Damage";
-                break;
-            case 2:
-                enemyIntentText.text = $"Weaken Player";
-                break;
-            case 3:
-                enemyIntentText.text = $"Apply 5 Poison";
-                break;
-            case 4:
-                enemyIntentText.text = $"8 Damage";
-                break;
-            case 5:
-                enemyIntentText.text = $"10 Damage";
-                break;
-            case 6:
-                enemyIntentText.text = $"Apply 5 Poison";
-                break;
+            enemyIntentText.text = currentMove.intentLabel;
         }
-
     }
-
-    //Uses RNG to determine attack damage
-    public void attackPlayer(Player player) {
-        int enemyChoice = RoundManager.instance.roundNumber; // Instead of what moves the enemy does being based on RNG, it will have a fixed attack pattern
-
-        switch (enemyChoice) // Enemy will either do damage to the player or apply status randomly
+ 
+    public void attackPlayer(Player player) // Method that is called at the start of the enemy's turn every round, will do attack actions based on the enemy's scriptable object
+    {
+        if (attackPattern == null)
         {
-            case 1:
-                player.TakeDamage(8);
-                Debug.Log("Enemy dealt " + 8 + " damage to player!");
-                
+            Debug.LogWarning("EnemyAttack: No attack pattern assigned!");
+            return;
+        }
+ 
+        EnemyMove move = attackPattern.GetMoveForRound(RoundManager.instance.roundNumber);
+        if (move == null)
+        {
+            Debug.LogWarning("EnemyAttack: No move found for round " + RoundManager.instance.roundNumber);
+            return;
+        }
+ 
+        switch (move.moveType) // Switch case that determines the values for actions based on the attack type
+        {
+            case EnemyMoveType.Damage:
+                player.TakeDamage(move.value);
+                Debug.Log($"Enemy dealt {move.value} damage to player!");
                 break;
-            case 2:
-                PlayerStatusEffects.Instance.ApplyWeaken(1, 1);
-                
+ 
+            case EnemyMoveType.Weaken:
+                PlayerStatusEffects.Instance.ApplyWeaken(move.value, move.duration);
+                Debug.Log($"Enemy applied Weaken ({move.value} stacks, {move.duration} duration) to player!");
                 break;
-            case 3:
-                PlayerStatusEffects.Instance.ApplyPoison(5, 5);
-                break; 
-            case 4:
-                player.TakeDamage(8);
-                Debug.Log("Enemy dealt " + 8 + " damage to player!");
-                
+ 
+            case EnemyMoveType.Poison:
+                PlayerStatusEffects.Instance.ApplyPoison(move.value, move.duration);
+                Debug.Log($"Enemy applied Poison ({move.value} stacks, {move.duration} duration) to player!");
                 break;
-            case 5:
-                player.TakeDamage(10);
-                Debug.Log("Enemy dealt " + 10 + " damage to player!");
-                
-                break;
-            case 6:
-                PlayerStatusEffects.Instance.ApplyPoison(5, 5);
-                break; 
+
+            // ADD MORE TO THIS SWITCH CASE FOR MORE TYPES OF ENEMY ACTIONS LIKE STRENGTHEN AND CONFUSE
         }
     }
 }

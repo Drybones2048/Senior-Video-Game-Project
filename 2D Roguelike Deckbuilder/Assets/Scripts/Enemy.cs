@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour
 
     public GameObject skeleton;
 
-    [SerializeField] private EnemyAttack attack;
+    private EnemyAttack attack; // This is now assigned dynamically depending on which enemy is alive
     [SerializeField] private int maxHealth; // The max health for the enemy will be set in the inspector
     [SerializeField] private int currentHealth; //don't attempt to modify from within inspector, that's only for debugging
     public int CurrentHealth => currentHealth;  //CurrentHealth is publicly readable, currentHealth is private. Also don't try and set it in the inspector
@@ -54,15 +54,27 @@ public class Enemy : MonoBehaviour
         {
             case 1:
                 centipede.SetActive(true);
-                currentHealth = 55;
-                healthBar.setMaxHealth(55);
+                SetupEnemy(centipede, 55);
                 break;
             case 2:
                 skeleton.SetActive(true);
-                currentHealth = 75;
-                healthBar.setMaxHealth(75);
+                SetupEnemy(skeleton, 75);
                 break;
         }
+    }
+
+    private void SetupEnemy(GameObject enemyObject, int health) // Helper function that serves to set health values for a given enemy and grab its' attack script
+    {
+        currentHealth = health;
+        healthBar.setMaxHealth(health);
+        healthBar.setHealth(health);
+ 
+        // Grab the EnemyAttack component from the specific child that just spawned, which will have its own ScriptableObject attack pattern assigned
+        attack = enemyObject.GetComponent<EnemyAttack>();
+        if (attack == null)
+        {
+            Debug.LogWarning($"Enemy.cs: No EnemyAttack component found on {enemyObject.name}. Make sure each enemy GameObject has one attached with its attack pattern assigned.");
+        } 
     }
 
     void Die() // Hides the character model of the enemy that just died.
