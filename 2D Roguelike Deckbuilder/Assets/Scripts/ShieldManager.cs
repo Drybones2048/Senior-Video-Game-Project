@@ -14,6 +14,8 @@ public class ShieldManager : MonoBehaviour
 
     int currentShield;
 
+    public AudioClip shieldGain;
+
     void Awake() {
         cg = GetComponent<CanvasGroup>();
         cg.alpha = 0;
@@ -36,6 +38,11 @@ public class ShieldManager : MonoBehaviour
         currentShield += card.block;
         
         defendText.text = currentShield.ToString();
+
+        if(shieldGain != null)
+        {
+            AudioSource.PlayClipAtPoint(shieldGain, Camera.main.transform.position, 1f);
+        }
 
         cg.alpha = 1; // Reveals shield bar
     }

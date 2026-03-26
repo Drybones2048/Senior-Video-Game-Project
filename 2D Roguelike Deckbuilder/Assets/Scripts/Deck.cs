@@ -173,7 +173,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
                 }
             }
 
-            if (deckShuffleSound != null) // Play card draw sound effect
+            if (deckShuffleSound != null && didReshuffle) // Play card draw sound effect
             {
                 AudioSource.PlayClipAtPoint(deckShuffleSound, Camera.main.transform.position, 0.2f);
             }

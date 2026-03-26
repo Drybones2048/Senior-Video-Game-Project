@@ -29,6 +29,13 @@ public class PlayerStatusEffects : MonoBehaviour {
         }
 
         RoundManager.endPlayerTurn.AddListener(PoisonDamage);
+        RoundManager.enemyDead.AddListener(clearAllStatusEffects);
+    }
+
+    void OnDestroy()
+    {
+        RoundManager.endPlayerTurn.RemoveListener(PoisonDamage);
+        RoundManager.enemyDead.RemoveListener(clearAllStatusEffects);
     }
 
     public void ApplyWeaken(int turns = 1, int quantity = 1) // Apply weaken status effect
@@ -186,6 +193,16 @@ public class PlayerStatusEffects : MonoBehaviour {
         return null; // Did not find status effect requested
     }
 
-    //TODO: WILL NEED TO CREATE METHOD CALLED DeleteAllStatusEffects THAT WILL BE CALLED FOR THE ENEMYDIES ENCOUNTER THAT REMOVES ALL STATUS EFFECTS ON THE PLAYER BEFORE THE NEXT COMBAT
+    void clearAllStatusEffects() // Called when the enemy dies to remove all status effects on the player for the next combat
+    {
+        if (isPoisoned)
+        {
+            RemovePoison();
+        }
+        if (isWeakened)
+        {
+            RemoveWeaken();
+        }
+    }
 }
     

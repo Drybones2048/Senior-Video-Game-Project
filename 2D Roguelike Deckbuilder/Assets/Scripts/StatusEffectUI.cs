@@ -10,19 +10,28 @@ public class StatusEffectUI : MonoBehaviour
     public TextMeshProUGUI poisonedTurnsText;
     public GameObject poisonedIcon;
 
+    public GameObject enemyStrengthIcon;
+    public TextMeshProUGUI enemyStrengthenQuantityText;
+    public TextMeshProUGUI enemyStrengthenTurnsText;
+    public GameObject infinitySymbol;
+
+
     void OnEnable()
     {
         PlayerStatusEffects.OnStatusEffectsChanged += UpdateStatusDisplay;
+        EnemyStatusEffects.OnEnemyStatusEffectsChanged += UpdateEnemyStatusDisplay;
     }
 
     void OnDisable()
     {
         PlayerStatusEffects.OnStatusEffectsChanged -= UpdateStatusDisplay;
+        EnemyStatusEffects.OnEnemyStatusEffectsChanged -= UpdateEnemyStatusDisplay;
     }
 
     void Start() // Initialize display
     {
         UpdateStatusDisplay();
+        UpdateEnemyStatusDisplay();
     }
 
     void UpdateStatusDisplay()
@@ -82,6 +91,51 @@ public class StatusEffectUI : MonoBehaviour
                 poisonedQuantityText.gameObject.SetActive(false);
                 poisonedIcon.gameObject.SetActive(false);
                 poisonedTurnsText.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    void UpdateEnemyStatusDisplay()
+    {
+        if (EnemyStatusEffects.Instance == null) // No status effect system, hide everything
+        {
+            if (enemyStrengthenQuantityText != null && enemyStrengthIcon != null)
+            {
+                enemyStrengthenQuantityText.gameObject.SetActive(false);
+                enemyStrengthIcon.gameObject.SetActive(false);
+                infinitySymbol.gameObject.SetActive(false);
+                enemyStrengthenTurnsText.gameObject.SetActive(false);
+            } 
+            return;       
+        }
+
+        if(enemyStrengthenQuantityText != null && enemyStrengthIcon != null)
+        {
+            if (EnemyStatusEffects.Instance.isStrengthened) // Checks for strengthen for display
+            {
+                enemyStrengthIcon.gameObject.SetActive(true);
+
+                // If the turn duration is -1 that means that the strengthen never goes away
+                if(EnemyStatusEffects.Instance.findStatusEffect(EffectType.Strengthen).turnDuration == -1)
+                {
+                    enemyStrengthenQuantityText.text = EnemyStatusEffects.Instance.findStatusEffect(EffectType.Strengthen).quantity.ToString();
+                    enemyStrengthenQuantityText.gameObject.SetActive(true);
+                    infinitySymbol.gameObject.SetActive(true);
+                }
+                else // If the strengthen lasts for a limited number of turns
+                {
+                    enemyStrengthenTurnsText.text = EnemyStatusEffects.Instance.findStatusEffect(EffectType.Strengthen).turnDuration.ToString();
+                    enemyStrengthenQuantityText.text = EnemyStatusEffects.Instance.findStatusEffect(EffectType.Strengthen).quantity.ToString();
+                    enemyStrengthenQuantityText.gameObject.SetActive(true);
+                    enemyStrengthenTurnsText.gameObject.SetActive(true);
+                }
+            }
+            else // If the enemy isn't strengthened, hide everything
+            {
+                enemyStrengthenQuantityText.gameObject.SetActive(false);
+                enemyStrengthIcon.gameObject.SetActive(false);
+                infinitySymbol.gameObject.SetActive(false);
+                enemyStrengthenTurnsText.gameObject.SetActive(false);
             }
         }
     }

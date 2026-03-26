@@ -16,6 +16,12 @@ public class EnemyAttack : MonoBehaviour
         {
             enemyIntentText.text = currentMove.intentLabel;
         }
+
+        EnemyMove move = attackPattern.GetMoveForRound(RoundManager.instance.roundNumber);
+        if(move != null && move.moveType == EnemyMoveType.Damage && EnemyStatusEffects.Instance.isStrengthened)
+        {
+            enemyIntentText.text = $"{GetActualDamage(move.value)} Damage";
+        }
     }
  
     public void attackPlayer(Player player) // Method that is called at the start of the enemy's turn every round, will do attack actions based on the enemy's scriptable object
@@ -36,8 +42,9 @@ public class EnemyAttack : MonoBehaviour
         switch (move.moveType) // Switch case that determines the values for actions based on the attack type
         {
             case EnemyMoveType.Damage:
-                player.TakeDamage(move.value);
-                Debug.Log($"Enemy dealt {move.value} damage to player!");
+                int actualDamage = GetActualDamage(move.value);
+                player.TakeDamage(actualDamage);
+                Debug.Log($"Enemy dealt {actualDamage} damage to player!");
                 break;
  
             case EnemyMoveType.Weaken:
@@ -49,8 +56,23 @@ public class EnemyAttack : MonoBehaviour
                 PlayerStatusEffects.Instance.ApplyPoison(move.value, move.duration);
                 Debug.Log($"Enemy applied Poison ({move.value} stacks, {move.duration} duration) to player!");
                 break;
+            
+            case EnemyMoveType.Strengthen:
+                if (EnemyStatusEffects.Instance != null)
+                    EnemyStatusEffects.Instance.ApplyStrengthen(move.value);
+                else
+                    Debug.LogWarning("EnemyAttack: EnemyStatusEffects instance not found. Make sure it is in the scene.");
+                break;
 
             // ADD MORE TO THIS SWITCH CASE FOR MORE TYPES OF ENEMY ACTIONS LIKE STRENGTHEN AND CONFUSE
         }
+    }
+
+    int GetActualDamage(int baseDamage) // Makes all damage values go through this method and is altered based on if the enemy has strengthen
+    {
+        if (EnemyStatusEffects.Instance != null)
+            return EnemyStatusEffects.Instance.GetModifiedAttackDamage(baseDamage);
+ 
+        return baseDamage;
     }
 }
