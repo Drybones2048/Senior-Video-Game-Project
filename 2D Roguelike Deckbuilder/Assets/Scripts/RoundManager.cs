@@ -14,6 +14,7 @@ public class RoundManager : MonoBehaviour
     public static RoundManager instance;    //singleton
 
     public Enemy currentEnemy;
+    public Player player;
 
     public System.Random RNG { get; private set; }  //One RNG for the whole program
     public int currentSeed { get; private set; }
@@ -88,6 +89,11 @@ public class RoundManager : MonoBehaviour
         currentState = gameState.playerTurn;
         currentEnergy = maxEnergy;
         energyChanged.Invoke(currentEnergy);
+
+        //***UPDATE*** Now deal block damage for Horus class at start of the turn. 
+        if (player.playerClass == PlayerClass.Horus) {
+            CombatManager.Instance.DealBlockDamage();
+        }
     }
 
     public void endTurnButton() {

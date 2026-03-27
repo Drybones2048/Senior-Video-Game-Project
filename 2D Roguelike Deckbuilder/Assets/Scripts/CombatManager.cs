@@ -17,6 +17,12 @@ public class CombatManager : MonoBehaviour
 
     public Animator animator;
 
+    public bool perfectBlock = false;   //based on whether you perfectly blocked all damage on the enemy's last attack
+    public float blockedDamage = 0f;
+    public float perfectBlockPercent = 0.3f;
+    bool empoweringShield = false;
+    bool juggernaut = false;
+
     void Awake()
     {
         Instance = this;
@@ -29,24 +35,23 @@ public class CombatManager : MonoBehaviour
     }
 
     void PlayPlayerCard(CardInstance card) {
+        bool isPiercingStrike = false;
+
         if (card.type == CardType.Attack) {
-            //****UPDATE***** getting the actual damage here rather than in the AttackCard script
-            int actualDamage = GetActualDamage(card.damage);
-            currentEnemy.TakeDamage(actualDamage);
-
-            // Show the slash sprite and play the animation
-            slash.SetActive(true); 
-            animator.Play("Sword Slash Animation", 0, 0);
-            
-
-            if(attackSound != null)
-            {
-                AudioSource.PlayClipAtPoint(attackSound, Camera.main.transform.position, 0.2f);
+            if (card.uniqueBehavior == UniqueBehavior.PiercingStrike) {
+                isPiercingStrike = true;
             }
 
-            StartCoroutine(SlashReveal(0.5f)); // wait for animation before hiding the sprite
+            int actualDamage = GetActualDamage(card.damage);
+            currentEnemy.TakeDamage(actualDamage);
+            if (card.uniqueBehavior == UniqueBehavior.PressAndFall)
+            {
+                PressAndFall(card, actualDamage);
+            }
 
-            if(currentEnemy.CurrentHealth <= 0) // When the enemy's health reaches 0 or lower, will trigger event that after card rewards should resent the combat with a new enemy
+            PlayAttackEffectsAndSounds();
+
+            if (currentEnemy.CurrentHealth <= 0) // When the enemy's health reaches 0 or lower, will trigger event that after card rewards should resent the combat with a new enemy
             {
                 RoundManager.enemyDead.Invoke();
             }
@@ -86,5 +91,47 @@ public class CombatManager : MonoBehaviour
     {
         yield return new WaitForSeconds(delayTime); 
         slash.SetActive(false); // hide the slash sprite
+    }
+
+    public void DealBlockDamage() {
+        if (perfectBlock)
+        {
+            currentEnemy.TakeDamage((int)(blockedDamage * perfectBlockPercent));
+            if (empoweringShield)
+            {
+                ApplyEmpoweringShield();
+            }
+            if (juggernaut)
+            {
+                ApplyJuggernaut();
+            }
+        }
+    }
+
+    void ApplyEmpoweringShield() {
+        //Create a StatusEffect and add it to the list in PlayerStatus Effects
+    }
+
+    void ApplyJuggernaut() {
+        perfectBlockPercent *= 2f;
+    }
+
+    void PressAndFall(CardInstance card, int actualDamage) {
+        player.GainShield(card.block);
+        shieldGained.Invoke(card);
+    }
+
+    void PlayAttackEffectsAndSounds() {
+        // Show the slash sprite and play the animation
+        slash.SetActive(true);
+        animator.Play("Sword Slash Animation", 0, 0);
+
+
+        if (attackSound != null)
+        {
+            AudioSource.PlayClipAtPoint(attackSound, Camera.main.transform.position, 0.2f);
+        }
+
+        StartCoroutine(SlashReveal(0.5f)); // wait for animation before hiding the sprite
     }
 }

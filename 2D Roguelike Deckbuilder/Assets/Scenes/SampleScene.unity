@@ -2152,6 +2152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoundManager
   currentEnemy: {fileID: 486525713}
+  player: {fileID: 2008279966}
   encounterNumber: 0
   routine: {fileID: 446406493}
   defaultMaxEnergy: 3
@@ -2209,6 +2210,9 @@ MonoBehaviour:
   attackSound: {fileID: 8300000, guid: 5a2395fa52f08054283d939a4d7988c6, type: 3}
   slash: {fileID: 2009077418}
   animator: {fileID: 2009077419}
+  perfectBlock: 0
+  blockedDamage: 0
+  perfectBlockPercent: 0.3
 --- !u!114 &446406493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6894,6 +6898,7 @@ MonoBehaviour:
   currentHealth: 0
   weakened: 0
   shieldAmount: 0
+  playerClass: 0
 --- !u!114 &2008279968
 MonoBehaviour:
   m_ObjectHideFlags: 0
