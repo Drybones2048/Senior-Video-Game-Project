@@ -110,6 +110,14 @@ public class CombatManager : MonoBehaviour
 
     void ApplyEmpoweringShield() {
         //Create a StatusEffect and add it to the list in PlayerStatus Effects
+        StatusEffect strengthenEffect = new StatusEffect();
+        strengthenEffect.effectType = EffectType.Strengthen;
+        strengthenEffect.effectStartOffset = 0;
+        strengthenEffect.turnDuration = 1;
+        strengthenEffect.quantity = 2;
+        strengthenEffect.effectTarget = EffectTarget.Player;
+
+        PlayerStatusEffects.Instance.allStatusEffects.Add(strengthenEffect);
     }
 
     void ApplyJuggernaut() {
