@@ -13,10 +13,21 @@ public class CardInstance
         this.upgraded = upgraded;
     }
 
+    public string GetDescription()
+    {
+        string modifiedDescription = description;
+
+        modifiedDescription = modifiedDescription.Replace("{damage}", actualDamage.ToString());
+        modifiedDescription = modifiedDescription.Replace("{block}", block.ToString());
+
+        return modifiedDescription;
+    }
+
     //GETTERS
     public int cost => card.cost;
     public int damage
         => card.damage + (upgraded ? 3 : 0);   // example upgrade logic where damage is increased by 3
+    public int actualDamage;
 
     public int block
         => card.block + (upgraded ? 3 : 0);    // example upgrade logic where block is increaesd by 3

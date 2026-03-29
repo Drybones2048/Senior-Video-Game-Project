@@ -35,7 +35,14 @@ public class ShieldManager : MonoBehaviour
     }
 
     void Show(CardInstance card){ // Shows shield bar
-        currentShield += card.block;
+        if (card.uniqueBehavior == UniqueBehavior.PressAndFall)
+        {
+            currentShield += CombatManager.Instance.GetActualDamage(card.damage);
+        }
+        else 
+        {
+            currentShield += card.block;
+        }
         
         defendText.text = currentShield.ToString();
 

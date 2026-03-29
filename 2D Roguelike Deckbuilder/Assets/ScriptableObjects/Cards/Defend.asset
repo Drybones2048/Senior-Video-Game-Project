@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   id: defend
   displayName: Defend
-  description: 
+  description: Gain {block} block
   type: 1
   cost: 1
   sprite: Basic Defense

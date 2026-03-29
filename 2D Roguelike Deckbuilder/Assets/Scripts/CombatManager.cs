@@ -35,13 +35,7 @@ public class CombatManager : MonoBehaviour
     }
 
     void PlayPlayerCard(CardInstance card) {
-        bool isPiercingStrike = false;
-
         if (card.type == CardType.Attack) {
-            if (card.uniqueBehavior == UniqueBehavior.PiercingStrike) {
-                isPiercingStrike = true;
-            }
-
             int actualDamage = GetActualDamage(card.damage);
             currentEnemy.TakeDamage(actualDamage);
             if (card.uniqueBehavior == UniqueBehavior.PressAndFall)
@@ -125,7 +119,7 @@ public class CombatManager : MonoBehaviour
     }
 
     void PressAndFall(CardInstance card, int actualDamage) {
-        player.GainShield(card.block);
+        player.GainShield(actualDamage);
         shieldGained.Invoke(card);
     }
 

@@ -17,7 +17,7 @@ MonoBehaviour:
   description: Gain 2 strength next turn after a perfect block.
   type: 3
   cost: 2
-  sprite: 
+  sprite: Empowering_Shield
   damage: 0
   block: 0
   statusEffects: []

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   id: attack
   displayName: Attack
-  description: 
+  description: Deal {damage} damage
   type: 0
   cost: 1
   sprite: Base Attack

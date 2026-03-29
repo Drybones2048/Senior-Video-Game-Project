@@ -66,6 +66,13 @@ public class CardHover : MonoBehaviour
         previewView.nameText.text = currentlyShowingCard.name;
         previewView.costText.text = currentlyShowingCard.cost.ToString();
 
+        //***UPDATE*** Removed if-else block chain, now you can call "GetDescription()" to get the description with modified damage values
+        int damage = currentlyShowingCard.damage;
+        currentlyShowingCard.actualDamage = CombatManager.Instance.GetActualDamage(currentlyShowingCard.damage);
+        previewView.descriptionText.text = currentlyShowingCard.GetDescription();
+        currentlyShowingCard.actualDamage = damage;
+
+        /*
         // Handle different card types
         if (currentlyShowingCard.id == "defend")
         {
@@ -89,7 +96,7 @@ public class CardHover : MonoBehaviour
                 // Show normal damage
                 previewView.descriptionText.text = $"Deal {currentlyShowingCard.damage} Damage";
             }
-        }
+        } */
         /*else {
             //****UPDATE***** this else statement now sets the text using the description field in CardInstance.
             //Later we will get rid of the if-else statement entirely and it will be the same action for all cards.

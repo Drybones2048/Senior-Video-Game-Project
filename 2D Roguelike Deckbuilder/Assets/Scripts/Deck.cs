@@ -12,25 +12,12 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
 
     public AudioClip deckShuffleSound;
 
-    // The deck of cards that the player has, starting amounts defined here.
-    /*List<Card> deck = new List<Card> 
-        {
-            new DefendCard(),
-            new DefendCard(),
-            new DefendCard(),
-            new DefendCard(),
-            new AttackCard(),
-            new AttackCard(),
-            new AttackCard(),
-            new AttackCard(),
-            new AttackCard()
-        };
-    */
-
-    //******UPDATE: This is now where you define the composition of the deck, you reference the cards by their ID in the quantity you want
-    //I just left the old deck commented above so you could see it in comparison 
+    //This is where you define the contents of your starting deck
     List<string> deckIDs = new List<string> {
         "solar_wrath",
+        "empowering_shield",
+        "press_and_fall",
+        "juggernaut",
         "defend",
         "defend",
         "defend",

@@ -48,6 +48,13 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     void UpdateCardDescription()
     {
+        //***UPDATE*** Removed if-else block chain, now you can call "GetDescription()" to get the description with modified damage values
+        int damage = cardData.damage;
+        cardData.actualDamage = CombatManager.Instance.GetActualDamage(cardData.damage);
+        descriptionText.text = cardData.GetDescription();
+        cardData.actualDamage = damage;
+
+        /*
         if (cardData.id == "defend")
         {
             descriptionText.text = $"Gain {cardData.block} Block";
@@ -76,7 +83,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             //Later we will get rid of the if-else statement entirely and it will be the same action for all cards.
             //TODO: Need to figure out how to use in-line variables in description to show effect-adjusted damage values.
             descriptionText.text = cardData.description;
-        }
+        } */
     }
 
     public void OnPointerEnter(PointerEventData eventData){ // Event that when pointer enters a card

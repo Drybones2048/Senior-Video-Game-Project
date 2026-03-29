@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   id: juggernaut
   displayName: Juggernaut
-  description: Double your block damage after consecutive perfect blocks.
+  description: Double your block damage after a perfect block.
   type: 3
   cost: 2
-  sprite: 
+  sprite: Juggernaut
   damage: 0
   block: 0
   statusEffects: []

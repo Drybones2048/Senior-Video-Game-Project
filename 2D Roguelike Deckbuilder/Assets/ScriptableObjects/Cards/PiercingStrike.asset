@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   id: piercing_strike
   displayName: Piercing Strike
-  description: Deal 5 damage, ignore enemy block.
+  description: Deal {damage} damage, ignore enemy block.
   type: 0
   cost: 1
   sprite: 
