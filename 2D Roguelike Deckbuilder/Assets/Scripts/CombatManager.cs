@@ -88,8 +88,10 @@ public class CombatManager : MonoBehaviour
     }
 
     public void DealBlockDamage() {
+        Debug.Log("Calling");
         if (perfectBlock)
         {
+            Debug.Log("Successful perfect block");
             currentEnemy.TakeDamage((int)(blockedDamage * perfectBlockPercent));
             if (empoweringShield)
             {

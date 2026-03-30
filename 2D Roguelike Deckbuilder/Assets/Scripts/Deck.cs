@@ -22,11 +22,9 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         "defend",
         "defend",
         "defend",
-        "attack",
-        "attack",
-        "attack",
-        "attack",
-        "attack"
+        "defend",
+        "defend",
+        "defend"
     };
 
     //*****UPDATE: This is the deck containing all card data that you'll pass by reference to other functions

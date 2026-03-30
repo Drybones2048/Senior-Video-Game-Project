@@ -85,6 +85,9 @@ public class RoundManager : MonoBehaviour
 
     private void StartPlayerTurn()
     {
+        Debug.Log("Starting player turn");
+        Debug.Log(player.playerClass);
+
         ShieldManager.removeShield.Invoke(); // Removes all shield from the player at the start of a new round
         currentState = gameState.playerTurn;
         currentEnergy = maxEnergy;
@@ -92,6 +95,7 @@ public class RoundManager : MonoBehaviour
 
         //***UPDATE*** Now deal block damage for Horus class at start of the turn. 
         if (player.playerClass == PlayerClass.Horus) {
+            Debug.Log("Is Horus");
             CombatManager.Instance.DealBlockDamage();
         }
     }

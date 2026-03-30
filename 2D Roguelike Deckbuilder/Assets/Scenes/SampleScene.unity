@@ -6898,7 +6898,7 @@ MonoBehaviour:
   currentHealth: 0
   weakened: 0
   shieldAmount: 0
-  playerClass: 0
+  playerClass: 2
 --- !u!114 &2008279968
 MonoBehaviour:
   m_ObjectHideFlags: 0

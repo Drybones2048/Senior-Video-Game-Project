@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
 
     public static event Action<int> shieldDamaged;
 
-    public PlayerClass playerClass = PlayerClass.Ra;
+    public PlayerClass playerClass = PlayerClass.Horus;
 
     //private variables
     bool myTurn;
@@ -67,6 +67,7 @@ public class Player : MonoBehaviour
 
             //****UPDATE**** set bool in CombatManager after enemy attack if perfect block occured.
             CombatManager.Instance.perfectBlock = true;
+            CombatManager.Instance.blockedDamage = damage;
             
         }
         else // Player takes regular damage because they played no block
