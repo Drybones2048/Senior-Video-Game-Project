@@ -17,8 +17,7 @@ public class CombatManager : MonoBehaviour
 
     public Animator animator;
 
-    public bool perfectBlock = false;   //based on whether you perfectly blocked all damage on the enemy's last attack
-    public float blockedDamage = 0f;
+    public float blockDamageDelay = 0.5f;
     public float perfectBlockPercent = 0.3f;
     bool empoweringShield = false;
     bool juggernaut = false;
@@ -35,7 +34,8 @@ public class CombatManager : MonoBehaviour
     }
 
     void PlayPlayerCard(CardInstance card) {
-        if (card.type == CardType.Attack) {
+        if (card.type == CardType.Attack)
+        {
             int actualDamage = GetActualDamage(card.damage);
             currentEnemy.TakeDamage(actualDamage);
             if (card.uniqueBehavior == UniqueBehavior.PressAndFall)
@@ -52,12 +52,25 @@ public class CombatManager : MonoBehaviour
 
         }
 
-        else if (card.type == CardType.Defend) {
+        else if (card.type == CardType.Defend)
+        {
             player.GainShield(card.block);
             shieldGained.Invoke(card);
         }
-        
-        else {}
+
+        else if (card.type == CardType.Persistent) {
+            if (card.uniqueBehavior == UniqueBehavior.Juggernaut) 
+            {
+                juggernaut = true;
+            }
+            if (card.uniqueBehavior == UniqueBehavior.EmpoweringShield)
+            {
+                empoweringShield = true;
+            }
+        }
+
+
+        else { }
     }
 
     public int GetActualDamage(int attackAmount) // Get the actual damage that the card will do considering status effects like weaken (or strengthen in the future)
@@ -87,24 +100,28 @@ public class CombatManager : MonoBehaviour
         slash.SetActive(false); // hide the slash sprite
     }
 
-    public void DealBlockDamage() {
-        Debug.Log("Calling");
-        if (perfectBlock)
+    //a coroutine that delays the slash effect when block damage is dealt
+    IEnumerator BlockDamageRoutine(int blockedDamage)
+    {
+        yield return new WaitForSeconds(blockDamageDelay);
+        currentEnemy.TakeDamage((int)(blockedDamage * perfectBlockPercent));
+        PlayAttackEffectsAndSounds();
+        if (empoweringShield)
         {
-            Debug.Log("Successful perfect block");
-            currentEnemy.TakeDamage((int)(blockedDamage * perfectBlockPercent));
-            if (empoweringShield)
-            {
-                ApplyEmpoweringShield();
-            }
-            if (juggernaut)
-            {
-                ApplyJuggernaut();
-            }
+            ApplyEmpoweringShield();
+        }
+        if (juggernaut)
+        {
+            ApplyJuggernaut();
         }
     }
 
+    public void DealBlockDamage(int blockedDamage) {
+        StartCoroutine(BlockDamageRoutine(blockedDamage));
+    }
+
     void ApplyEmpoweringShield() {
+        Debug.Log("Empowering shield effect triggered");
         //Create a StatusEffect and add it to the list in PlayerStatus Effects
         StatusEffect strengthenEffect = new StatusEffect();
         strengthenEffect.effectType = EffectType.Strengthen;
@@ -117,6 +134,7 @@ public class CombatManager : MonoBehaviour
     }
 
     void ApplyJuggernaut() {
+        Debug.Log("Juggernaut effect triggered");
         perfectBlockPercent *= 2f;
     }
 
