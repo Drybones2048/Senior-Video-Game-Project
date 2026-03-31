@@ -49,13 +49,25 @@ public class CardRewardScreen : MonoBehaviour
 
     void ShowRewardScreen() // Method that will set up the card reward display
     {
-        Debug.Log("Enemy defeated! Showing card rewards...");
+        if (roundManager.encounterNumber == 4) // When pharaoh phase 2 has been killed
+        {
+            //TODO: Make a 'You Win' Screen appear in this statement
 
-        List<CardInstance> rewardCards = GenerateRewardCards();
+        } else if(roundManager.encounterNumber != 3) // For all combats that are not the pharaoh, give a card reward
+        {
+            Debug.Log("Enemy defeated! Showing card rewards...");
 
-        DisplayRewardCards(rewardCards);
+            List<CardInstance> rewardCards = GenerateRewardCards();
 
-        FadeInRewardScreen();
+            DisplayRewardCards(rewardCards);
+
+            FadeInRewardScreen();
+        } 
+        else // Skip the card reward between pharaoh phase 1 and 2
+        {
+            roundManager.StartNewCombat();
+        }
+        
     }
 
     List<CardInstance> GenerateRewardCards() // Generates the number of card rewards as requested by the variable

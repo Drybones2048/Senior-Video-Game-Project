@@ -5,10 +5,12 @@ public class Enemy : MonoBehaviour
 {
     public Player player;
     public EnemyHealth healthBar;
-
     public GameObject centipede;
 
     public GameObject skeleton;
+
+    public GameObject pharaohPhase1;
+    public GameObject pharaohPhase2;
 
     private EnemyAttack attack; // This is now assigned dynamically depending on which enemy is alive
     [SerializeField] private int maxHealth; // The max health for the enemy will be set in the inspector
@@ -22,6 +24,8 @@ public class Enemy : MonoBehaviour
         RoundManager.enemyDead.AddListener(Die);
         spawnNewEnemy.AddListener(SpawnNewEnemy);
         skeleton.SetActive(false);
+        pharaohPhase1.SetActive(false);
+        pharaohPhase2.SetActive(false);
     }
 
     void OnDestroy() {
@@ -60,6 +64,14 @@ public class Enemy : MonoBehaviour
                 skeleton.SetActive(true);
                 SetupEnemy(skeleton, 75);
                 break;
+            case 3:
+                pharaohPhase1.SetActive(true);
+                SetupEnemy(pharaohPhase1, 80);
+                break;
+            case 4:
+                pharaohPhase2.SetActive(true);
+                SetupEnemy(pharaohPhase2, 120);
+                break;
         }
     }
 
@@ -85,6 +97,12 @@ public class Enemy : MonoBehaviour
         } else if(skeleton.activeSelf == true)
         {
             skeleton.SetActive(false);
+        } else if(pharaohPhase1.activeSelf == true)
+        {
+            pharaohPhase1.SetActive(false);
+        } else if (pharaohPhase2.activeSelf == true)
+        {
+            pharaohPhase2.SetActive(false);
         }
     }
 }

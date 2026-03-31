@@ -8,9 +8,14 @@ public class EnemyAttack : MonoBehaviour
     public EnemyAttackPattern attackPattern; // Will store the scriptable object of the enemy in question
     public TextMeshProUGUI enemyIntentText;
 
+    void Awake()
+    {
+        RoundManager.enemyDead.AddListener(moveText);
+    }
+    
     void Update(){
         if (attackPattern == null) return;
- 
+
         EnemyMove currentMove = attackPattern.GetMoveForRound(RoundManager.instance.roundNumber);
         if (currentMove != null) // Get the intent text displayed correctly every round
         {
@@ -22,6 +27,11 @@ public class EnemyAttack : MonoBehaviour
         {
             enemyIntentText.text = $"{GetActualDamage(move.value)} Damage";
         }
+    }
+
+    void OnDestroy()
+    {
+        RoundManager.enemyDead.RemoveListener(moveText);
     }
  
     public void attackPlayer(Player player) // Method that is called at the start of the enemy's turn every round, will do attack actions based on the enemy's scriptable object
@@ -64,7 +74,7 @@ public class EnemyAttack : MonoBehaviour
                     Debug.LogWarning("EnemyAttack: EnemyStatusEffects instance not found. Make sure it is in the scene.");
                 break;
 
-            // ADD MORE TO THIS SWITCH CASE FOR MORE TYPES OF ENEMY ACTIONS LIKE STRENGTHEN AND CONFUSE
+            // ADD MORE TO THIS SWITCH CASE FOR MORE TYPES OF ENEMY ACTIONS LIKE CONFUSE
         }
     }
 
@@ -74,5 +84,17 @@ public class EnemyAttack : MonoBehaviour
             return EnemyStatusEffects.Instance.GetModifiedAttackDamage(baseDamage);
  
         return baseDamage;
+    }
+
+    void moveText() // Function that moves the intent text of the enemies since their sprites are different heights
+    {
+        if(RoundManager.instance.encounterNumber == 1) // If the centipede is killed, move the text higher for the skeleton
+        {
+            enemyIntentText.rectTransform.anchoredPosition += new Vector2(0, 40);
+
+        } else if(RoundManager.instance.encounterNumber == 2){ // If the skeleton is killed, move the text highest for the pharaoh
+
+            enemyIntentText.rectTransform.anchoredPosition += new Vector2(0, 25);
+        }
     }
 }

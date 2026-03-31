@@ -9,6 +9,9 @@ public class StatusEffectUI : MonoBehaviour
     public TextMeshProUGUI poisonedQuantityText;
     public TextMeshProUGUI poisonedTurnsText;
     public GameObject poisonedIcon;
+    public TextMeshProUGUI strengthenQuantityText;
+    public TextMeshProUGUI strengthenTurnsText;
+    public GameObject strengthenIcon;
 
     public GameObject enemyStrengthIcon;
     public TextMeshProUGUI enemyStrengthenQuantityText;
@@ -43,10 +46,16 @@ public class StatusEffectUI : MonoBehaviour
                 weakenedText.gameObject.SetActive(false);
                 weakenedIcon.gameObject.SetActive(false);
             }
-            if(poisonedQuantityText != null && poisonedIcon != null){
+            if(poisonedQuantityText != null && poisonedIcon != null && poisonedTurnsText != null){
                 poisonedQuantityText.gameObject.SetActive(false);
                 poisonedIcon.gameObject.SetActive(false);
                 poisonedTurnsText.gameObject.SetActive(false);
+            }
+            if(strengthenQuantityText != null && strengthenIcon != null && strengthenTurnsText != null)
+            {
+                strengthenQuantityText.gameObject.SetActive(false);
+                strengthenIcon.gameObject.SetActive(false);
+                strengthenTurnsText.gameObject.SetActive(false);
             }
             return;
         }
@@ -83,7 +92,7 @@ public class StatusEffectUI : MonoBehaviour
                 if (poison.turnDuration > 0) // If there is more than one turn left on poison, set text
                 {
                     poisonedQuantityText.text = poison.quantity.ToString();
-                    poisonedTurnsText.text = $"{poison.turnDuration.ToString()} Turns";
+                    poisonedTurnsText.text = $"{poison.turnDuration.ToString()} T";
                 }
             }
             else // If player is not poisoned, stay hiddden
@@ -91,6 +100,29 @@ public class StatusEffectUI : MonoBehaviour
                 poisonedQuantityText.gameObject.SetActive(false);
                 poisonedIcon.gameObject.SetActive(false);
                 poisonedTurnsText.gameObject.SetActive(false);
+            }
+        }
+        if(strengthenQuantityText != null && strengthenIcon != null && strengthenTurnsText != null)
+        {
+            if (PlayerStatusEffects.Instance.isStrengthened) // If the player is strengthened, show the icons and update the text
+            {
+                strengthenQuantityText.gameObject.SetActive(true);
+                strengthenIcon.gameObject.SetActive(true);
+                strengthenTurnsText.gameObject.SetActive(true);
+
+                StatusEffect strengthen = PlayerStatusEffects.Instance.findStatusEffect(EffectType.Strengthen);
+
+                if(strengthen.turnDuration > 0)
+                {
+                    strengthenQuantityText.text = strengthen.quantity.ToString();
+                    strengthenTurnsText.text = $"{strengthen.turnDuration.ToString()} T";
+                }
+            }
+            else // If the player is not strengthened, hide all of the assets
+            {
+                strengthenQuantityText.gameObject.SetActive(false);
+                strengthenIcon.gameObject.SetActive(false);
+                strengthenTurnsText.gameObject.SetActive(false);
             }
         }
     }

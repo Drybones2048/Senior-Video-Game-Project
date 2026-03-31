@@ -10,6 +10,10 @@ public class Player : MonoBehaviour
     public int maxHealth = 100; // Max health value that we want to give the player character
     public PlayerHealth healthBar;
     public int currentHealth;
+    private SpriteRenderer spriteRenderer;
+    [SerializeField] private Sprite horusCharacter;
+    [SerializeField] private Sprite setCharacter;
+    [SerializeField] private Sprite raCharacter;
 
     public bool weakened; // status effect to indicate the player will do 20% (balance pending) less damage on each attack card's listed value
 
@@ -29,11 +33,25 @@ public class Player : MonoBehaviour
         currentHealth = maxHealth;
         healthBar.setMaxHealth(maxHealth);
         shieldAmount = 0;
+        ShieldManager.removeShield.AddListener(removeAllShield);
+
+        // Rest of this method is used to set the character's sprite based on the Egyptian god picked
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if(playerClass == PlayerClass.Horus)
+        {
+            spriteRenderer.sprite = horusCharacter;
+            
+        } else if(playerClass == PlayerClass.Ra)
+        {
+            spriteRenderer.sprite = raCharacter;
+            
+        } else if(playerClass == PlayerClass.Set)
+        {
+            spriteRenderer.sprite = setCharacter;
+
+        }
     }   
 
-    void Update(){
-        
-    }
     public void GainShield(int shield)
     {
         shieldAmount += shield;
@@ -79,6 +97,11 @@ public class Player : MonoBehaviour
         }
 
         healthBar.setHealth(currentHealth);
+    }
+
+    void removeAllShield() // Method that is called to update the player's shield value to 0 at the end of a round
+    {
+        shieldAmount = 0;
     }
 
     public void TakeDirectDamage(int damage)

@@ -75,7 +75,7 @@ public class CombatManager : MonoBehaviour
     {
         if (PlayerStatusEffects.Instance != null)
         {
-            return PlayerStatusEffects.Instance.isWeakened;
+            return PlayerStatusEffects.Instance.isWeakened || PlayerStatusEffects.Instance.isStrengthened;
         }
 
         return false;

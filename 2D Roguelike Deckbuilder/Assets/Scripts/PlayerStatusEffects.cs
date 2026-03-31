@@ -3,10 +3,13 @@ using UnityEngine.EventSystems;
 using System;
 using System.Collections.Generic;
 using UnityEngine.Events;
+
 public class PlayerStatusEffects : MonoBehaviour {
     public bool isWeakened = false; // Boolean for weakened condition (player deals 20% less damage)
 
     public bool isPoisoned = false; // Boolean for poisoned condition (player takes 5-x damage every turn, with x being number of turns)
+
+    public bool isStrengthened = false; // Boolean for strengthened condition (player does 20% more damage per attack card for 2 turns)
 
     public Player player;
 
@@ -126,6 +129,44 @@ public class PlayerStatusEffects : MonoBehaviour {
         OnStatusEffectsChanged?.Invoke();
     }
 
+    public void ApplyStrengthen(int turns = 2, int quantity = 1) // Method to apply strengthen to the character
+    {
+        if(isStrengthened && findStatusEffect(EffectType.Strengthen) != null)
+        {
+            findStatusEffect(EffectType.Strengthen).quantity += quantity;
+            findStatusEffect(EffectType.Strengthen).turnDuration += turns;
+            OnStatusEffectsChanged?.Invoke();
+        }
+        else
+        {
+            StatusEffect strengthened = new StatusEffect();
+            strengthened.effectType = EffectType.Strengthen;
+            strengthened.effectStartOffset = 0;
+            strengthened.turnDuration = turns;
+            strengthened.quantity = quantity;
+            strengthened.effectTarget = EffectTarget.Player;
+
+            allStatusEffects.Add(strengthened);
+            isStrengthened = true;
+
+            Debug.Log($"Player strengthened for {strengthened.turnDuration} turn(s)!");
+            OnStatusEffectsChanged?.Invoke();
+        }
+    }
+
+    public void RemoveStrengthen() // Remove strengthen status effect
+    {
+        StatusEffect strengthen = findStatusEffect(EffectType.Strengthen);
+        strengthen.turnDuration = 0;
+        strengthen.quantity = 0;
+
+        allStatusEffects.Remove(strengthen); // Remove strengthen from list of status effects
+        isStrengthened = false;
+        
+        Debug.Log("Strengthened effect removed!");
+        OnStatusEffectsChanged?.Invoke();
+    }
+
     public void DecrementStatusEffects() // Call this at the end of the player's turn to decrement status effects and remove any text or symbols
     {
         if(HasAnyStatusEffects()) // Checks to see if there are any status effects currently on the player
@@ -161,12 +202,32 @@ public class PlayerStatusEffects : MonoBehaviour {
                         OnStatusEffectsChanged?.Invoke();
                     }
                 }
+                else if(allStatusEffects[i].effectType is EffectType.Strengthen && allStatusEffects[i].turnDuration > 0)
+                {
+                    allStatusEffects[i].turnDuration--; // Decrements turn duration
+                    allStatusEffects[i].quantity--;
+
+                    if(allStatusEffects[i].turnDuration <= 0)
+                    {
+                        RemoveStrengthen();
+                    }
+                    else
+                    {
+                        Debug.Log($"Strengthen: {allStatusEffects[i].turnDuration} turn(s) remaining");
+                        OnStatusEffectsChanged?.Invoke();
+                    }
+                }
             }
         }
     }
 
     public int GetModifiedAttackDamage(int baseDamage) // Calculate modified attack damage (apply weaken if active)
     {
+        if (isStrengthened)
+        {
+            return Mathf.FloorToInt(baseDamage * 1.2f); // Increase damage by 20% when strengthened
+        }
+
         if (isWeakened)
         {
             return Mathf.FloorToInt(baseDamage * 0.8f); // Reduce damage by 20% when weakened
@@ -177,7 +238,7 @@ public class PlayerStatusEffects : MonoBehaviour {
 
     public bool HasAnyStatusEffects() // Check if player has any active status effects (will expand this as other statuses get added)
     {
-        return isWeakened || isPoisoned;
+        return isWeakened || isPoisoned || isStrengthened;
     }
 
     public StatusEffect findStatusEffect(EffectType requestedType) // Goes through the status effect list and returns the first reference to the requested status effect in the list
@@ -202,6 +263,10 @@ public class PlayerStatusEffects : MonoBehaviour {
         if (isWeakened)
         {
             RemoveWeaken();
+        }
+        if (isStrengthened)
+        {
+            RemoveStrengthen();
         }
     }
 }
