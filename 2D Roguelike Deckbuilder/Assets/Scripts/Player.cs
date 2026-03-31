@@ -38,10 +38,13 @@ public class Player : MonoBehaviour
     {
         shieldAmount += shield;
     }
+    public void ResetShield() 
+    {
+        shieldAmount = 0;
+    }
 
     public void TakeDamage(int damage){ // function that will be used strictly to keep track of damage
-
-        if(shieldAmount > 0 && damage >= shieldAmount) // Player has shield but not enough to block all the damage
+        if (shieldAmount > 0 && damage > shieldAmount) // Player has shield but not enough to block all the damage
         {
             currentHealth -= (damage - shieldAmount);
 
@@ -49,7 +52,7 @@ public class Player : MonoBehaviour
 
             shieldBroken?.Invoke();
 
-        } else if (shieldAmount > 0 && shieldAmount > damage) // Shield is able to block all of the damage
+        } else if (shieldAmount > 0 && shieldAmount >= damage) // Shield is able to block all of the damage
         {
             shieldAmount -= damage;
 
