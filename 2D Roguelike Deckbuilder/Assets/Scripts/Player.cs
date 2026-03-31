@@ -56,10 +56,13 @@ public class Player : MonoBehaviour
     {
         shieldAmount += shield;
     }
+    public void ResetShield() 
+    {
+        shieldAmount = 0;
+    }
 
     public void TakeDamage(int damage){ // function that will be used strictly to keep track of damage
-
-        if(shieldAmount > 0 && damage >= shieldAmount) // Player has shield but not enough to block all the damage
+        if (shieldAmount > 0 && damage > shieldAmount) // Player has shield but not enough to block all the damage
         {
             currentHealth -= (damage - shieldAmount);
 
@@ -67,10 +70,7 @@ public class Player : MonoBehaviour
 
             shieldBroken?.Invoke();
 
-            //***UPDATE*** perfect block did not occur so set bool=false
-            CombatManager.Instance.perfectBlock = false;
-
-        } else if (shieldAmount > 0 && shieldAmount > damage) // Shield is able to block all of the damage
+        } else if (shieldAmount > 0 && shieldAmount >= damage) // Shield is able to block all of the damage
         {
             shieldAmount -= damage;
 
@@ -83,17 +83,16 @@ public class Player : MonoBehaviour
                 shieldDamaged?.Invoke(damage);
             }
 
-            //****UPDATE**** set bool in CombatManager after enemy attack if perfect block occured.
-            CombatManager.Instance.perfectBlock = true;
-            CombatManager.Instance.blockedDamage = damage;
+            //***UPDATE*** Now deal block damage for Horus class after a perfect block 
+            if (playerClass == PlayerClass.Horus)
+            {
+                CombatManager.Instance.DealBlockDamage(damage);
+            }
             
         }
         else // Player takes regular damage because they played no block
         {
             currentHealth -= damage;
-
-            //***UPDATE*** perfect block did not occur so set bool=false
-            CombatManager.Instance.perfectBlock = false;
         }
 
         healthBar.setHealth(currentHealth);

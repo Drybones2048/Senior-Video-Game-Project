@@ -200,7 +200,11 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
     {
         currentHand.Remove(card);
 
-        discard.Add(card);
+        //when a persistent card is played, it is not added to the discard pile, it's exhausted
+        if (card.type != CardType.Persistent)
+        {
+            discard.Add(card);
+        }
     }
 
     public void discardAll() // Method to discard all cards in hand when the player clicks the end round button
