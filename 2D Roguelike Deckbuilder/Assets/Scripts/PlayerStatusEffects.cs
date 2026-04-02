@@ -205,7 +205,6 @@ public class PlayerStatusEffects : MonoBehaviour {
                 else if(allStatusEffects[i].effectType is EffectType.Strengthen && allStatusEffects[i].turnDuration > 0)
                 {
                     allStatusEffects[i].turnDuration--; // Decrements turn duration
-                    allStatusEffects[i].quantity--;
 
                     if(allStatusEffects[i].turnDuration <= 0)
                     {
@@ -223,17 +222,25 @@ public class PlayerStatusEffects : MonoBehaviour {
 
     public int GetModifiedAttackDamage(int baseDamage) // Calculate modified attack damage (apply weaken if active)
     {
+        int damageValue = baseDamage;
+
         if (isStrengthened)
         {
-            return Mathf.FloorToInt(baseDamage * 1.2f); // Increase damage by 20% when strengthened
+            StatusEffect strengthen = findStatusEffect(EffectType.Strengthen);
+            if(strengthen != null)
+            {
+                float multiplier = 1f + (strengthen.quantity * 0.2f);
+                damageValue = Mathf.FloorToInt(damageValue * multiplier); // Increase damage by 20% when strengthened
+            }
+            
         }
 
         if (isWeakened)
         {
-            return Mathf.FloorToInt(baseDamage * 0.8f); // Reduce damage by 20% when weakened
+            damageValue = Mathf.FloorToInt(damageValue * 0.8f); // Reduce damage by 20% when weakened
         }
         
-        return baseDamage;
+        return damageValue;
     }
 
     public bool HasAnyStatusEffects() // Check if player has any active status effects (will expand this as other statuses get added)

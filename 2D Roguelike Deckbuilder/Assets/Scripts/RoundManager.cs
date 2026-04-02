@@ -115,6 +115,7 @@ public class RoundManager : MonoBehaviour
 
     private void EndEnemyTurn() {
         currentState = gameState.interim;
+        EnemyStatusEffects.Instance.DecrementStatusEffects();
         roundNumber++;  //this is the only place other than startCombat(called once per combat) where roundNumber is incremented
         routine.EndEnemyTurn(); //start coroutine
     }

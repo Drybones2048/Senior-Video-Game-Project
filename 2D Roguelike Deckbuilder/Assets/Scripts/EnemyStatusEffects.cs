@@ -6,6 +6,7 @@ public class EnemyStatusEffects : MonoBehaviour
 {
     public bool isStrengthened = false; // Boolean for strengthened condition (enemy deals 20% more damage per stack)
 
+    public bool isWeakened = false; // Boolean for weakened status effect (20% decrease in incoming damage)
     public static event Action OnEnemyStatusEffectsChanged; // Event that other systems (e.g. UI) can subscribe to
 
     public static EnemyStatusEffects Instance { get; private set; } // Singleton pattern
@@ -72,26 +73,93 @@ public class EnemyStatusEffects : MonoBehaviour
         OnEnemyStatusEffectsChanged?.Invoke();
     }
 
-    // Returns the actual damage the enemy deals after applying Strengthen stacks.
-    // Each stack adds a flat 20%, so 2 stacks = 40% bonus, 3 stacks = 60%, etc.
-    public int GetModifiedAttackDamage(int baseDamage)
+    public void ApplyWeaken(int turns = 1, int quantity = 1) // Method to apply weaken to the enemy
     {
+        if(isWeakened && findStatusEffect(EffectType.Weaken) != null) // If the enemy is already weakened, increase the duration
+        {
+            findStatusEffect(EffectType.Weaken).turnDuration += turns;
+            OnEnemyStatusEffectsChanged.Invoke();
+        }
+        else // The enemy is not already weakened
+        {
+            StatusEffect weaken = new StatusEffect(); // Create weakened status effect
+
+            weaken.effectType = EffectType.Weaken;
+            weaken.effectStartOffset = 0;
+            weaken.turnDuration = turns;
+            weaken.quantity = quantity;
+            weaken.effectTarget = EffectTarget.Enemy;
+
+            allStatusEffects.Add(weaken);
+            isWeakened = true;
+
+            Debug.Log($"Enemy weakened for {weaken.turnDuration} turn(s)!");
+
+            OnEnemyStatusEffectsChanged.Invoke();
+        }
+    }
+
+    public void RemoveWeaken() // Method that will remove weaken off the enemy if they die or the duration runs out
+    {
+        StatusEffect weaken = findStatusEffect(EffectType.Weaken);
+        weaken.turnDuration = 0;
+        weaken.quantity = 0;
+
+        allStatusEffects.Remove(weaken);
+        isWeakened = false;
+        Debug.Log("Weakened on the enemy removed!");
+        OnEnemyStatusEffectsChanged.Invoke();
+    }
+
+    public void DecrementStatusEffects() // Enemy decrement the turn duration of status effects like weaken
+    {
+        if (HasAnyStatusEffects()) // Checks if the enemy has any status effects at all
+        {
+            for(int i = 0; i < allStatusEffects.Count; i++) // Goes through all status effects
+            {
+                if(allStatusEffects[i].effectType is EffectType.Weaken && allStatusEffects[i].turnDuration > 0) // Checks if enemy is weakened and has a positive turn duration
+                {
+                    allStatusEffects[i].turnDuration--; // Decreases number of turns weakened lasts for
+
+                    if(allStatusEffects[i].turnDuration <= 0) // If the turn duration is zero or below, remove it as no longer active
+                    {
+                        RemoveWeaken();
+                    }
+                    else // If there are a positive amount of turns left with weaken on the enemy, update UI and keep weaken
+                    {
+                        Debug.Log($"Enemy weaken: {allStatusEffects[i].turnDuration} turn(s) remaining");
+                        OnEnemyStatusEffectsChanged.Invoke();
+                    }
+                }
+            }
+        }
+    }
+
+    public int GetModifiedAttackDamage(int baseDamage) // Calculates how much damage an attack will do considering weaken and strengthen
+    {
+        int damageValue = baseDamage;
+
         if (isStrengthened)
         {
             StatusEffect strengthen = findStatusEffect(EffectType.Strengthen);
             if (strengthen != null)
             {
                 float multiplier = 1f + (strengthen.quantity * 0.2f);
-                return Mathf.FloorToInt(baseDamage * multiplier);
+                damageValue = Mathf.FloorToInt(damageValue * multiplier);
             }
         }
 
-        return baseDamage;
+        if (isWeakened)
+        {
+            damageValue = Mathf.FloorToInt(damageValue * 0.8f);
+        }
+
+        return damageValue;
     }
 
     public bool HasAnyStatusEffects() // Checks and sees if the enemy has any status effects on them
     {
-        return isStrengthened;
+        return isStrengthened || isWeakened;
     }
 
     public StatusEffect findStatusEffect(EffectType requestedType) // Interate to find requested status effect
@@ -110,6 +178,11 @@ public class EnemyStatusEffects : MonoBehaviour
         if (isStrengthened)
         {
             RemoveStrengthen();
+        }
+
+        if (isWeakened)
+        {
+            RemoveWeaken();
         }
     }
 }

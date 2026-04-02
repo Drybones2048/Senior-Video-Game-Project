@@ -17,6 +17,9 @@ public class StatusEffectUI : MonoBehaviour
     public TextMeshProUGUI enemyStrengthenQuantityText;
     public TextMeshProUGUI enemyStrengthenTurnsText;
     public GameObject infinitySymbol;
+    public GameObject enemyWeakenedIcon;
+    public TextMeshProUGUI enemyWeakenedText;
+    public TextMeshProUGUI enemyWeakenedDurationText;
 
 
     void OnEnable()
@@ -138,6 +141,13 @@ public class StatusEffectUI : MonoBehaviour
                 infinitySymbol.gameObject.SetActive(false);
                 enemyStrengthenTurnsText.gameObject.SetActive(false);
             } 
+
+            if(enemyWeakenedText != null && weakenedIcon != null)
+            {
+                enemyWeakenedIcon.gameObject.SetActive(false);
+                enemyWeakenedText.gameObject.SetActive(false);
+                enemyWeakenedDurationText.gameObject.SetActive(false);
+            }
             return;       
         }
 
@@ -168,6 +178,28 @@ public class StatusEffectUI : MonoBehaviour
                 enemyStrengthIcon.gameObject.SetActive(false);
                 infinitySymbol.gameObject.SetActive(false);
                 enemyStrengthenTurnsText.gameObject.SetActive(false);
+            }
+        }
+
+        if(enemyWeakenedText != null && enemyWeakenedIcon != null)
+        {
+            if (EnemyStatusEffects.Instance.isWeakened) // If the enemy is weakened, show UI
+            {
+                enemyWeakenedIcon.gameObject.SetActive(true);
+                enemyWeakenedText.gameObject.SetActive(true);
+                enemyWeakenedDurationText.gameObject.SetActive(true);
+            
+                if(EnemyStatusEffects.Instance.findStatusEffect(EffectType.Weaken).turnDuration > 0) // Update the duration of weaken from enemy status effect
+                {
+                    enemyWeakenedText.text = EnemyStatusEffects.Instance.findStatusEffect(EffectType.Weaken).quantity.ToString();
+                    enemyWeakenedDurationText.text = $"{EnemyStatusEffects.Instance.findStatusEffect(EffectType.Weaken).turnDuration.ToString()} T";
+                }
+            }
+            else // If the enemy is not weakened, hide UI still
+            {
+                enemyWeakenedIcon.gameObject.SetActive(false);
+                enemyWeakenedText.gameObject.SetActive(false);
+                enemyWeakenedDurationText.gameObject.SetActive(false);
             }
         }
     }

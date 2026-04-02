@@ -35,13 +35,6 @@ public class CombatManager : MonoBehaviour
     }
 
     void PlayPlayerCard(CardInstance card) {
-        if (card.statusEffects is not null) {
-            if (card.statusEffects.Count > 0) {
-                Debug.Log("Added effects");
-                EnemyStatusEffects.Instance.allStatusEffects.AddRange(card.statusEffects);
-            }
-        }
-
         if (card.type == CardType.Attack)
         {
             int actualDamage = GetActualDamage(card.damage);
@@ -81,6 +74,7 @@ public class CombatManager : MonoBehaviour
         else if (card.type == CardType.Special) {
             if (card.uniqueBehavior == UniqueBehavior.WeakenRitual) {
                 player.TakeDamage(card.damage);
+                EnemyStatusEffects.Instance.ApplyWeaken(2, 1);
             }
         }
 
@@ -137,15 +131,8 @@ public class CombatManager : MonoBehaviour
 
     void ApplyEmpoweringShield() {
         Debug.Log("Empowering shield effect triggered");
-        //Create a StatusEffect and add it to the list in PlayerStatus Effects
-        StatusEffect strengthenEffect = new StatusEffect();
-        strengthenEffect.effectType = EffectType.Strengthen;
-        strengthenEffect.effectStartOffset = 0;
-        strengthenEffect.turnDuration = 1;
-        strengthenEffect.quantity = 2;
-        strengthenEffect.effectTarget = EffectTarget.Player;
 
-        PlayerStatusEffects.Instance.allStatusEffects.Add(strengthenEffect);
+        PlayerStatusEffects.Instance.ApplyStrengthen(2, 2); // Calls the singleton of the status player status effect class and applies 2 strengthen for the 2 turn default
     }
 
     void ApplyJuggernaut() {

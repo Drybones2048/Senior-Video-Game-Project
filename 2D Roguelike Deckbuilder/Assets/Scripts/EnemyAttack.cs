@@ -27,6 +27,11 @@ public class EnemyAttack : MonoBehaviour
         {
             enemyIntentText.text = $"{GetActualDamage(move.value)} Damage";
         }
+
+        if(move != null && move.moveType == EnemyMoveType.Damage && EnemyStatusEffects.Instance.isWeakened) // If the enemy is weakened mid-turn, update the intent text with new damage values
+        {
+            enemyIntentText.text = $"{GetActualDamage(move.value)} Damage";
+        }
     }
 
     void OnDestroy()
@@ -90,7 +95,7 @@ public class EnemyAttack : MonoBehaviour
     {
         if(RoundManager.instance.encounterNumber == 1) // If the centipede is killed, move the text higher for the skeleton
         {
-            enemyIntentText.rectTransform.anchoredPosition += new Vector2(0, 40);
+            enemyIntentText.rectTransform.anchoredPosition += new Vector2(0, 140);
 
         } else if(RoundManager.instance.encounterNumber == 2){ // If the skeleton is killed, move the text highest for the pharaoh
 
