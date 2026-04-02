@@ -22,5 +22,5 @@ MonoBehaviour:
   block: 0
   statusEffects: []
   uniqueBehavior: 3
-  cardClass: 1
+  cardClass: 3
   isStartingCard: 1

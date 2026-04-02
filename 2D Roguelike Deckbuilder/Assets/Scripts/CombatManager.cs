@@ -10,6 +10,7 @@ public class CombatManager : MonoBehaviour
     public Enemy currentEnemy;
 
     public Player player;
+    public PlayerClass playerClass;
 
     public AudioClip attackSound;
 
@@ -34,6 +35,13 @@ public class CombatManager : MonoBehaviour
     }
 
     void PlayPlayerCard(CardInstance card) {
+        if (card.statusEffects is not null) {
+            if (card.statusEffects.Count > 0) {
+                Debug.Log("Added effects");
+                EnemyStatusEffects.Instance.allStatusEffects.AddRange(card.statusEffects);
+            }
+        }
+
         if (card.type == CardType.Attack)
         {
             int actualDamage = GetActualDamage(card.damage);
@@ -58,14 +66,21 @@ public class CombatManager : MonoBehaviour
             shieldGained.Invoke(card);
         }
 
-        else if (card.type == CardType.Persistent) {
-            if (card.uniqueBehavior == UniqueBehavior.Juggernaut) 
+        else if (card.type == CardType.Persistent)
+        {
+            if (card.uniqueBehavior == UniqueBehavior.Juggernaut)
             {
                 juggernaut = true;
             }
             if (card.uniqueBehavior == UniqueBehavior.EmpoweringShield)
             {
                 empoweringShield = true;
+            }
+        }
+
+        else if (card.type == CardType.Special) {
+            if (card.uniqueBehavior == UniqueBehavior.WeakenRitual) {
+                player.TakeDamage(card.damage);
             }
         }
 

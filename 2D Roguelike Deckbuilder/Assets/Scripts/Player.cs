@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System;
 
-public enum PlayerClass { Ra, Set, Horus }
+public enum PlayerClass { All, Ra, Set, Horus }
 
 public class Player : MonoBehaviour
 {
@@ -23,8 +23,6 @@ public class Player : MonoBehaviour
 
     public static event Action<int> shieldDamaged;
 
-    public PlayerClass playerClass = PlayerClass.Horus;
-
     //private variables
     bool myTurn;
 
@@ -37,15 +35,15 @@ public class Player : MonoBehaviour
 
         // Rest of this method is used to set the character's sprite based on the Egyptian god picked
         spriteRenderer = GetComponent<SpriteRenderer>();
-        if(playerClass == PlayerClass.Horus)
+        if(CombatManager.Instance.playerClass == PlayerClass.Horus)
         {
             spriteRenderer.sprite = horusCharacter;
             
-        } else if(playerClass == PlayerClass.Ra)
+        } else if(CombatManager.Instance.playerClass == PlayerClass.Ra)
         {
             spriteRenderer.sprite = raCharacter;
             
-        } else if(playerClass == PlayerClass.Set)
+        } else if(CombatManager.Instance.playerClass == PlayerClass.Set)
         {
             spriteRenderer.sprite = setCharacter;
 
@@ -84,7 +82,7 @@ public class Player : MonoBehaviour
             }
 
             //***UPDATE*** Now deal block damage for Horus class after a perfect block 
-            if (playerClass == PlayerClass.Horus)
+            if (CombatManager.Instance.playerClass == PlayerClass.Horus)
             {
                 CombatManager.Instance.DealBlockDamage(damage);
             }

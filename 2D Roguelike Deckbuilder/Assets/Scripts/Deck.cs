@@ -12,20 +12,24 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
 
     public AudioClip deckShuffleSound;
 
+    public Player player;
+
     //This is where you define the contents of your starting deck
-    List<string> deckIDs = new List<string> {
-        "solar_wrath",
+    /*List<string> deckIDs = new List<string> {
+        "attack",
         "empowering_shield",
         "press_and_fall",
-        "juggernaut",
-        "defend",
+        "attack",
+        "attack",
         "defend",
         "defend",
         "defend",
         "defend",
         "defend",
         "defend"
-    };
+    }; */
+
+    List<string> deckIDs;
 
     //*****UPDATE: This is the deck containing all card data that you'll pass by reference to other functions
     List<CardInstance> deck = new List<CardInstance>();
@@ -54,6 +58,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
     void Start()
     {
         //****UPDATE**** deck is now built here
+        AssignDeckByClass();
         deck = BuildRuntimeDeck(deckIDs);
 
         // At the start of combat, add all cards in the deck to the draw pile
@@ -66,6 +71,52 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         RoundManager.endPlayerTurn.RemoveListener(discardAll);
         RoundManager.enemyDead.RemoveListener(discardAll);
         RewardCardHandler.addedCard.RemoveListener(AddCardToDeck);
+    }
+
+    void AssignDeckByClass() {
+        if (CombatManager.Instance.playerClass == PlayerClass.Horus)
+        {
+            deckIDs = new List<string> {
+                "attack",
+                "attack",
+                "attack",
+                "attack",
+                "defend",
+                "defend",
+                "defend",
+                "defend",
+                "defend",
+                "defend"
+           };
+        }
+        else if (CombatManager.Instance.playerClass == PlayerClass.Ra) {
+            deckIDs = new List<string> {
+                "attack",
+                "attack",
+                "attack",
+                "attack",
+                "attack",
+                "solar_wrath",
+                "defend",
+                "defend",
+                "defend",
+                "defend"
+           };
+        }
+        else if (CombatManager.Instance.playerClass == PlayerClass.Set) {
+            deckIDs = new List<string> {
+                "attack",
+                "attack",
+                "attack",
+                "attack",
+                "weaken_ritual",
+                "defend",
+                "defend",
+                "defend",
+                "defend"
+           };
+        }
+        else { }
     }
 
     //****UPDATE**** new helper for building the deck

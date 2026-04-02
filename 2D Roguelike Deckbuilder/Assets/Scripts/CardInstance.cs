@@ -40,6 +40,6 @@ public class CardInstance
     public CardType type => card.type;
     public List<StatusEffect> statusEffects => card.statusEffects;
     public UniqueBehavior uniqueBehavior => card.uniqueBehavior;
-    public CardClass cardClass => card.cardClass;
+    public PlayerClass cardClass => card.cardClass;
     public IsStartingCard isStartingCard => card.isStartingCard;
 }

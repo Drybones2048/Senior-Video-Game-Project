@@ -10,17 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3355b9f7ec31d6642a1bafb45b36224f, type: 3}
-  m_Name: SolarWrath
+  m_Name: WeakenRitual
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  id: solar_wrath
-  displayName: Solar Wrath
-  description: Deal {damage} damage
-  type: 0
-  cost: 2
-  sprite: SolarWrath
-  damage: 13
+  id: weaken_ritual
+  displayName: Weaken Ritual
+  description: Deal yourself 3 damage and weaken the enemy for 2 turns
+  type: 2
+  cost: 0
+  sprite: Astral_Tear
+  damage: 3
   block: 0
-  statusEffects: []
-  uniqueBehavior: 0
-  cardClass: 1
-  isStartingCard: 1
+  statusEffects:
+  - effectType: 0
+    effectStartOffset: 0
+    turnDuration: 2
+    quantity: 1
+    effectTarget: 1
+  uniqueBehavior: 5
+  cardClass: 2
+  isStartingCard: 0

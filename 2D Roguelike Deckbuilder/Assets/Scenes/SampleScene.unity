@@ -2193,6 +2193,7 @@ MonoBehaviour:
   handView: {fileID: 990285235}
   cardLibrary: {fileID: 11400000, guid: 327752160e14de646a0f338b1b5f7c20, type: 2}
   deckShuffleSound: {fileID: 8300000, guid: c42b4591708e05c46a8e6437e4c940de, type: 3}
+  player: {fileID: 2008279966}
 --- !u!114 &446406492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2207,11 +2208,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CombatManager
   currentEnemy: {fileID: 486525713}
   player: {fileID: 2008279966}
+  playerClass: 2
   attackSound: {fileID: 8300000, guid: 5a2395fa52f08054283d939a4d7988c6, type: 3}
   slash: {fileID: 2009077418}
   animator: {fileID: 2009077419}
-  perfectBlock: 0
-  blockedDamage: 0
+  blockDamageDelay: 0.5
   perfectBlockPercent: 0.3
 --- !u!114 &446406493
 MonoBehaviour:
@@ -7425,7 +7426,6 @@ MonoBehaviour:
   raCharacter: {fileID: 4524913410433130931, guid: 29bdff353ad78724291774a2485913a9, type: 3}
   weakened: 0
   shieldAmount: 0
-  playerClass: 2
 --- !u!114 &2008279968
 MonoBehaviour:
   m_ObjectHideFlags: 0
