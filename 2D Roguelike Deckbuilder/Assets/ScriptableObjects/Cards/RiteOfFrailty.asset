@@ -10,17 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3355b9f7ec31d6642a1bafb45b36224f, type: 3}
-  m_Name: HorusBlock
+  m_Name: RiteOfFrailty
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  id: horus_block
-  displayName: Horus Block
-  description: Gain {block} block
-  type: 1
-  cost: 1
-  sprite: Basic Defense
-  damage: 0
-  block: 7
-  statusEffects: []
-  uniqueBehavior: 0
-  cardClass: 3
+  id: rite_of_frailty
+  displayName: Rite of Frailty
+  description: Deal yourself 3 damage and weaken the enemy for 2 turns
+  type: 2
+  cost: 0
+  sprite: Rite_of_Frailty
+  damage: 3
+  block: 0
+  statusEffects:
+  - effectType: 0
+    effectStartOffset: 0
+    turnDuration: 2
+    quantity: 1
+    effectTarget: 1
+  uniqueBehavior: 5
+  cardClass: 2
   isStartingCard: 0

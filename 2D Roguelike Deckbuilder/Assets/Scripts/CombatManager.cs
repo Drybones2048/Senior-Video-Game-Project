@@ -83,7 +83,7 @@ public class CombatManager : MonoBehaviour
         }
 
         else if (card.type == CardType.Special) {
-            if (card.uniqueBehavior == UniqueBehavior.WeakenRitual) {
+            if (card.uniqueBehavior == UniqueBehavior.RiteOfFrailty) {
                 player.TakeDamage(card.damage);
                 EnemyStatusEffects.Instance.ApplyWeaken(2, 1);
             }

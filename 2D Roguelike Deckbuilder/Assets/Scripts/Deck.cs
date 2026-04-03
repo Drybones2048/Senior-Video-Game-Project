@@ -32,7 +32,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
     List<string> deckIDs;
 
     //*****UPDATE: This is the deck containing all card data that you'll pass by reference to other functions
-    List<CardInstance> deck = new List<CardInstance>();
+    public static List<CardInstance> deck = new List<CardInstance>();
 
     //List of persistent cards that are exhausted during combat. Resets every combat.
     public static List<CardInstance> exhaustPile = new List<CardInstance>();
@@ -84,12 +84,12 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
                 "attack",
                 "attack",
                 "attack",
-                "horus_block",
-                "horus_block",
-                "horus_block",
-                "horus_block",
-                "horus_block",
-                "horus_block"
+                "unyielding_sky",
+                "unyielding_sky",
+                "unyielding_sky",
+                "unyielding_sky",
+                "unyielding_sky",
+                "unyielding_sky"
            };
         }
         else if (CombatManager.Instance.playerClass == PlayerClass.Ra) {
@@ -112,7 +112,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
                 "attack",
                 "attack",
                 "attack",
-                "weaken_ritual",
+                "rite_of_frailty",
                 "defend",
                 "defend",
                 "defend",
