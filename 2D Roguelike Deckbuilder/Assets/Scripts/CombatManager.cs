@@ -6,6 +6,7 @@ public class CombatManager : MonoBehaviour
 {
     public static CombatManager Instance {get; private set;}
     public static UnityEvent<CardInstance> shieldGained = new UnityEvent<CardInstance>();
+    public static UnityEvent combatOver = new UnityEvent();
 
     public Enemy currentEnemy;
 
@@ -20,6 +21,7 @@ public class CombatManager : MonoBehaviour
 
     public float blockDamageDelay = 0.5f;
     public float perfectBlockPercent = 0.3f;
+    float initialPerfectBlockPercent;
     bool empoweringShield = false;
     bool juggernaut = false;
 
@@ -28,10 +30,19 @@ public class CombatManager : MonoBehaviour
         Instance = this;
         CardView.playerCardPlayed.AddListener(PlayPlayerCard);
         slash.SetActive(false);
+        combatOver.AddListener(Reset);
+        initialPerfectBlockPercent = perfectBlockPercent;   //saving the block damage at the start of the run as a return point for resetting the combat.
     }
 
     void OnDestroy() {
         CardView.playerCardPlayed.RemoveListener(PlayPlayerCard);
+        combatOver.RemoveListener(Reset);
+    }
+
+    void Reset() {
+        empoweringShield = false;
+        juggernaut = false;
+        perfectBlockPercent = initialPerfectBlockPercent;
     }
 
     void PlayPlayerCard(CardInstance card) {

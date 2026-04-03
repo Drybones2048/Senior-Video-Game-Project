@@ -34,6 +34,9 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
     //*****UPDATE: This is the deck containing all card data that you'll pass by reference to other functions
     List<CardInstance> deck = new List<CardInstance>();
 
+    //List of persistent cards that are exhausted during combat. Resets every combat.
+    public static List<CardInstance> exhaustPile = new List<CardInstance>();
+
     // The pool of cards that the player can draw each turn
     public static List<CardInstance> drawPile = new List<CardInstance>();
 
@@ -81,12 +84,12 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
                 "attack",
                 "attack",
                 "attack",
-                "defend",
-                "defend",
-                "defend",
-                "defend",
-                "defend",
-                "defend"
+                "horus_block",
+                "horus_block",
+                "horus_block",
+                "horus_block",
+                "horus_block",
+                "horus_block"
            };
         }
         else if (CombatManager.Instance.playerClass == PlayerClass.Ra) {
@@ -175,8 +178,10 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
     public void resetDeck() // Will be used to reset deck after combat ends and a new card is added to the deck
     {
         drawPile.AddRange(discard); // Add all discarded cards back to draw pile
+        drawPile.AddRange(exhaustPile); //Add any exhausted cards back into the deck
 
         discard.Clear(); // Clear the discard pile
+        exhaustPile.Clear(); //Clear the exhaust pile
     }
 
     // NEW: Method to start a new turn - resets animation flag and draws new hand
@@ -255,6 +260,9 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         if (card.type != CardType.Persistent)
         {
             discard.Add(card);
+        }
+        else {
+            exhaustPile.Add(card);
         }
     }
 

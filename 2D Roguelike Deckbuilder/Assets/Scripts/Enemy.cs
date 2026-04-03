@@ -94,15 +94,19 @@ public class Enemy : MonoBehaviour
         if(centipede.activeSelf == true)
         {
             centipede.SetActive(false);
+            CombatManager.combatOver.Invoke();  //Unity event to indicate the combat has ended
         } else if(skeleton.activeSelf == true)
         {
             skeleton.SetActive(false);
+            CombatManager.combatOver.Invoke();  //Unity event to indicate the combat has ended
         } else if(pharaohPhase1.activeSelf == true)
         {
             pharaohPhase1.SetActive(false);
+            //Combat is not considered over if you beat the first Pharaoh phase
         } else if (pharaohPhase2.activeSelf == true)
         {
             pharaohPhase2.SetActive(false);
+            CombatManager.combatOver.Invoke();  //Unity event to indicate the combat has ended
         }
     }
 }

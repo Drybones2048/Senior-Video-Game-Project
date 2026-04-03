@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3355b9f7ec31d6642a1bafb45b36224f, type: 3}
-  m_Name: PressAndFall
+  m_Name: HorusBlock
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  id: press_and_fall
-  displayName: Press and Fall
-  description: 'Deal {damage} damage. Gain block equal to enemy damage received. '
-  type: 0
+  id: horus_block
+  displayName: Horus Block
+  description: Gain {block} block
+  type: 1
   cost: 1
-  sprite: Press_and_fall
-  damage: 5
-  block: 0
+  sprite: Basic Defense
+  damage: 0
+  block: 7
   statusEffects: []
-  uniqueBehavior: 1
+  uniqueBehavior: 0
   cardClass: 3
-  isStartingCard: 1
+  isStartingCard: 0
