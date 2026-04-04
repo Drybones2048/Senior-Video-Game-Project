@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public enum CardType { Attack, Defend, Special, Persistent }
-public enum UniqueBehavior { None, PressAndFall, PiercingStrike, EmpoweringShield, Juggernaut, RiteOfFrailty } //going to add more here once I decide what needs unique behavior
+public enum UniqueBehavior { None, PressAndFall, PiercingStrike, EmpoweringShield, Juggernaut, RiteOfFrailty, LifeDrain, StaggeringShield, SerpentsGift, EyeOfEternity, HexStorm }
 public enum IsStartingCard { Yes, No }    //Is this card in the class's deck at the start of each run?
 
 [CreateAssetMenu(fileName = "CardData", menuName = "Scriptable Objects/CardData")]

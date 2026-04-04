@@ -2345,7 +2345,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CombatManager
   currentEnemy: {fileID: 486525713}
   player: {fileID: 2008279966}
-  playerClass: 1
+  playerClass: 2
   attackSound: {fileID: 8300000, guid: 5a2395fa52f08054283d939a4d7988c6, type: 3}
   slash: {fileID: 2009077418}
   animator: {fileID: 2009077419}

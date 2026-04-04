@@ -106,4 +106,9 @@ public class Player : MonoBehaviour
         currentHealth -= damage;
         healthBar.setHealth(currentHealth);
     }
+
+    public void Heal(int heal) {
+        currentHealth += heal;
+        healthBar.setHealth(currentHealth);
+    }
 } 

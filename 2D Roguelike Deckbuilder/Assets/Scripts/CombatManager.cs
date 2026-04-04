@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
+using System.Linq;
 
 public class CombatManager : MonoBehaviour
 {
@@ -83,10 +84,35 @@ public class CombatManager : MonoBehaviour
         }
 
         else if (card.type == CardType.Special) {
-            if (card.uniqueBehavior == UniqueBehavior.RiteOfFrailty) {
+            if (card.uniqueBehavior == UniqueBehavior.RiteOfFrailty)
+            {
                 player.TakeDamage(card.damage);
                 EnemyStatusEffects.Instance.ApplyWeaken(2, 1);
             }
+            else if (card.uniqueBehavior == UniqueBehavior.LifeDrain)
+            {
+                player.Heal(3 * EnemyStatusEffects.Instance.allStatusEffects.Count(e => e.effectType == EffectType.Weaken || e.effectType == EffectType.Poison || e.effectType == EffectType.Confuse));
+            }
+            else if (card.uniqueBehavior == UniqueBehavior.StaggeringShield)
+            {
+                EnemyStatusEffects.Instance.ApplyWeaken(2, 1);
+                player.GainShield(card.block);
+                shieldGained.Invoke(card);
+            }
+            else if (card.uniqueBehavior == UniqueBehavior.SerpentsGift)
+            {
+                //apply poison, this line is temporary until poisoning enemy is implemented
+                EnemyStatusEffects.Instance.ApplyWeaken(2, 1);
+            }
+            else if (card.uniqueBehavior == UniqueBehavior.EyeOfEternity)
+            {
+                //apply poison, this line is temporary until confusing enemy is implemented
+                EnemyStatusEffects.Instance.ApplyWeaken(2, 1);
+            }
+            else if (card.uniqueBehavior == UniqueBehavior.HexStorm) {
+                currentEnemy.TakeDamage(card.damage * EnemyStatusEffects.Instance.allStatusEffects.Count(e => e.effectType == EffectType.Weaken || e.effectType == EffectType.Poison || e.effectType == EffectType.Confuse));
+            }
+            else { }
         }
 
 

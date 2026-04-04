@@ -81,6 +81,24 @@ public class RoundManager : MonoBehaviour
 
         roundNumber++; 
         routine.StartCombat();
+
+        if (CombatManager.Instance.playerClass == PlayerClass.Set) {
+            int random = RNG.Next(0, 3);
+            if (random == 0)
+            {
+                //apply confuse
+                EnemyStatusEffects.Instance.ApplyWeaken(3, 1); //temporary, until enemy confuse is implemented
+            }
+            else if (random == 1) {
+                //apply poison
+                EnemyStatusEffects.Instance.ApplyWeaken(3, 1); //temporary, until enemy poison is implemented
+            }
+            else if (random == 2) {
+                //apply weaken
+                EnemyStatusEffects.Instance.ApplyWeaken(3, 1);
+            }
+            else { }
+        }
     }
 
     private void StartPlayerTurn()
