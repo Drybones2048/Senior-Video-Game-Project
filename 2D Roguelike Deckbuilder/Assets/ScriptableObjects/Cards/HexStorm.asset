@@ -16,9 +16,9 @@ MonoBehaviour:
   displayName: Hex Storm
   description: Deal {damage}*x damage, where x is the number of debuffs on the enemy.
   type: 2
-  cost: 2
+  cost: 1
   sprite: Hex_Storm
-  damage: 4
+  damage: 5
   block: 0
   statusEffects: []
   uniqueBehavior: 10

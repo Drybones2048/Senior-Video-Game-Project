@@ -2513,8 +2513,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStatusEffects
   isStrengthened: 0
+  isPoisoned: 0
   isWeakened: 0
   allStatusEffects: []
+  currentEnemy: {fileID: 486525713}
 --- !u!1 &506768867
 GameObject:
   m_ObjectHideFlags: 0

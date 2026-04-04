@@ -6,12 +6,16 @@ public class EnemyStatusEffects : MonoBehaviour
 {
     public bool isStrengthened = false; // Boolean for strengthened condition (enemy deals 20% more damage per stack)
 
+    public bool isPoisoned = false; // Boolean for poisoned condition (player takes 5-x damage every turn, with x being number of turns)
+
     public bool isWeakened = false; // Boolean for weakened status effect (20% decrease in incoming damage)
     public static event Action OnEnemyStatusEffectsChanged; // Event that other systems (e.g. UI) can subscribe to
 
     public static EnemyStatusEffects Instance { get; private set; } // Singleton pattern
 
     public List<StatusEffect> allStatusEffects = new List<StatusEffect>(); // List of all active status effects on the enemy
+
+    public Enemy currentEnemy;
 
     void Awake()
     {
@@ -25,11 +29,13 @@ public class EnemyStatusEffects : MonoBehaviour
         }
 
         RoundManager.enemyDead.AddListener(ClearAllStatusEffects);
+        RoundManager.endEnemyTurn.AddListener(PoisonDamage);
     }
 
     void OnDestroy()
     {
         RoundManager.enemyDead.RemoveListener(ClearAllStatusEffects);
+        RoundManager.endEnemyTurn.RemoveListener(PoisonDamage);
     }
 
     // Apply Strengthen to the enemy. Each stack adds a flat 20% damage bonus and lasts the whole fight.
@@ -99,6 +105,54 @@ public class EnemyStatusEffects : MonoBehaviour
         }
     }
 
+    public void ApplyPoison(int turns = 5, int quantity = 5)
+    {
+        if (isPoisoned && findStatusEffect(EffectType.Poison) != null)
+        {
+            findStatusEffect(EffectType.Poison).quantity += quantity;
+            Debug.Log($"More poison has been added! {findStatusEffect(EffectType.Poison).quantity} poison remaining for {findStatusEffect(EffectType.Poison).turnDuration} turns!");
+            OnEnemyStatusEffectsChanged.Invoke();
+        }
+        else
+        {
+            StatusEffect poisoned = new StatusEffect();
+            poisoned.effectType = EffectType.Poison;
+            poisoned.effectStartOffset = 0;
+            poisoned.turnDuration = turns;
+            poisoned.quantity = quantity;
+            poisoned.effectTarget = EffectTarget.Enemy;
+
+            allStatusEffects.Add(poisoned);
+            isPoisoned = true;
+
+            Debug.Log($"Enemy poisoned for {poisoned.turnDuration} turn(s)!");
+            OnEnemyStatusEffectsChanged.Invoke();
+        }
+    }
+
+    public void PoisonDamage()
+    {
+        if (isPoisoned)
+        {
+            int poisonDamage = findStatusEffect(EffectType.Poison).quantity;
+            Debug.Log($"Enemy takes {poisonDamage} damage from poison!");
+            currentEnemy.TakeDamage(poisonDamage);
+        }
+    }
+
+    public void RemovePoison()
+    {
+        StatusEffect poison = findStatusEffect(EffectType.Poison);
+        poison.turnDuration = 0;
+        poison.quantity = 0;
+
+        allStatusEffects.Remove(poison);
+        isPoisoned = false;
+
+        Debug.Log("Poison effect removed!");
+        OnEnemyStatusEffectsChanged?.Invoke();
+    }
+
     public void RemoveWeaken() // Method that will remove weaken off the enemy if they die or the duration runs out
     {
         StatusEffect weaken = findStatusEffect(EffectType.Weaken);
@@ -117,11 +171,11 @@ public class EnemyStatusEffects : MonoBehaviour
         {
             for(int i = 0; i < allStatusEffects.Count; i++) // Goes through all status effects
             {
-                if(allStatusEffects[i].effectType is EffectType.Weaken && allStatusEffects[i].turnDuration > 0) // Checks if enemy is weakened and has a positive turn duration
+                if (allStatusEffects[i].effectType is EffectType.Weaken && allStatusEffects[i].turnDuration > 0) // Checks if enemy is weakened and has a positive turn duration
                 {
                     allStatusEffects[i].turnDuration--; // Decreases number of turns weakened lasts for
 
-                    if(allStatusEffects[i].turnDuration <= 0) // If the turn duration is zero or below, remove it as no longer active
+                    if (allStatusEffects[i].turnDuration <= 0) // If the turn duration is zero or below, remove it as no longer active
                     {
                         RemoveWeaken();
                     }
@@ -131,6 +185,22 @@ public class EnemyStatusEffects : MonoBehaviour
                         OnEnemyStatusEffectsChanged.Invoke();
                     }
                 }
+                else if (allStatusEffects[i].effectType is EffectType.Poison && allStatusEffects[i].turnDuration > 0)
+                {
+                    allStatusEffects[i].turnDuration--; // Decrements turn duration
+                    allStatusEffects[i].quantity--;
+
+                    if (allStatusEffects[i].turnDuration <= 0)
+                    {
+                        RemovePoison();
+                    }
+                    else
+                    {
+                        Debug.Log($"Poison: {allStatusEffects[i].turnDuration} turn(s) remaining");
+                        OnEnemyStatusEffectsChanged?.Invoke();
+                    }
+                }
+                else { }
             }
         }
     }
@@ -183,6 +253,10 @@ public class EnemyStatusEffects : MonoBehaviour
         if (isWeakened)
         {
             RemoveWeaken();
+        }
+
+        if (isPoisoned) {
+            RemovePoison();
         }
     }
 }

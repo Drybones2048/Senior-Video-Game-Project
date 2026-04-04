@@ -88,6 +88,7 @@ public class CombatManager : MonoBehaviour
             {
                 player.TakeDamage(card.damage);
                 EnemyStatusEffects.Instance.ApplyWeaken(2, 1);
+                //ApplySetPassive();
             }
             else if (card.uniqueBehavior == UniqueBehavior.LifeDrain)
             {
@@ -96,13 +97,15 @@ public class CombatManager : MonoBehaviour
             else if (card.uniqueBehavior == UniqueBehavior.StaggeringShield)
             {
                 EnemyStatusEffects.Instance.ApplyWeaken(2, 1);
+                //ApplySetPassive();
                 player.GainShield(card.block);
                 shieldGained.Invoke(card);
             }
             else if (card.uniqueBehavior == UniqueBehavior.SerpentsGift)
             {
                 //apply poison, this line is temporary until poisoning enemy is implemented
-                EnemyStatusEffects.Instance.ApplyWeaken(2, 1);
+                EnemyStatusEffects.Instance.ApplyPoison();
+                //ApplySetPassive();
             }
             else if (card.uniqueBehavior == UniqueBehavior.EyeOfEternity)
             {
@@ -110,7 +113,7 @@ public class CombatManager : MonoBehaviour
                 EnemyStatusEffects.Instance.ApplyWeaken(2, 1);
             }
             else if (card.uniqueBehavior == UniqueBehavior.HexStorm) {
-                currentEnemy.TakeDamage(card.damage * EnemyStatusEffects.Instance.allStatusEffects.Count(e => e.effectType == EffectType.Weaken || e.effectType == EffectType.Poison || e.effectType == EffectType.Confuse));
+                currentEnemy.TakeDamage(GetActualDamage(card.damage) * EnemyStatusEffects.Instance.allStatusEffects.Count(e => e.effectType == EffectType.Weaken || e.effectType == EffectType.Poison || e.effectType == EffectType.Confuse));
             }
             else { }
         }
@@ -164,6 +167,15 @@ public class CombatManager : MonoBehaviour
 
     public void DealBlockDamage(int blockedDamage) {
         StartCoroutine(BlockDamageRoutine(blockedDamage));
+    }
+
+    public void ApplySetPassive() {
+        int numEffects = EnemyStatusEffects.Instance.allStatusEffects.Count(e => e.effectType == EffectType.Weaken || e.effectType == EffectType.Poison || e.effectType == EffectType.Confuse);
+
+        if (numEffects > 0)
+        {
+            PlayerStatusEffects.Instance.ApplyStrengthen(1, numEffects);
+        }
     }
 
     void ApplyEmpoweringShield() {

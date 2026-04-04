@@ -82,7 +82,7 @@ public class RoundManager : MonoBehaviour
         roundNumber++; 
         routine.StartCombat();
 
-        if (CombatManager.Instance.playerClass == PlayerClass.Set) {
+        /*if (CombatManager.Instance.playerClass == PlayerClass.Set) {
             int random = RNG.Next(0, 3);
             if (random == 0)
             {
@@ -98,7 +98,7 @@ public class RoundManager : MonoBehaviour
                 EnemyStatusEffects.Instance.ApplyWeaken(3, 1);
             }
             else { }
-        }
+        }*/
     }
 
     private void StartPlayerTurn()
@@ -110,6 +110,10 @@ public class RoundManager : MonoBehaviour
         currentState = gameState.playerTurn;
         currentEnergy = maxEnergy;
         energyChanged.Invoke(currentEnergy);
+
+        if (CombatManager.Instance.playerClass == PlayerClass.Set) {
+            CombatManager.Instance.ApplySetPassive();
+        }
     }
 
     public void endTurnButton() {
