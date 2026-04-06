@@ -154,13 +154,15 @@ public class RoundManager : MonoBehaviour
         maxEnergy = defaultMaxEnergy;
         currentEnergy = maxEnergy;
 
-        // Heal the player to full HP
+        // Heal the player to full HP and remove all status effects
         player.currentHealth = player.maxHealth;
         player.healthBar.setMaxHealth(player.maxHealth);
+        PlayerStatusEffects.Instance.clearAllStatusEffects();
 
-        // Heal the enemy to full HP
+        // Heal the enemy to full HP and remove all status effects
         currentEnemy.currentHealth = currentEnemy.maxHealth;
         currentEnemy.healthBar.setMaxHealth(currentEnemy.maxHealth);
+        EnemyStatusEffects.Instance.ClearAllStatusEffects();
 
         currentSeed = Environment.TickCount;
         RNG = new System.Random(currentSeed);

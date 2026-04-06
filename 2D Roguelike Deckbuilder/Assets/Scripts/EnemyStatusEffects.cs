@@ -243,7 +243,7 @@ public class EnemyStatusEffects : MonoBehaviour
         return null;
     }
 
-    void ClearAllStatusEffects() // Called when the enemy dies to reset for the next combat
+    public void ClearAllStatusEffects() // Called when the enemy dies to reset for the next combat
     {
         if (isStrengthened)
         {

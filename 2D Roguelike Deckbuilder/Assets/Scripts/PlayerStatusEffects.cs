@@ -261,7 +261,7 @@ public class PlayerStatusEffects : MonoBehaviour {
         return null; // Did not find status effect requested
     }
 
-    void clearAllStatusEffects() // Called when the enemy dies to remove all status effects on the player for the next combat
+    public void clearAllStatusEffects() // Called when the enemy dies to remove all status effects on the player for the next combat
     {
         if (isPoisoned)
         {
