@@ -74,7 +74,7 @@ public class CardRewardScreen : MonoBehaviour
     List<CardInstance> GenerateRewardCards() // Generates the number of card rewards as requested by the variable
     {
         //add whatever conditions you want to the first parameter
-        return cardLibrary.GetRandomCard(c => c.cardClass == CombatManager.Instance.playerClass && !Deck.deck.Any(d => d.id == c.id), numberOfRewards); 
+        return cardLibrary.GetRandomCard(c => c.cardClass == CombatManager.Instance.getPlayerClass() && !Deck.deck.Any(d => d.id == c.id), numberOfRewards); 
     }
 
     void DisplayRewardCards(List<CardInstance> cards) // Displays the possible reward cards on screen

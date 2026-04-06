@@ -13,8 +13,8 @@ public class Enemy : MonoBehaviour
     public GameObject pharaohPhase2;
 
     private EnemyAttack attack; // This is now assigned dynamically depending on which enemy is alive
-    [SerializeField] private int maxHealth; // The max health for the enemy will be set in the inspector
-    [SerializeField] private int currentHealth; //don't attempt to modify from within inspector, that's only for debugging
+    [SerializeField] public int maxHealth; // The max health for the enemy will be set in the inspector
+    [SerializeField] public int currentHealth; //don't attempt to modify from within inspector, that's only for debugging
     public int CurrentHealth => currentHealth;  //CurrentHealth is publicly readable, currentHealth is private. Also don't try and set it in the inspector
 
     public static UnityEvent<int> spawnNewEnemy = new UnityEvent<int>(); // An event that spawns a new enemy on screen based on the encounter number we are currently at
@@ -43,6 +43,12 @@ public class Enemy : MonoBehaviour
     void StartEnemyTurn() {
         attack.attackPlayer(player);
         Debug.Log("Enemy turn ended, resolving");
+
+        if(player.currentHealth <= 0) // If the player dies after the enemy's attack, do not continue with combat practices
+        {
+            return;
+        }
+
         RoundManager.endEnemyTurn.Invoke();
     }
 

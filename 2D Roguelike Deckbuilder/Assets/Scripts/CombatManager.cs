@@ -12,7 +12,7 @@ public class CombatManager : MonoBehaviour
     public Enemy currentEnemy;
 
     public Player player;
-    public PlayerClass playerClass;
+    private PlayerClass playerClass;
 
     public AudioClip attackSound;
 
@@ -33,17 +33,29 @@ public class CombatManager : MonoBehaviour
         slash.SetActive(false);
         combatOver.AddListener(Reset);
         initialPerfectBlockPercent = perfectBlockPercent;   //saving the block damage at the start of the run as a return point for resetting the combat.
+        StartScreen.choseClass.AddListener(setPlayerClass);
     }
 
     void OnDestroy() {
         CardView.playerCardPlayed.RemoveListener(PlayPlayerCard);
         combatOver.RemoveListener(Reset);
+        StartScreen.choseClass.RemoveListener(setPlayerClass);
     }
 
     void Reset() {
         empoweringShield = false;
         juggernaut = false;
         perfectBlockPercent = initialPerfectBlockPercent;
+    }
+
+    public void setPlayerClass(PlayerClass playerClass) // Sets the player class when the appropriate start screen button is pressed
+    {
+        this.playerClass = playerClass;
+    }
+
+    public PlayerClass getPlayerClass() // Getter to check what the player's class is
+    {
+        return playerClass;
     }
 
     void PlayPlayerCard(CardInstance card) {

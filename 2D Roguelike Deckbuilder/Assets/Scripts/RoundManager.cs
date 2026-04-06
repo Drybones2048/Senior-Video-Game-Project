@@ -39,7 +39,7 @@ public class RoundManager : MonoBehaviour
 
     void Awake() {
         instance = this;    //initialize an instance of RoundManager before game starts
-        startNewRun();
+
         //initialize energy and state variables in awake because other scripts depend on them
         maxEnergy = defaultMaxEnergy;
         currentEnergy = maxEnergy;
@@ -61,17 +61,7 @@ public class RoundManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        StartNewCombat(); //we can put this here for now, but when we create multiple rounds, we'll need this to be called multiple times
         energyChanged.Invoke(currentEnergy);
-    }
-
-    void startNewRun(int? seed = null) {
-        //TODO: Make sure through play-testing that it's not possible to get some super unlucky seed draws
-        //i.e. make sure you can't get seeds that are so unfavorable that it makes the run unfairly difficult
-        roundNumber = 0;
-        currentSeed = seed ?? Environment.TickCount;
-        RNG = new System.Random(currentSeed);
-        Debug.Log("Run Seed: " + currentSeed);
     }
 
     public void StartNewCombat() {
@@ -111,7 +101,7 @@ public class RoundManager : MonoBehaviour
         currentEnergy = maxEnergy;
         energyChanged.Invoke(currentEnergy);
 
-        if (CombatManager.Instance.playerClass == PlayerClass.Set) {
+        if (CombatManager.Instance.getPlayerClass() == PlayerClass.Set) {
             CombatManager.Instance.ApplySetPassive();
         }
     }
@@ -142,17 +132,41 @@ public class RoundManager : MonoBehaviour
         routine.EndEnemyTurn(); //start coroutine
     }
 
-    private void EndCombat() // Created an event for when the combat ends because the enemy dies (or player does but that is not programmed currently)
+    public void EndCombat() // Created an event for when the combat ends because the enemy dies (or player does but that is not programmed currently)
     {
         currentState = gameState.interim;
     }
 
-    public void decrementEnergy(int amount) {
+    public void decrementEnergy(int amount) { // Method that decreases the current energy the player has for the turn
         if (currentEnergy - amount < 0) {
             throw new System.Exception("Card cost exceeded remaining energy.");
         }
 
         currentEnergy -= amount;
         energyChanged.Invoke(currentEnergy);
+    }
+    public void ReinitialiseForNewRun() // Is used by the start screen after the player chooses a class, resets all of the run variables
+    {
+        currentState = gameState.interim;
+
+        roundNumber = 0;
+        encounterNumber = 0;
+        maxEnergy = defaultMaxEnergy;
+        currentEnergy = maxEnergy;
+
+        // Heal the player to full HP
+        player.currentHealth = player.maxHealth;
+        player.healthBar.setMaxHealth(player.maxHealth);
+
+        // Heal the enemy to full HP
+        currentEnemy.currentHealth = currentEnemy.maxHealth;
+        currentEnemy.healthBar.setMaxHealth(currentEnemy.maxHealth);
+
+        currentSeed = Environment.TickCount;
+        RNG = new System.Random(currentSeed);
+        Debug.Log("New run started. Seed: " + currentSeed);
+
+        energyChanged.Invoke(currentEnergy);
+        StartNewCombat();
     }
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 using System;
 
 public enum PlayerClass { All, Ra, Set, Horus }
@@ -23,6 +24,8 @@ public class Player : MonoBehaviour
 
     public static event Action<int> shieldDamaged;
 
+    public static UnityEvent playerDead = new UnityEvent();
+
     //private variables
     bool myTurn;
 
@@ -33,22 +36,39 @@ public class Player : MonoBehaviour
         shieldAmount = 0;
         ShieldManager.removeShield.AddListener(removeAllShield);
 
-        // Rest of this method is used to set the character's sprite based on the Egyptian god picked
+        StartScreen.afterChosenClass.AddListener(setSprite);
+    }   
+
+    void OnDestroy()
+    {
+        StartScreen.afterChosenClass.RemoveListener(setSprite);
+    }
+
+    void Update()
+    {
+        if(currentHealth <= 0)
+        {
+            playerDead.Invoke();
+        }
+    }
+
+    void setSprite() // Once the player has chosen their class on the select class screen, the sprite is set correctly here
+    {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        if(CombatManager.Instance.playerClass == PlayerClass.Horus)
+        if(CombatManager.Instance.getPlayerClass() == PlayerClass.Horus)
         {
             spriteRenderer.sprite = horusCharacter;
             
-        } else if(CombatManager.Instance.playerClass == PlayerClass.Ra)
+        } else if(CombatManager.Instance.getPlayerClass() == PlayerClass.Ra)
         {
             spriteRenderer.sprite = raCharacter;
             
-        } else if(CombatManager.Instance.playerClass == PlayerClass.Set)
+        } else if(CombatManager.Instance.getPlayerClass() == PlayerClass.Set)
         {
             spriteRenderer.sprite = setCharacter;
 
         }
-    }   
+    }
 
     public void GainShield(int shield)
     {
@@ -82,7 +102,7 @@ public class Player : MonoBehaviour
             }
 
             //***UPDATE*** Now deal block damage for Horus class after a perfect block 
-            if (CombatManager.Instance.playerClass == PlayerClass.Horus)
+            if (CombatManager.Instance.getPlayerClass() == PlayerClass.Horus)
             {
                 CombatManager.Instance.DealBlockDamage(damage);
             }
@@ -108,7 +128,14 @@ public class Player : MonoBehaviour
     }
 
     public void Heal(int heal) {
-        currentHealth += heal;
+
+        if(currentHealth + heal <= maxHealth) // If the heal value would not put the player at or above max, do the full heal
+        {
+            currentHealth += heal;
+
+        } else{ // If the heal would make the player go above the max health value, just set the player's health to max
+            currentHealth = maxHealth;
+        }
         healthBar.setHealth(currentHealth);
     }
 } 

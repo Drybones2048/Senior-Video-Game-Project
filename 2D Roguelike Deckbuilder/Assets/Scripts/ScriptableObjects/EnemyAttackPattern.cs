@@ -34,6 +34,11 @@ public class EnemyAttackPattern : ScriptableObject
     public EnemyMove GetMoveForRound(int roundNumber)
     {
         if (moves == null || moves.Count == 0) return null;
+
+        if(RoundManager.instance.currentState == gameState.interim)
+        {
+            return null;
+        }
  
         int patternLength = moves.Count;
         int zeroIndexed = roundNumber - 1;

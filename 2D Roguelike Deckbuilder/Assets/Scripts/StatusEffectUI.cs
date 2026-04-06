@@ -21,6 +21,9 @@ public class StatusEffectUI : MonoBehaviour
     public TextMeshProUGUI enemyWeakenedText;
     public TextMeshProUGUI enemyWeakenedDurationText;
 
+    public TextMeshProUGUI enemyPoisonedQuantityText;
+    public TextMeshProUGUI enemyPoisonedTurnsText;
+    public GameObject enemyPoisonedIcon;
 
     void OnEnable()
     {
@@ -148,7 +151,15 @@ public class StatusEffectUI : MonoBehaviour
                 enemyWeakenedText.gameObject.SetActive(false);
                 enemyWeakenedDurationText.gameObject.SetActive(false);
             }
-            return;       
+                 
+
+            if(enemyPoisonedIcon != null && enemyPoisonedQuantityText != null && enemyPoisonedTurnsText != null)
+            {
+                enemyPoisonedIcon.gameObject.SetActive(false);
+                enemyPoisonedQuantityText.gameObject.SetActive(false);
+                enemyPoisonedTurnsText.gameObject.SetActive(false);
+            }
+            return;
         }
 
         if(enemyStrengthenQuantityText != null && enemyStrengthIcon != null)
@@ -200,6 +211,30 @@ public class StatusEffectUI : MonoBehaviour
                 enemyWeakenedIcon.gameObject.SetActive(false);
                 enemyWeakenedText.gameObject.SetActive(false);
                 enemyWeakenedDurationText.gameObject.SetActive(false);
+            }
+        }
+
+        if(enemyPoisonedQuantityText != null && enemyPoisonedIcon != null && enemyPoisonedTurnsText != null)
+        {
+            if (EnemyStatusEffects.Instance.isPoisoned) // If enemy is poisoned, show poisoned UI
+            {
+                enemyPoisonedQuantityText.gameObject.SetActive(true);
+                enemyPoisonedIcon.gameObject.SetActive(true);
+                enemyPoisonedTurnsText.gameObject.SetActive(true);
+
+                StatusEffect poison = EnemyStatusEffects.Instance.findStatusEffect(EffectType.Poison); // Grab the poison status information
+
+                if (poison.turnDuration > 0) // If there is more than one turn left on poison, set text
+                {
+                    enemyPoisonedQuantityText.text = poison.quantity.ToString();
+                    enemyPoisonedTurnsText.text = $"{poison.turnDuration.ToString()} T";
+                }
+            }
+            else // If enemy is not poisoned, stay hiddden
+            {
+                enemyPoisonedQuantityText.gameObject.SetActive(false);
+                enemyPoisonedIcon.gameObject.SetActive(false);
+                enemyPoisonedTurnsText.gameObject.SetActive(false);
             }
         }
     }

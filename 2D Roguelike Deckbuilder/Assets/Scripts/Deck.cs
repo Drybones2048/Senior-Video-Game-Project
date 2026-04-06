@@ -55,17 +55,8 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         RoundManager.endPlayerTurn.AddListener(discardAll); // Listen for when the player clicks the end turn button, then discard all cards
         RoundManager.enemyDead.AddListener(discardAll);
         RewardCardHandler.addedCard.AddListener(AddCardToDeck);
-    }
-
-    // The entire deck the player has at the start of the game
-    void Start()
-    {
-        //****UPDATE**** deck is now built here
-        AssignDeckByClass();
-        deck = BuildRuntimeDeck(deckIDs);
-
-        // At the start of combat, add all cards in the deck to the draw pile
-        drawPile.AddRange(deck);
+        StartScreen.afterChosenClass.AddListener(assignClass);
+        Player.playerDead.AddListener(destroyDeck);
     }
 
     void OnDestroy() {
@@ -74,10 +65,21 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         RoundManager.endPlayerTurn.RemoveListener(discardAll);
         RoundManager.enemyDead.RemoveListener(discardAll);
         RewardCardHandler.addedCard.RemoveListener(AddCardToDeck);
+        StartScreen.afterChosenClass.AddListener(assignClass);
+        Player.playerDead.AddListener(destroyDeck);
+    }
+
+    void assignClass() // Once the player has chosen their class on the select screen, their starting deck is built for them
+    {
+        AssignDeckByClass();
+        deck = BuildRuntimeDeck(deckIDs);
+
+        // At the start of combat, add all cards in the deck to the draw pile
+        drawPile.AddRange(deck);
     }
 
     void AssignDeckByClass() {
-        if (CombatManager.Instance.playerClass == PlayerClass.Horus)
+        if (CombatManager.Instance.getPlayerClass() == PlayerClass.Horus)
         {
             deckIDs = new List<string> {
                 "attack",
@@ -92,7 +94,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
                 "unyielding_sky"
            };
         }
-        else if (CombatManager.Instance.playerClass == PlayerClass.Ra) {
+        else if (CombatManager.Instance.getPlayerClass() == PlayerClass.Ra) {
             deckIDs = new List<string> {
                 "attack",
                 "attack",
@@ -106,7 +108,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
                 "defend"
            };
         }
-        else if (CombatManager.Instance.playerClass == PlayerClass.Set) {
+        else if (CombatManager.Instance.getPlayerClass() == PlayerClass.Set) {
             deckIDs = new List<string> {
                 "attack",
                 "attack",
@@ -182,6 +184,18 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
 
         discard.Clear(); // Clear the discard pile
         exhaustPile.Clear(); //Clear the exhaust pile
+    }
+
+    void destroyDeck() // Only to be used when the player starts a new run
+    {
+        deck.Clear();
+        deckIDs.Clear();
+        exhaustPile.Clear();
+        drawPile.Clear();
+        currentHand.Clear();
+        discard.Clear();
+
+        handView.hasDrawnInitialHand = false; // Reset the flag in handview to give a draw animation for the first turn
     }
 
     // NEW: Method to start a new turn - resets animation flag and draws new hand
