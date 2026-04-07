@@ -118,7 +118,6 @@ public class CardRewardScreen : MonoBehaviour
                     rewardScreenCG.blocksRaycasts = false;
                 });
         }
-
         roundManager.StartNewCombat(); // After a card reward is chosen, a new enemy encounter will begin
     }
 }

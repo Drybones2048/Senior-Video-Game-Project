@@ -30,7 +30,8 @@ public class TurnEndRoutine : MonoBehaviour
 
     public void EndEnemyTurn()
     {
-        flow = StartCoroutine(ResolveEnemyTurn());
+        flow = StartCoroutine(ResolveEnemyTurn()); 
+        
     }
 
     private IEnumerator ResolveCombatStart() {
@@ -62,7 +63,12 @@ public class TurnEndRoutine : MonoBehaviour
         UI_Manager.instance.PrintRoundStartMessage();
         yield return new WaitForSeconds(playerTurnMessageDisplayLength);
         UI_Manager.instance.RemovePlayerTurnMessage();
-        RoundManager.startPlayerTurn.Invoke();  //now the game registers user input
+
+        if(RoundManager.instance.currentEnemy.currentHealth > 0) // Makes sure that if the enemy is killed when it is not the player's turn (poison or Horus retaliate) the player does not play the card reward they pick from the reward screen
+        {
+            RoundManager.startPlayerTurn.Invoke();  //now the game registers user input
+        }
+        
 
         flow = null; // Added to have the round text print every time with player turn start text
     }

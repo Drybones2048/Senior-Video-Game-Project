@@ -119,6 +119,41 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &34701716
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 34701717}
+  m_Layer: 5
+  m_Name: Centipede Intent Locations
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &34701717
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34701716}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1034147081}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 562.19, y: 152.5}
+  m_SizeDelta: {x: 453.77, y: 99}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &43431907
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,7 +379,6 @@ MonoBehaviour:
   delayBetweenCards: 0.1
   drawEaseType: 6
   cardDrawSound: {fileID: 8300000, guid: f082c5d6d6e623b4d858aebb60082624, type: 3}
-  hasDrawnInitialHand: 0
 --- !u!1 &100690970
 GameObject:
   m_ObjectHideFlags: 0
@@ -1348,6 +1382,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 170689184}
   m_CullTransparentMesh: 1
+--- !u!1 &174280876
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 174280877}
+  m_Layer: 5
+  m_Name: Skeleton Intent Locations
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &174280877
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 174280876}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1034147081}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 554.63, y: 294}
+  m_SizeDelta: {x: 453.77, y: 99}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &178680608
 GameObject:
   m_ObjectHideFlags: 0
@@ -2380,6 +2449,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
   attackPattern: {fileID: 11400000, guid: 8a377cd26d58c8049afb7c7e963bb17c, type: 2}
   enemyIntentText: {fileID: 664725640}
+  centipedeTextPos: {x: 562.19, y: 152.5}
+  skeletonTextPos: {x: 554.63, y: 294}
+  pharaohTextPos: {x: 554.63, y: 373}
 --- !u!1 &439419865
 GameObject:
   m_ObjectHideFlags: 0
@@ -2611,6 +2683,7 @@ MonoBehaviour:
   animator: {fileID: 2009077419}
   blockDamageDelay: 0.5
   perfectBlockPercent: 0.3
+  radiantRebirth: 0
 --- !u!114 &446406493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5026,6 +5099,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 868279523}
   m_CullTransparentMesh: 1
+--- !u!1 &880023491
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 880023492}
+  m_Layer: 5
+  m_Name: Pharaoh Intent Locations
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &880023492
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 880023491}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1034147081}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 554.63, y: 373}
+  m_SizeDelta: {x: 453.77, y: 99}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &920639591
 GameObject:
   m_ObjectHideFlags: 0
@@ -5135,7 +5243,6 @@ MonoBehaviour:
   delayBetweenCards: 0.075
   drawEaseType: 5
   cardDrawSound: {fileID: 8300000, guid: f082c5d6d6e623b4d858aebb60082624, type: 3}
-  hasDrawnInitialHand: 0
 --- !u!1 &1002863085
 GameObject:
   m_ObjectHideFlags: 0
@@ -5304,6 +5411,9 @@ RectTransform:
   m_Children:
   - {fileID: 1348532037}
   - {fileID: 1757083660}
+  - {fileID: 34701717}
+  - {fileID: 174280877}
+  - {fileID: 880023492}
   - {fileID: 664725639}
   - {fileID: 541809854}
   - {fileID: 1180568804}
@@ -5833,6 +5943,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
   attackPattern: {fileID: 11400000, guid: e6d2f5e3a7c8ef648b52c8af1a6cd6d2, type: 2}
   enemyIntentText: {fileID: 664725640}
+  centipedeTextPos: {x: 562.19, y: 152.5}
+  skeletonTextPos: {x: 554.63, y: 294}
+  pharaohTextPos: {x: 554.63, y: 373}
 --- !u!212 &1139375768
 SpriteRenderer:
   serializedVersion: 2
@@ -6860,7 +6973,7 @@ SortingGroup:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 99
-  m_SortAtRoot: 1
+  m_SortAtRoot: 0
   m_Sort3DAs2D: 0
 --- !u!223 &1348532043
 Canvas:
@@ -6876,7 +6989,7 @@ Canvas:
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
-  m_OverrideSorting: 1
+  m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
@@ -7306,6 +7419,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
   attackPattern: {fileID: 11400000, guid: 0530cc99405dbdb4e9388134492d8c8f, type: 2}
   enemyIntentText: {fileID: 664725640}
+  centipedeTextPos: {x: 562.19, y: 152.5}
+  skeletonTextPos: {x: 554.63, y: 294}
+  pharaohTextPos: {x: 554.63, y: 373}
 --- !u!1001 &1521081749
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7783,6 +7899,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
   attackPattern: {fileID: 11400000, guid: 97f30bad0cb0cca49855854d48412faa, type: 2}
   enemyIntentText: {fileID: 664725640}
+  centipedeTextPos: {x: 562.19, y: 152.5}
+  skeletonTextPos: {x: 554.63, y: 294}
+  pharaohTextPos: {x: 554.63, y: 373}
 --- !u!1 &1656543536
 GameObject:
   m_ObjectHideFlags: 0
@@ -9817,7 +9936,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c957347d4958a29498400ba8070486be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  maxHealth: 100
+  maxHealth: 10
   healthBar: {fileID: 585470566}
   currentHealth: 0
   horusCharacter: {fileID: -7391498558540480385, guid: 12c734fdc94980847a0c1a760756f8a8, type: 3}

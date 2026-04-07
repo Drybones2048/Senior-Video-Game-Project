@@ -35,13 +35,16 @@ public class CardHover : MonoBehaviour
     }
 
     void Show(CardInstance card){ // Reveals the hidden magnified card
-        currentlyShowingCard = card; // Remember which card we're showing
+        if(RoundManager.instance.currentState != gameState.interim)
+        {
+            currentlyShowingCard = card; // Remember which card we're showing
         
-        previewView.cardData = card; 
- 
-        previewView.Setup(currentlyShowingCard); // Copies the sprite of the hovered card and changes text in the case of status effects
-        
-        cg.alpha = 1; // Reveals hidden magnified card
+            previewView.cardData = card; 
+    
+            previewView.Setup(currentlyShowingCard); // Copies the sprite of the hovered card and changes text in the case of status effects
+            
+            cg.alpha = 1; // Reveals hidden magnified card
+        }
     }
 
     void Hide(){ // Re-hides card when not hovered

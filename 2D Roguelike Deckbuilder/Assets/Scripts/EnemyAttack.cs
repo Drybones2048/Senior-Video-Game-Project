@@ -8,9 +8,14 @@ public class EnemyAttack : MonoBehaviour
     public EnemyAttackPattern attackPattern; // Will store the scriptable object of the enemy in question
     public TextMeshProUGUI enemyIntentText;
 
+    [SerializeField] Vector2 centipedeTextPos;
+    [SerializeField] Vector2 skeletonTextPos;
+    [SerializeField] Vector2 pharaohTextPos;
+
     void Awake()
     {
         RoundManager.enemyDead.AddListener(moveText);
+        Player.playerDead.AddListener(moveTextDown);
     }
     
     void Update(){
@@ -37,6 +42,7 @@ public class EnemyAttack : MonoBehaviour
     void OnDestroy()
     {
         RoundManager.enemyDead.RemoveListener(moveText);
+        Player.playerDead.RemoveListener(moveTextDown);
     }
  
     public void attackPlayer(Player player) // Method that is called at the start of the enemy's turn every round, will do attack actions based on the enemy's scriptable object
@@ -63,12 +69,12 @@ public class EnemyAttack : MonoBehaviour
                 break;
  
             case EnemyMoveType.Weaken:
-                PlayerStatusEffects.Instance.ApplyWeaken(move.value, move.duration);
+                PlayerStatusEffects.Instance.ApplyWeaken(move.duration, move.value);
                 Debug.Log($"Enemy applied Weaken ({move.value} stacks, {move.duration} duration) to player!");
                 break;
  
             case EnemyMoveType.Poison:
-                PlayerStatusEffects.Instance.ApplyPoison(move.value, move.duration);
+                PlayerStatusEffects.Instance.ApplyPoison(move.duration, move.value);
                 Debug.Log($"Enemy applied Poison ({move.value} stacks, {move.duration} duration) to player!");
                 break;
             
@@ -93,13 +99,21 @@ public class EnemyAttack : MonoBehaviour
 
     void moveText() // Function that moves the intent text of the enemies since their sprites are different heights
     {
-        if(RoundManager.instance.encounterNumber == 1) // If the centipede is killed, move the text higher for the skeleton
+        if(RoundManager.instance.encounterNumber == 0) // If the centipede is killed, move the text higher for the skeleton
         {
-            enemyIntentText.rectTransform.anchoredPosition += new Vector2(0, 140);
+            enemyIntentText.rectTransform.anchoredPosition = centipedeTextPos;
+
+        } if(RoundManager.instance.encounterNumber == 1) // If the centipede is killed, move the text higher for the skeleton
+        {
+            enemyIntentText.rectTransform.anchoredPosition = skeletonTextPos;
 
         } else if(RoundManager.instance.encounterNumber == 2){ // If the skeleton is killed, move the text highest for the pharaoh
 
-            enemyIntentText.rectTransform.anchoredPosition += new Vector2(0, 25);
-        }
+            enemyIntentText.rectTransform.anchoredPosition = pharaohTextPos;
+        } 
+    }
+    void moveTextDown() // When the player dies, move the intent text to centipede height again
+    {
+        enemyIntentText.rectTransform.anchoredPosition = centipedeTextPos;
     }
 }

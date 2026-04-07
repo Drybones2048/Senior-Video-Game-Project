@@ -28,7 +28,7 @@ public class HandView : MonoBehaviour
 
     private List<CardView> cardViews = new();
     private bool isDrawing = false;
-    public bool hasDrawnInitialHand = false; // Tracks for intial draw
+    private bool hasDrawnInitialHand = false; // Tracks for intial draw
 
     void OnEnable()
     {

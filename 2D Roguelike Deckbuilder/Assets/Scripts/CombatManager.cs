@@ -62,7 +62,7 @@ public class CombatManager : MonoBehaviour
     }
 
     void PlayPlayerCard(CardInstance card) {
-        if (card.type == CardType.Attack)
+        if (card.type == CardType.Attack && currentEnemy.currentHealth > 0)
         {
             int actualDamage = GetActualDamage(card.damage);
             currentEnemy.TakeDamage(actualDamage);
@@ -73,20 +73,20 @@ public class CombatManager : MonoBehaviour
 
             PlayAttackEffectsAndSounds();
 
-            if (currentEnemy.CurrentHealth <= 0) // When the enemy's health reaches 0 or lower, will trigger event that after card rewards should resent the combat with a new enemy
+            /*if (currentEnemy.CurrentHealth <= 0) // When the enemy's health reaches 0 or lower, will trigger event that after card rewards should resent the combat with a new enemy
             {
                 RoundManager.enemyDead.Invoke();
-            }
+            }*/
 
         }
 
-        else if (card.type == CardType.Defend)
+        else if (card.type == CardType.Defend && currentEnemy.currentHealth > 0)
         {
             player.GainShield(card.block);
             shieldGained.Invoke(card);
         }
 
-        else if (card.type == CardType.Persistent)
+        else if (card.type == CardType.Persistent && currentEnemy.currentHealth > 0)
         {
             if (card.uniqueBehavior == UniqueBehavior.Juggernaut)
             {
@@ -101,7 +101,7 @@ public class CombatManager : MonoBehaviour
             }
         }
 
-        else if (card.type == CardType.Special) {
+        else if (card.type == CardType.Special && currentEnemy.currentHealth > 0) {
             if (card.uniqueBehavior == UniqueBehavior.RiteOfFrailty)
             {
                 player.TakeDamage(card.damage);

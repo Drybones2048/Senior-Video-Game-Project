@@ -65,8 +65,8 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         RoundManager.endPlayerTurn.RemoveListener(discardAll);
         RoundManager.enemyDead.RemoveListener(discardAll);
         RewardCardHandler.addedCard.RemoveListener(AddCardToDeck);
-        StartScreen.afterChosenClass.AddListener(assignClass);
-        Player.playerDead.AddListener(destroyDeck);
+        StartScreen.afterChosenClass.RemoveListener(assignClass);
+        Player.playerDead.RemoveListener(destroyDeck);
     }
 
     void assignClass() // Once the player has chosen their class on the select screen, their starting deck is built for them
@@ -179,11 +179,14 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
 
     public void resetDeck() // Will be used to reset deck after combat ends and a new card is added to the deck
     {
+        discardAll();
         drawPile.AddRange(discard); // Add all discarded cards back to draw pile
         drawPile.AddRange(exhaustPile); //Add any exhausted cards back into the deck
 
         discard.Clear(); // Clear the discard pile
         exhaustPile.Clear(); //Clear the exhaust pile
+
+        handView.ResetDrawFlag();
     }
 
     void destroyDeck() // Only to be used when the player starts a new run
@@ -195,7 +198,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         currentHand.Clear();
         discard.Clear();
 
-        handView.hasDrawnInitialHand = false; // Reset the flag in handview to give a draw animation for the first turn
+        handView.ResetDrawFlag(); // Reset the flag in handview to give a draw animation for the first turn
     }
 
     // NEW: Method to start a new turn - resets animation flag and draws new hand

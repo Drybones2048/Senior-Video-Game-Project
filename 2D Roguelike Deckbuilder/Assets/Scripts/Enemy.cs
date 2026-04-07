@@ -55,6 +55,12 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int damage){
         currentHealth -= damage;
 
+        if(currentHealth <= 0) // Every time the enemy takes damage, check to see if it is fatal
+        {
+            RoundManager.instance.EndCombat();
+            RoundManager.enemyDead.Invoke();
+        }
+
         healthBar.setHealth(currentHealth);
     }
 
@@ -64,17 +70,29 @@ public class Enemy : MonoBehaviour
         {
             case 1:
                 centipede.SetActive(true);
-                SetupEnemy(centipede, 55);  //55
+                skeleton.SetActive(false);
+                pharaohPhase1.SetActive(false);
+                pharaohPhase2.SetActive(false);
+                SetupEnemy(centipede, 2);  //55
                 break;
             case 2:
+                centipede.SetActive(false);
                 skeleton.SetActive(true);
-                SetupEnemy(skeleton, 75);
+                pharaohPhase1.SetActive(false);
+                pharaohPhase2.SetActive(false);
+                SetupEnemy(skeleton, 2);
                 break;
             case 3:
+                centipede.SetActive(false);
+                skeleton.SetActive(false);
                 pharaohPhase1.SetActive(true);
+                pharaohPhase2.SetActive(false);
                 SetupEnemy(pharaohPhase1, 80);
                 break;
             case 4:
+                centipede.SetActive(false);
+                skeleton.SetActive(false);
+                pharaohPhase1.SetActive(false);
                 pharaohPhase2.SetActive(true);
                 SetupEnemy(pharaohPhase2, 120);
                 break;
