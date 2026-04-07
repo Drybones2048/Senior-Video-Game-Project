@@ -25,6 +25,8 @@ public class CombatManager : MonoBehaviour
     float initialPerfectBlockPercent;
     bool empoweringShield = false;
     bool juggernaut = false;
+    public bool radiantRebirth = false;
+    bool appliedRaPassive = false;
 
     void Awake()
     {
@@ -45,6 +47,7 @@ public class CombatManager : MonoBehaviour
     void Reset() {
         empoweringShield = false;
         juggernaut = false;
+        radiantRebirth = false;
         perfectBlockPercent = initialPerfectBlockPercent;
     }
 
@@ -93,6 +96,9 @@ public class CombatManager : MonoBehaviour
             {
                 empoweringShield = true;
             }
+            if (card.uniqueBehavior == UniqueBehavior.RadiantRebirth) {
+                radiantRebirth = true;
+            }
         }
 
         else if (card.type == CardType.Special) {
@@ -124,8 +130,18 @@ public class CombatManager : MonoBehaviour
                 //apply poison, this line is temporary until confusing enemy is implemented
                 EnemyStatusEffects.Instance.ApplyWeaken(2, 1);
             }
-            else if (card.uniqueBehavior == UniqueBehavior.HexStorm) {
+            else if (card.uniqueBehavior == UniqueBehavior.HexStorm)
+            {
                 currentEnemy.TakeDamage(GetActualDamage(card.damage) * EnemyStatusEffects.Instance.allStatusEffects.Count(e => e.effectType == EffectType.Weaken || e.effectType == EffectType.Poison || e.effectType == EffectType.Confuse));
+                PlayAttackEffectsAndSounds();
+            }
+            else if (card.uniqueBehavior == UniqueBehavior.SolarSurge) {
+                PlayerStatusEffects.Instance.ApplyStrengthen(20, 1);
+            }
+            else if (card.uniqueBehavior == UniqueBehavior.VeilOfTheDuat) {
+                currentEnemy.TakeDamage(GetActualDamage(card.damage));
+                PlayAttackEffectsAndSounds();
+                EnemyStatusEffects.Instance.ApplyWeaken(2, 1);
             }
             else { }
         }
@@ -179,6 +195,14 @@ public class CombatManager : MonoBehaviour
 
     public void DealBlockDamage(int blockedDamage) {
         StartCoroutine(BlockDamageRoutine(blockedDamage));
+    }
+
+    public void ApplyRaPassive() {
+        if (player.currentHealth < player.maxHealth/2 && !appliedRaPassive)
+        {
+            PlayerStatusEffects.Instance.ApplyStrengthen(20, 2);
+            appliedRaPassive = true;
+        }
     }
 
     public void ApplySetPassive() {

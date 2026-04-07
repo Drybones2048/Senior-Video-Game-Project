@@ -64,7 +64,7 @@ public class Enemy : MonoBehaviour
         {
             case 1:
                 centipede.SetActive(true);
-                SetupEnemy(centipede, 55);
+                SetupEnemy(centipede, 55);  //55
                 break;
             case 2:
                 skeleton.SetActive(true);

@@ -101,9 +101,15 @@ public class RoundManager : MonoBehaviour
         currentEnergy = maxEnergy;
         energyChanged.Invoke(currentEnergy);
 
-        if (CombatManager.Instance.getPlayerClass() == PlayerClass.Set) {
+        if (CombatManager.Instance.getPlayerClass() == PlayerClass.Set)
+        {
             CombatManager.Instance.ApplySetPassive();
         }
+        else if (CombatManager.Instance.getPlayerClass() == PlayerClass.Ra)
+        {
+            CombatManager.Instance.ApplyRaPassive();
+        }
+        else { }
     }
 
     public void endTurnButton() {

@@ -46,10 +46,16 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if(currentHealth <= 0)
+        if (currentHealth <= 0 && CombatManager.Instance.radiantRebirth == true)
+        {
+            Heal((int)(maxHealth * 0.3));
+            CombatManager.Instance.radiantRebirth = false;
+        }
+        else if (currentHealth <= 0 && CombatManager.Instance.radiantRebirth == false)
         {
             playerDead.Invoke();
         }
+        else { }
     }
 
     void setSprite() // Once the player has chosen their class on the select class screen, the sprite is set correctly here
