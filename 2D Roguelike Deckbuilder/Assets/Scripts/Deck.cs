@@ -57,6 +57,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         RewardCardHandler.addedCard.AddListener(AddCardToDeck);
         StartScreen.afterChosenClass.AddListener(assignClass);
         Player.playerDead.AddListener(destroyDeck);
+        CombatManager.combatOver.AddListener(resetDeck);
     }
 
     void OnDestroy() {
@@ -67,6 +68,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         RewardCardHandler.addedCard.RemoveListener(AddCardToDeck);
         StartScreen.afterChosenClass.RemoveListener(assignClass);
         Player.playerDead.RemoveListener(destroyDeck);
+        CombatManager.combatOver.RemoveListener(resetDeck);
     }
 
     void assignClass() // Once the player has chosen their class on the select screen, their starting deck is built for them
@@ -115,6 +117,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
                 "attack",
                 "attack",
                 "rite_of_frailty",
+                "serpents_gift",
                 "defend",
                 "defend",
                 "defend",

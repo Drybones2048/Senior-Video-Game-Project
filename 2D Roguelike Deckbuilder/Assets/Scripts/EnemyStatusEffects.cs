@@ -110,6 +110,7 @@ public class EnemyStatusEffects : MonoBehaviour
         if (isPoisoned && findStatusEffect(EffectType.Poison) != null)
         {
             findStatusEffect(EffectType.Poison).quantity += quantity;
+            findStatusEffect(EffectType.Poison).turnDuration += turns;
             Debug.Log($"More poison has been added! {findStatusEffect(EffectType.Poison).quantity} poison remaining for {findStatusEffect(EffectType.Poison).turnDuration} turns!");
             OnEnemyStatusEffectsChanged.Invoke();
         }

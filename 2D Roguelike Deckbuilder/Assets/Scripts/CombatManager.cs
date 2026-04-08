@@ -48,6 +48,7 @@ public class CombatManager : MonoBehaviour
         empoweringShield = false;
         juggernaut = false;
         radiantRebirth = false;
+        appliedRaPassive = false;
         perfectBlockPercent = initialPerfectBlockPercent;
     }
 
@@ -99,6 +100,10 @@ public class CombatManager : MonoBehaviour
             if (card.uniqueBehavior == UniqueBehavior.RadiantRebirth) {
                 radiantRebirth = true;
             }
+            if (card.uniqueBehavior == UniqueBehavior.SolarSurge)
+            {
+                PlayerStatusEffects.Instance.ApplyStrengthen(20, 2);
+            }
         }
 
         else if (card.type == CardType.Special && currentEnemy.currentHealth > 0) {
@@ -134,9 +139,6 @@ public class CombatManager : MonoBehaviour
             {
                 currentEnemy.TakeDamage(GetActualDamage(card.damage) * EnemyStatusEffects.Instance.allStatusEffects.Count(e => e.effectType == EffectType.Weaken || e.effectType == EffectType.Poison || e.effectType == EffectType.Confuse));
                 PlayAttackEffectsAndSounds();
-            }
-            else if (card.uniqueBehavior == UniqueBehavior.SolarSurge) {
-                PlayerStatusEffects.Instance.ApplyStrengthen(20, 1);
             }
             else if (card.uniqueBehavior == UniqueBehavior.VeilOfTheDuat) {
                 currentEnemy.TakeDamage(GetActualDamage(card.damage));

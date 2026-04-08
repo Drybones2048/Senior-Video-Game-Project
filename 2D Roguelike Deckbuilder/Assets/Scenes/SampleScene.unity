@@ -9936,7 +9936,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c957347d4958a29498400ba8070486be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  maxHealth: 10
+  maxHealth: 100
   healthBar: {fileID: 585470566}
   currentHealth: 0
   horusCharacter: {fileID: -7391498558540480385, guid: 12c734fdc94980847a0c1a760756f8a8, type: 3}

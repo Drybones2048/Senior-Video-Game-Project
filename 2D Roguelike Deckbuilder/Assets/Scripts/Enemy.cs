@@ -44,7 +44,7 @@ public class Enemy : MonoBehaviour
         attack.attackPlayer(player);
         Debug.Log("Enemy turn ended, resolving");
 
-        if(player.currentHealth <= 0) // If the player dies after the enemy's attack, do not continue with combat practices
+        if(player.currentHealth <= 0 && !CombatManager.Instance.radiantRebirth) // If the player dies after the enemy's attack, do not continue with combat practices
         {
             return;
         }
@@ -73,28 +73,28 @@ public class Enemy : MonoBehaviour
                 skeleton.SetActive(false);
                 pharaohPhase1.SetActive(false);
                 pharaohPhase2.SetActive(false);
-                SetupEnemy(centipede, 2);  //55
+                SetupEnemy(centipede, 55);  //55
                 break;
             case 2:
                 centipede.SetActive(false);
                 skeleton.SetActive(true);
                 pharaohPhase1.SetActive(false);
                 pharaohPhase2.SetActive(false);
-                SetupEnemy(skeleton, 2);
+                SetupEnemy(skeleton, 75);
                 break;
             case 3:
                 centipede.SetActive(false);
                 skeleton.SetActive(false);
                 pharaohPhase1.SetActive(true);
                 pharaohPhase2.SetActive(false);
-                SetupEnemy(pharaohPhase1, 80);
+                SetupEnemy(pharaohPhase1, 80); //80
                 break;
             case 4:
                 centipede.SetActive(false);
                 skeleton.SetActive(false);
-                pharaohPhase1.SetActive(false);
+                pharaohPhase1.SetActive(true);
                 pharaohPhase2.SetActive(true);
-                SetupEnemy(pharaohPhase2, 120);
+                SetupEnemy(pharaohPhase2, 120); //120
                 break;
         }
     }
@@ -115,22 +115,20 @@ public class Enemy : MonoBehaviour
 
     void Die() // Hides the character model of the enemy that just died.
     {
-        if(centipede.activeSelf == true)
+        CombatManager.combatOver.Invoke();  //Unity event to indicate the combat has ended
+
+        if (centipede.activeSelf == true)
         {
             centipede.SetActive(false);
-            CombatManager.combatOver.Invoke();  //Unity event to indicate the combat has ended
         } else if(skeleton.activeSelf == true)
         {
             skeleton.SetActive(false);
-            CombatManager.combatOver.Invoke();  //Unity event to indicate the combat has ended
         } else if(pharaohPhase1.activeSelf == true)
         {
             pharaohPhase1.SetActive(false);
-            //Combat is not considered over if you beat the first Pharaoh phase
         } else if (pharaohPhase2.activeSelf == true)
         {
             pharaohPhase2.SetActive(false);
-            CombatManager.combatOver.Invoke();  //Unity event to indicate the combat has ended
         }
     }
 }
