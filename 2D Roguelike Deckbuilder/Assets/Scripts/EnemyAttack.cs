@@ -17,6 +17,8 @@ public class EnemyAttack : MonoBehaviour
         RoundManager.enemyDead.AddListener(moveText);
         Player.playerDead.AddListener(moveTextDown);
         DeathScreen.gameWon.AddListener(moveTextDown);
+        DeathScreen.gameWon.AddListener(ClearIntentText);
+        Player.playerDead.AddListener(ClearIntentText);
     }
     
     void Update(){
@@ -45,8 +47,16 @@ public class EnemyAttack : MonoBehaviour
         RoundManager.enemyDead.RemoveListener(moveText);
         Player.playerDead.RemoveListener(moveTextDown);
         DeathScreen.gameWon.RemoveListener(moveTextDown);
+        DeathScreen.gameWon.RemoveListener(ClearIntentText);
+        Player.playerDead.RemoveListener(ClearIntentText);
     }
- 
+
+    //Set the intent text to an empty string when the game is won
+    void ClearIntentText() {
+        enemyIntentText.text = "";
+    }
+
+
     public void attackPlayer(Player player) // Method that is called at the start of the enemy's turn every round, will do attack actions based on the enemy's scriptable object
     {
         if (attackPattern == null)

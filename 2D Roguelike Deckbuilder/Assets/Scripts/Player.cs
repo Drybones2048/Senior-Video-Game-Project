@@ -53,7 +53,6 @@ public class Player : MonoBehaviour
         }
         else if (currentHealth <= 0 && CombatManager.Instance.radiantRebirth == false)
         {
-            Debug.Log("Player dead!");
             playerDead.Invoke();
             CombatManager.combatOver.Invoke();
         }

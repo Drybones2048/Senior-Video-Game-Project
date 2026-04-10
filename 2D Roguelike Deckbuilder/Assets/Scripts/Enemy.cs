@@ -104,7 +104,8 @@ public class Enemy : MonoBehaviour
         currentHealth = health;
         healthBar.setMaxHealth(health);
         healthBar.setHealth(health);
- 
+        EnemyStatusEffects.Instance.ClearAllStatusEffects();
+
         // Grab the EnemyAttack component from the specific child that just spawned, which will have its own ScriptableObject attack pattern assigned
         attack = enemyObject.GetComponent<EnemyAttack>();
         if (attack == null)
