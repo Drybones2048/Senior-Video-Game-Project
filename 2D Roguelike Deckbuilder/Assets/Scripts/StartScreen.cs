@@ -140,7 +140,7 @@ public class StartScreen : MonoBehaviour
 
         roundManager.ReinitialiseForNewRun(); // Resets all run state and starts combat
 
-        deathScreen.Hide();
+        deathScreen.HideAll();
 
         Hide();
     }

@@ -55,6 +55,7 @@ public class Player : MonoBehaviour
         {
             Debug.Log("Player dead!");
             playerDead.Invoke();
+            CombatManager.combatOver.Invoke();
         }
         else { }
     }

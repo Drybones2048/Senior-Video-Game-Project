@@ -16,6 +16,7 @@ public class EnemyAttack : MonoBehaviour
     {
         RoundManager.enemyDead.AddListener(moveText);
         Player.playerDead.AddListener(moveTextDown);
+        DeathScreen.gameWon.AddListener(moveTextDown);
     }
     
     void Update(){
@@ -43,6 +44,7 @@ public class EnemyAttack : MonoBehaviour
     {
         RoundManager.enemyDead.RemoveListener(moveText);
         Player.playerDead.RemoveListener(moveTextDown);
+        DeathScreen.gameWon.RemoveListener(moveTextDown);
     }
  
     public void attackPlayer(Player player) // Method that is called at the start of the enemy's turn every round, will do attack actions based on the enemy's scriptable object

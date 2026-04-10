@@ -57,6 +57,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         RewardCardHandler.addedCard.AddListener(AddCardToDeck);
         StartScreen.afterChosenClass.AddListener(assignClass);
         Player.playerDead.AddListener(destroyDeck);
+        DeathScreen.gameWon.AddListener(destroyDeck);
         CombatManager.combatOver.AddListener(resetDeck);
     }
 
@@ -68,6 +69,7 @@ public class Deck : MonoBehaviour // Will store a list of all the cards in the d
         RewardCardHandler.addedCard.RemoveListener(AddCardToDeck);
         StartScreen.afterChosenClass.RemoveListener(assignClass);
         Player.playerDead.RemoveListener(destroyDeck);
+        DeathScreen.gameWon.RemoveListener(destroyDeck);
         CombatManager.combatOver.RemoveListener(resetDeck);
     }
 

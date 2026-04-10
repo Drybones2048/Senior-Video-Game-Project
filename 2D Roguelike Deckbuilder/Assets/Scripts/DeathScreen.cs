@@ -9,25 +9,34 @@ using UnityEngine.SceneManagement;
 public class DeathScreen : MonoBehaviour
 {
     public GameObject deathScreenPanel;
-    public Button tryAgainButton;
+    public GameObject victoryScreenPanel;
+    public Button tryAgainButton;   //for restarting the game after a defeat
+    public Button playAgainButton;  //for restarting the game after a victory
 
     public static UnityEvent resetGame = new UnityEvent();
+    public static UnityEvent gameWon = new UnityEvent();
+
+    void Awake() {
+        Player.playerDead.AddListener(ShowDefeatScreen);
+
+        StartScreen.choseClass.AddListener((_) => HideAll()); // Hides death screen after player confirms a class
+
+        gameWon.AddListener(ShowVictoryScreen);
+    }
 
     void Start()
     {
-        Hide();
-        Player.playerDead.AddListener(Show);
-
-        StartScreen.choseClass.AddListener((_) => Hide()); // Hides death screen after player confirms a class
+        HideAll();
     }
 
     void OnDestroy()
     {
-        Player.playerDead.RemoveListener(Show);
-        StartScreen.choseClass.RemoveListener((_) => Hide());
+        Player.playerDead.RemoveListener(ShowDefeatScreen);
+        StartScreen.choseClass.RemoveListener((_) => HideAll());
+        gameWon.RemoveListener(ShowVictoryScreen);
     }
 
-    void Show()
+    void ShowDefeatScreen()
     {
         deathScreenPanel.gameObject.SetActive(true);
         RoundManager.instance.EndCombat();
@@ -35,14 +44,22 @@ public class DeathScreen : MonoBehaviour
         tryAgainButton.onClick.AddListener(buttonClicked);
     }
 
-    public void Hide()
-    {
-        deathScreenPanel.gameObject.SetActive(false);
+    void ShowVictoryScreen() {
+        victoryScreenPanel.gameObject.SetActive(true);
+        RoundManager.instance.EndCombat();
+        playAgainButton.onClick.RemoveAllListeners(); // Prevent duplicate listeners on repeated deaths
+        playAgainButton.onClick.AddListener(buttonClicked);
     }
 
-    void buttonClicked() // When the player clicks 'try again', the game will reset using this event
+    public void HideAll()
+    {
+        deathScreenPanel.gameObject.SetActive(false);
+        victoryScreenPanel.gameObject.SetActive(false);
+    }
+
+    void buttonClicked() //called when player clicks restart button after victory or defeat
     {
         resetGame.Invoke();
-        Hide();
+        HideAll();
     }
 }

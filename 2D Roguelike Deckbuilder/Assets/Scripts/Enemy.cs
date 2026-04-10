@@ -80,7 +80,7 @@ public class Enemy : MonoBehaviour
                 skeleton.SetActive(true);
                 pharaohPhase1.SetActive(false);
                 pharaohPhase2.SetActive(false);
-                SetupEnemy(skeleton, 75);
+                SetupEnemy(skeleton, 75); //75
                 break;
             case 3:
                 centipede.SetActive(false);
@@ -92,7 +92,7 @@ public class Enemy : MonoBehaviour
             case 4:
                 centipede.SetActive(false);
                 skeleton.SetActive(false);
-                pharaohPhase1.SetActive(true);
+                pharaohPhase1.SetActive(false);
                 pharaohPhase2.SetActive(true);
                 SetupEnemy(pharaohPhase2, 120); //120
                 break;
@@ -120,15 +120,21 @@ public class Enemy : MonoBehaviour
         if (centipede.activeSelf == true)
         {
             centipede.SetActive(false);
-        } else if(skeleton.activeSelf == true)
+        }
+        else if (skeleton.activeSelf == true)
         {
             skeleton.SetActive(false);
-        } else if(pharaohPhase1.activeSelf == true)
+        }
+        else if (pharaohPhase1.activeSelf == true)
         {
             pharaohPhase1.SetActive(false);
-        } else if (pharaohPhase2.activeSelf == true)
+            RoundManager.instance.StartNewCombat();
+        }
+        else if (pharaohPhase2.activeSelf == true)
         {
             pharaohPhase2.SetActive(false);
+            DeathScreen.gameWon.Invoke();
         }
+        else { }
     }
 }
