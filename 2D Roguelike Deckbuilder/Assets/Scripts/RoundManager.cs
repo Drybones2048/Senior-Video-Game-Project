@@ -67,6 +67,7 @@ public class RoundManager : MonoBehaviour
     public void StartNewCombat() {
         roundNumber = 0;
         encounterNumber++; // Keeps track of which encounter we are on for purposes of enemy spawning
+        BackgroundChange.changeBackground.Invoke();
         currentEnemy.SpawnNewEnemy(encounterNumber); // Spawns the new enemy on screen
 
         roundNumber++; 
@@ -116,9 +117,9 @@ public class RoundManager : MonoBehaviour
     private void EndEnemyTurn() {
         currentState = gameState.interim;
 
-        EnemyStatusEffects.Instance.DecrementStatusEffects();
         roundNumber++;  //this is the only place other than startCombat(called once per combat) where roundNumber is incremented
         routine.EndEnemyTurn(); //start coroutine
+        EnemyStatusEffects.Instance.DecrementStatusEffects(); // Decrements the status effects on the enemy after they take their turn
     }
 
     public void EndCombat() // Created an event for when the combat ends because the enemy dies (or player does but that is not programmed currently)

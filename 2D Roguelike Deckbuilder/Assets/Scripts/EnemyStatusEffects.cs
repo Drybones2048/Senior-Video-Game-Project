@@ -11,7 +11,7 @@ public class EnemyStatusEffects : MonoBehaviour
     public bool isWeakened = false; // Boolean for weakened status effect (20% decrease in incoming damage)
     public static event Action OnEnemyStatusEffectsChanged; // Event that other systems (e.g. UI) can subscribe to
 
-    public static EnemyStatusEffects Instance { get; private set; } // Singleton pattern
+    public static EnemyStatusEffects Instance; // Singleton pattern
 
     public List<StatusEffect> allStatusEffects = new List<StatusEffect>(); // List of all active status effects on the enemy
 
@@ -136,8 +136,9 @@ public class EnemyStatusEffects : MonoBehaviour
         if (isPoisoned)
         {
             int poisonDamage = findStatusEffect(EffectType.Poison).quantity;
-            Debug.Log($"Enemy takes {poisonDamage} damage from poison!");
-            currentEnemy.TakeDamage(poisonDamage);
+            // Poison damage is increased by 1 to avoid poison getting decremented before enemy takes damage from it
+            Debug.Log($"Enemy takes {poisonDamage + 1} damage from poison!");
+            currentEnemy.TakeDamage(poisonDamage + 1);
         }
     }
 
@@ -230,7 +231,7 @@ public class EnemyStatusEffects : MonoBehaviour
 
     public bool HasAnyStatusEffects() // Checks and sees if the enemy has any status effects on them
     {
-        return isStrengthened || isWeakened;
+        return isStrengthened || isWeakened || isPoisoned;
     }
 
     public StatusEffect findStatusEffect(EffectType requestedType) // Interate to find requested status effect
