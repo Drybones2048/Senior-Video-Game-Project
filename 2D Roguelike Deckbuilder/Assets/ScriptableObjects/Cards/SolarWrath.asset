@@ -18,7 +18,7 @@ MonoBehaviour:
   type: 0
   cost: 2
   sprite: SolarWrath
-  damage: 500
+  damage: 13
   block: 0
   statusEffects: []
   uniqueBehavior: 0
